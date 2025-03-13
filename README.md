@@ -63,7 +63,8 @@ shopping-app/
 ## 我们的数据模型
 > 我们采用 MySQL 作为数据库，并设计了如下数据模型。
 
-[![](https://mermaid.ink/img/pako:eNrNl-1P00Acx_-V5V4DYYOVsdeExPiGxHdmiTnbgzWuvdlelQkkYORJRUAeRgQMIVE0Bhg6RxwY_5m12_4Lr9deV-TWRQxI37S9-_Su9_093O8mgIwVBNIAGUMqHDOgltFj9LJMZMQmvGf3Momh6mOsWVViI3djGVBf_-QsnN4ZygAhpkMNBZS9siTA8tA0n2JDoZh9PFffmxEwSINqjgLN50f1oxPRIFmsexN9bxzvCgAD59z-xsHbxuJXQb-ZVfN5-vAAKoqBTJOyznqlUT6wd0r27nT4CwUSRFS6LtlA_JH--8K2fVZ1ipVmsSykrbzSop3tsrNZukhPeTcqhVB11s5lbxzt20sbbWWn2LCL1X6U7KOKEDOzmC2Yo_bGnF0tXkQVJKsazFETFTSkE6bJce1sqzm_2twXqWwSSCwz-L_6y4ozPSNUI49N4r64My-vUp0jlKPTc9nY9BGonMNmYJHZb83iYRR8ffZTCdLCNlSpehdt5-q9NiM0Dbf0cAdL5w0ctl6b0SilWDLxI9EDaSTWD0pCUxuq3OJqZ6fO3nmYcxfy2II6UUkhwJyNUnN--QY1ph6h6qNYECVuj6-z5yz_pHA4lkSZjqsGNWz9VXx4XER8XJNuni-IdGO-NNLBl2RIAo9bmKufnAmpDq7GtbAeUifKhcjFY2dvvrm_FYYJGidUZlM21DxRsd7yueXlxq8ru7BJsPyoNXN1zT7cirKXx924vWRoiIxFm4NkUj6sL35u_Px4Jf-9HdHsrjIyYfI1RnpmK54jJemQNG-LIgSNYaMgtD0JArVzCDKifQgG7s24G3dvXoMIlul2hRPSn6WJwMHtpc2oYieUlarF9pJQ0k03AXk5z_CKEslIfRKUuF61WKtWI1BepXps-1rVx_9rKRo6AUxOdnfjSb8wTQcTcNhrD0MsmBn4etZe-XIBZH0-zLcjhp5v0AzFUb7BX5ra3zjfvfB27TY8--0QzlIfZ1lS_RO0T97Xqm_CSPhH2SedsYj1-D3BeH58p4Pg42QQE5eW8uqDs7PoYqALaMigRyKFHtlY6GQAySINZYALKmgUWjniklMUhRbB9wq6DNLEsFAXMLA1lgXpUZgz6ZvnCv6pL2jNQ_0-xhr_hL6C9AQYB-m-ZM9gbyo5MBCnNykej0tdoADS3fG-pNQjDdKm3oSUlPoGE1Nd4BkbItGTiiekwf5kf580kJISqf6p3zd7kgc?type=png)](https://mermaid.live/edit#pako:eNrNl-1P00Acx_-V5V4DYYOVsdeExPiGxHdmiTnbgzWuvdlelQkkYORJRUAeRgQMIVE0Bhg6RxwY_5m12_4Lr9deV-TWRQxI37S9-_Su9_093O8mgIwVBNIAGUMqHDOgltFj9LJMZMQmvGf3Momh6mOsWVViI3djGVBf_-QsnN4ZygAhpkMNBZS9siTA8tA0n2JDoZh9PFffmxEwSINqjgLN50f1oxPRIFmsexN9bxzvCgAD59z-xsHbxuJXQb-ZVfN5-vAAKoqBTJOyznqlUT6wd0r27nT4CwUSRFS6LtlA_JH--8K2fVZ1ipVmsSykrbzSop3tsrNZukhPeTcqhVB11s5lbxzt20sbbWWn2LCL1X6U7KOKEDOzmC2Yo_bGnF0tXkQVJKsazFETFTSkE6bJce1sqzm_2twXqWwSSCwz-L_6y4ozPSNUI49N4r64My-vUp0jlKPTc9nY9BGonMNmYJHZb83iYRR8ffZTCdLCNlSpehdt5-q9NiM0Dbf0cAdL5w0ctl6b0SilWDLxI9EDaSTWD0pCUxuq3OJqZ6fO3nmYcxfy2II6UUkhwJyNUnN--QY1ph6h6qNYECVuj6-z5yz_pHA4lkSZjqsGNWz9VXx4XER8XJNuni-IdGO-NNLBl2RIAo9bmKufnAmpDq7GtbAeUifKhcjFY2dvvrm_FYYJGidUZlM21DxRsd7yueXlxq8ru7BJsPyoNXN1zT7cirKXx924vWRoiIxFm4NkUj6sL35u_Px4Jf-9HdHsrjIyYfI1RnpmK54jJemQNG-LIgSNYaMgtD0JArVzCDKifQgG7s24G3dvXoMIlul2hRPSn6WJwMHtpc2oYieUlarF9pJQ0k03AXk5z_CKEslIfRKUuF61WKtWI1BepXps-1rVx_9rKRo6AUxOdnfjSb8wTQcTcNhrD0MsmBn4etZe-XIBZH0-zLcjhp5v0AzFUb7BX5ra3zjfvfB27TY8--0QzlIfZ1lS_RO0T97Xqm_CSPhH2SedsYj1-D3BeH58p4Pg42QQE5eW8uqDs7PoYqALaMigRyKFHtlY6GQAySINZYALKmgUWjniklMUhRbB9wq6DNLEsFAXMLA1lgXpUZgz6ZvnCv6pL2jNQ_0-xhr_hL6C9AQYB-m-ZM9gbyo5MBCnNykej0tdoADS3fG-pNQjDdKm3oSUlPoGE1Nd4BkbItGTiiekwf5kf580kJISqf6p3zd7kgc)
+#### 数据库UML图
+[![](https://mermaid.ink/img/pako:eNq1VVtvmzAY_SvIT5uURIbmBm9pgtpIzUWETNsUqbLABWtgM9uoS5P89xlIUnIhTbWMJ-NzbB8fn89eAY_5GFgA8wFBAUfxgmrqm89sR1sV7ez71nP6jz3nS7v5VUsF5sQ_xVqwwCiK8SmqQwUnSIhXxv0KGMeIRKeYkY0MGS3Nao_nI42zCJ9jK7oISZIQGjwj3-dYiHfaoOfa7nBkax7HSGJJymL3YJr4B-BmQYtGXzEeJs6PKnM8JEnV9g6N-UchU2cymPfdKh0JZ9fqsPvDUe9JQXUjG0e8Ejgcu5qQzPv13uXa313Nx8LjJJGE0at8uH-a3GskRsHtDJg4g-qMqoydD-mlAGeYCFlSxvKgCYlkKm6rfOjao7L6zOkqURd3c-mkFeannvzkgf9OEZVELm9YNI5bXTBXn9MNVHzG9QvKjjz_L6bNHifT6XD8UGXccVKvSbhe3I0sOUxEXtJZd1bWN9tA_oas1_U6W2-L1drOJE4JeUQsjb3SM-DeijJhfxNvSbsL0cruHhwwTt52C-2gspg8CYrLqERkN2ch80PaXs_J0gJHkSiFvrS7szMdKSvxiKgTZSSogRhz9S766pHOk7AAMsTKbGCppo9fUBrJBVjQjaKiVLLZknrAkjzFNcBZGoTAekGRUH_FSW3f-X1vguhPxuLdEPULrBX4AyxDb3T0JtRhp9Vt3nXhXbsGlsDSO7BhmNDomF0DNk3YMTY18JbPABum3mpDw2jqbdNomdDc_AVunFH5?type=png)](https://mermaid.live/edit#pako:eNq1VVtvmzAY_SvIT5uURIbmBm9pgtpIzUWETNsUqbLABWtgM9uoS5P89xlIUnIhTbWMJ-NzbB8fn89eAY_5GFgA8wFBAUfxgmrqm89sR1sV7ez71nP6jz3nS7v5VUsF5sQ_xVqwwCiK8SmqQwUnSIhXxv0KGMeIRKeYkY0MGS3Nao_nI42zCJ9jK7oISZIQGjwj3-dYiHfaoOfa7nBkax7HSGJJymL3YJr4B-BmQYtGXzEeJs6PKnM8JEnV9g6N-UchU2cymPfdKh0JZ9fqsPvDUe9JQXUjG0e8Ejgcu5qQzPv13uXa313Nx8LjJJGE0at8uH-a3GskRsHtDJg4g-qMqoydD-mlAGeYCFlSxvKgCYlkKm6rfOjao7L6zOkqURd3c-mkFeannvzkgf9OEZVELm9YNI5bXTBXn9MNVHzG9QvKjjz_L6bNHifT6XD8UGXccVKvSbhe3I0sOUxEXtJZd1bWN9tA_oas1_U6W2-L1drOJE4JeUQsjb3SM-DeijJhfxNvSbsL0cruHhwwTt52C-2gspg8CYrLqERkN2ch80PaXs_J0gJHkSiFvrS7szMdKSvxiKgTZSSogRhz9S766pHOk7AAMsTKbGCppo9fUBrJBVjQjaKiVLLZknrAkjzFNcBZGoTAekGRUH_FSW3f-X1vguhPxuLdEPULrBX4AyxDb3T0JtRhp9Vt3nXhXbsGlsDSO7BhmNDomF0DNk3YMTY18JbPABum3mpDw2jqbdNomdDc_AVunFH5)
 
 #### 1. **用户表（User）**
 用户表存储所有用户信息，包括买家、卖家和管理员。
@@ -74,143 +75,120 @@ CREATE TABLE user (
     password VARCHAR(100) NOT NULL,  -- 密码
     email VARCHAR(100) NOT NULL,     -- 邮箱
     phone VARCHAR(20),               -- 电话
-    role ENUM('buyer', 'seller', 'admin') NOT NULL,  -- 用户角色：买家、卖家、管理员
-    shipping_address VARCHAR(200),   -- 用户收货地址
+    role ENUM('buyer', 'seller', 'admin') NOT NULL,  -- 用户角色（买家、卖家、管理员）
+    shipping_address VARCHAR(200),   -- 收货地址
     createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 更新时间
 );
+
 ```
 
 #### 2. **订单表（Order）**
 订单表存储买家所创建的订单。
 ```sql
-CREATE TABLE order (
-    orderid VARCHAR(64) PRIMARY KEY,      -- 订单ID
-    userid VARCHAR(64),                   -- 买家ID，外键
-    shoppingid VARCHAR(64),               -- 商店ID，外键
-    payment DECIMAL(20, 2),               -- 支付金额
-    status ENUM('pending', 'completed', 'cancelled') DEFAULT 'pending',  -- 订单状态
-    postdate DATETIME,                    -- 发货日期
-    paytime DATETIME,                     -- 支付时间
-    closetime DATETIME,                   -- 关闭时间
-    createtime DATETIME DEFAULT CURRENT_TIMESTAMP, -- 创建时间
+CREATE TABLE `order` (
+    orderid VARCHAR(64) PRIMARY KEY,   -- 订单ID
+    userid VARCHAR(64),                -- 买家ID
+    shopid VARCHAR(64),                -- 商店ID
+    status ENUM('pending', 'shipped', 'delivered') DEFAULT 'pending',  -- 订单状态（待发货、已发货、已完成）
+    createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (userid) REFERENCES user(userid) ON DELETE CASCADE,
-    FOREIGN KEY (shoppingid) REFERENCES shopping(shopid) ON DELETE CASCADE
+    FOREIGN KEY (userid) REFERENCES user(userid),   -- 外键关联用户表
+    FOREIGN KEY (shopid) REFERENCES shopping(shopid)  -- 外键关联商店表
 );
+
 ```
 
 #### 3. **订单商品表（OrderItem）**
 存储每个订单包含的商品信息。
 ```sql
 CREATE TABLE orderitem (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    orderid VARCHAR(64),                  -- 订单ID，外键
-    proid VARCHAR(64),                    -- 商品ID，外键
-    productname VARCHAR(100),             -- 商品名称
-    price DECIMAL(20, 2),                 -- 商品价格
-    quantity INT NOT NULL,                -- 商品数量
-    createtime DATETIME DEFAULT CURRENT_TIMESTAMP, -- 创建时间
-    updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (orderid) REFERENCES order(orderid) ON DELETE CASCADE,
-    FOREIGN KEY (proid) REFERENCES product(proid) ON DELETE CASCADE
-);
-```
-
-#### 4. **支付表（PayInfo）**
-存储支付信息，跟订单进行关联。
-```sql
-CREATE TABLE payinfo (
-    payid VARCHAR(64) PRIMARY KEY,        -- 支付ID
-    orderid VARCHAR(64),                  -- 订单ID，外键
-    userid VARCHAR(64),                   -- 用户ID，外键
-    amount DECIMAL(20, 2),                -- 支付金额
-    status ENUM('pending', 'completed', 'failed') DEFAULT 'pending', -- 支付状态
+    id INT PRIMARY KEY AUTO_INCREMENT,  -- 订单商品ID
+    orderid VARCHAR(64),                -- 订单ID
+    proid VARCHAR(64),                  -- 商品ID
+    productname VARCHAR(100),           -- 商品名称
+    price DECIMAL(10, 2),               -- 商品价格
+    quantity INT,                       -- 商品数量
     createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (orderid) REFERENCES order(orderid) ON DELETE CASCADE,
-    FOREIGN KEY (userid) REFERENCES user(userid) ON DELETE CASCADE
+    FOREIGN KEY (orderid) REFERENCES `order`(orderid),  -- 外键关联订单表
+    FOREIGN KEY (proid) REFERENCES product(proid)      -- 外键关联商品表
 );
+
 ```
 
-#### 5. **商品表（Product）**
-商品表存储商品的详细信息，包括分类、库存、价格等。
+
+#### 4. **商品表（Product）**
+商品表存储商品的详细信息，包括分类、库存、价格、图片等。
 ```sql
 CREATE TABLE product (
-    proid VARCHAR(64) PRIMARY KEY,         -- 商品ID
-    catid VARCHAR(64),                     -- 分类ID，外键
-    name VARCHAR(100),                     -- 商品名称
-    subtitle VARCHAR(100),                 -- 商品副标题
-    description TEXT,                      -- 商品描述
-    price DECIMAL(20, 2),                  -- 商品价格
-    stock INT,                             -- 商品库存
-    status ENUM('available', 'out_of_stock', 'discontinued') DEFAULT 'available', -- 商品状态
+    proid VARCHAR(64) PRIMARY KEY,   -- 商品ID
+    name VARCHAR(100) NOT NULL,      -- 商品名称
+    price DECIMAL(10, 2) NOT NULL,   -- 商品价格
+    stock INT NOT NULL,              -- 商品库存
+    description TEXT,                -- 商品描述
+    catid VARCHAR(64),               -- 商品分类ID
+    image BLOB,                      -- 商品图片（二进制数据）
     createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (catid) REFERENCES category(catid) ON DELETE CASCADE
+    FOREIGN KEY (catid) REFERENCES category(catid)  -- 外键关联分类表
 );
+
 ```
 
-#### 6. **购物车表（Cart）**
+#### 5. **购物车表（Cart）**
 存储买家购物车中的商品。
 ```sql
 CREATE TABLE cart (
-    carid VARCHAR(64) PRIMARY KEY,         -- 购物车ID
-    userid VARCHAR(64),                    -- 用户ID，外键
-    quantity INT,                          -- 商品数量
+    carid VARCHAR(64) PRIMARY KEY,   -- 购物车ID
+    userid VARCHAR(64),              -- 用户ID
     createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (userid) REFERENCES user(userid) ON DELETE CASCADE
+    FOREIGN KEY (userid) REFERENCES user(userid)   -- 外键关联用户表
 );
+
 ```
 
-#### 7. **购物车商品表（CartItem）**
+#### 6. **购物车商品表（CartItem）**
 存储购物车中每个商品的详细信息。
 ```sql
 CREATE TABLE cartitem (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    carid VARCHAR(64),                     -- 购物车ID，外键
-    proid VARCHAR(64),                     -- 商品ID，外键
-    quantity INT NOT NULL,                 -- 商品数量
-    createtime DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 创建时间
+    id INT PRIMARY KEY AUTO_INCREMENT,  -- 购物车商品ID
+    carid VARCHAR(64),                  -- 购物车ID
+    proid VARCHAR(64),                  -- 商品ID
+    quantity INT,                       -- 商品数量
+    createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (carid) REFERENCES cart(carid) ON DELETE CASCADE,
-    FOREIGN KEY (proid) REFERENCES product(proid) ON DELETE CASCADE
+    FOREIGN KEY (carid) REFERENCES cart(carid),   -- 外键关联购物车表
+    FOREIGN KEY (proid) REFERENCES product(proid)  -- 外键关联商品表
 );
+
 ```
 
-#### 8. **商店表（Shopping）**
+#### 7. **商店表（Shopping）**
 卖家的商店信息。
 ```sql
 CREATE TABLE shopping (
-    shopid VARCHAR(64) PRIMARY KEY,       -- 商店ID
-    userid VARCHAR(64),                   -- 卖家ID，外键
-    shopname VARCHAR(100),                -- 商店名称
-    shopdesc TEXT,                        -- 商店描述
-    receivername VARCHAR(100),            -- 收货人
-    receiverphone VARCHAR(20),            -- 收货电话
-    receiveraddress VARCHAR(200),         -- 收货地址
-    createtime DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 创建时间
+    shopid VARCHAR(64) PRIMARY KEY,    -- 商店ID
+    userid VARCHAR(64),                -- 卖家ID
+    shopname VARCHAR(100),             -- 商店名称
+    shopdesc TEXT,                     -- 商店描述
+    createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (userid) REFERENCES user(userid) ON DELETE CASCADE
+    FOREIGN KEY (userid) REFERENCES user(userid)  -- 外键关联用户表
 );
+
 ```
 
-#### 9. **商品分类表（Category）**
+#### 8. **商品分类表（Category）**
 商品分类信息。
 ```sql
 CREATE TABLE category (
-    catid VARCHAR(64) PRIMARY KEY,        -- 分类ID
-    name VARCHAR(100),                    -- 分类名称
-    status ENUM('active', 'inactive') DEFAULT 'active',  -- 分类状态
-    createtime DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 创建时间
+    catid VARCHAR(64) PRIMARY KEY,     -- 分类ID
+    name VARCHAR(100),                 -- 分类名称
+    createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  -- 更新时间
 );
+
 ```
 
-### **补充说明：**
-- 订单和商品通过 `order` 和 `orderitem` 进行关联，支付信息存储在 `payinfo` 表，且与订单相关联。
-- 购物车表和购物车商品表分别存储了购物车的基本信息和商品信息，购物车与买家进行关联。
-- 商品通过 `category` 分类，并存储在 `product` 表中，商品的状态、库存等信息可以根据实际需要进行更新。
-
-## 
