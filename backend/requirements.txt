@@ -3,6 +3,5 @@ Flask_Cors
 Flask_Migrate
 flask_sqlalchemy
 SQLAlchemy
-mysql
 mysqlclient
 pymysql
