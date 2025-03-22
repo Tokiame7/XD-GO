@@ -48,7 +48,7 @@ XD-GO/
   1. 安装 Python 3.11 环境。
   2. 安装依赖`pip install -r requirements.txt`。
   3. 修改配置文件`config.py`，将数据库的root密码修改为自己设置的密码。
-  4. 运行`python app.py`启动服务。
+  4. 运行`flask run`启动服务。
   5. 代码运行后自动生成数据库`xd_go`，并自动创建数据表。
 
 ## 我们的数据模型
