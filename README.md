@@ -57,6 +57,8 @@ XD-GO/
 
 ### 数据库UML图
 
+[API文档](https://6745r7mzhv.apifox.cn/)
+
 ![数据库模型](https://cdn.nlark.com/yuque/__mermaid_v3/7025a5d6cae195378819ed2ce286bd20.svg)
 
 ### 1. **用户表（User）**
