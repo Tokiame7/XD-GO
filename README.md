@@ -2,14 +2,20 @@
 
 ## The  demo structure demo of XD-GO
 
-```absh
-shopping-app/
-│
-├── backend/                    # Flask 后端代码
-├── frontend/                   # Vue.js 前端代码
-├── requirements.txt            # 后端依赖
-├── README.md                   # 项目文档
-└── .gitignore                  # Git 忽略文件
+```plaintext
+
+XD-GO/
+├───README.md                    # 项目说明文档
+├───LICENSE                      # 项目许可证
+├───backend
+│   ├───migrations
+│   │   ├───versions
+│   │   │   └───__pycache__
+│   │   └───__pycache__
+│   └───__pycache__
+└───fronted
+├─── .gitignore                  # Git 忽略文件
+
 
 ```
 
@@ -20,6 +26,30 @@ shopping-app/
 - 状态管理：Vuex 用于管理全局状态，特别是用户认证、购物车、订单等跨页面的数据。
 - 接口文档：通过工具APIFOX为每个模块生成接口文档，确保各小组之间的 API 交互准确无误。
 - 代码版本管理：使用 Git 进行代码管理，各小组分别在不同分支上开发，最后合并到主分支。
+
+## 我们的技术栈
+
+- 开发环境
+        后端： Python + Flask
+        前端： Javascript + Vue
+        数据库：MySQL
+        开发平台：Pycharm + vscode
+        运行环境：Windows 10/11
+
+- 关键技术
+        前端技术栈：
+        Vue3；状态管理Pinia； 路由管理VueRouter； 组件库 ElementPlus； AJAX请求axios； CSS预处理器 SCSS； 构建工具Vite；
+        后端技术栈：
+        Python3.10+（pip版本与python对应)；核心框架Flask；数据库连接flask_SQLAlchemy
+
+## 如何部署
+
+- 后端部署：
+  1. 安装 Python 3.11 环境。
+  2. 安装依赖`pip install -r requirements.txt`。
+  3. 修改配置文件`config.py`，将数据库的root密码修改为自己设置的密码。
+  4. 运行`python app.py`启动服务。
+  5. 代码运行后自动生成数据库`xd_go`，并自动创建数据表。
 
 ## 我们的数据模型
 
