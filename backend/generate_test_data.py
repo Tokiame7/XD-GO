@@ -1,15 +1,22 @@
 from backend import create_app, db
 from backend.models import *
-import datetime
+import os
+from datetime import datetime
 
 app = create_app()
+
+# 商品图片路径
+image_path = r"D:\XD-GO\backend\assets"
+
+# 获取图片文件名列表
+image_files = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"]
 
 
 def generate_sample_data():
     with app.app_context():
         # 清空现有数据（可选）
-        # db.drop_all()
-        # db.create_all()
+        db.drop_all()
+        db.create_all()
 
         # 创建用户
         admin_user = User(
@@ -37,38 +44,6 @@ def generate_sample_data():
         db.session.add_all([admin_user, buyer_user, seller_user])
         db.session.commit()  # 提交用户数据
 
-        # 创建商品分类
-        electronics_category = Category(
-            catid='cat_electronics',
-            name='Electronics'
-        )
-        clothing_category = Category(
-            catid='cat_clothing',
-            name='Clothing'
-        )
-        db.session.add_all([electronics_category, clothing_category])
-        db.session.commit()  # 提交分类数据
-
-        # 创建商品
-        laptop_product = Product(
-            proid='pro_laptop',
-            name='Laptop',
-            price=999.99,
-            stock=100,
-            description='High-performance laptop for everyday use',
-            catid=electronics_category.catid
-        )
-        tshirt_product = Product(
-            proid='pro_tshirt',
-            name='T-Shirt',
-            price=19.99,
-            stock=200,
-            description='Comfortable cotton t-shirt',
-            catid=clothing_category.catid
-        )
-        db.session.add_all([laptop_product, tshirt_product])
-        db.session.commit()  # 提交商品数据
-
         # 创建商店
         tech_shop = Shop(
             shopid='shop_tech',
@@ -84,6 +59,72 @@ def generate_sample_data():
         )
         db.session.add_all([tech_shop, fashion_shop])
         db.session.commit()  # 提交商店数据
+
+        # 创建商品分类
+        electronics_category = Category(
+            catid='cat_electronics',
+            name='Electronics'
+        )
+        clothing_category = Category(
+            catid='cat_clothing',
+            name='Clothing'
+        )
+        db.session.add_all([electronics_category, clothing_category])
+        db.session.commit()  # 提交分类数据
+
+        # 创建商品并为每个商品分配图片
+        laptop_product = Product(
+            proid='pro_laptop',
+            name='Laptop',
+            price=999.99,
+            stock=100,
+            description='High-performance laptop for everyday use',
+            catid=electronics_category.catid,
+            image=open(os.path.join(image_path, image_files[0]), 'rb').read(),  # 读取图片文件
+            shopid='shop_tech'  # 为商品指定卖家
+        )
+        tshirt_product = Product(
+            proid='pro_tshirt',
+            name='T-Shirt',
+            price=19.99,
+            stock=200,
+            description='Comfortable cotton t-shirt',
+            catid=clothing_category.catid,
+            image=open(os.path.join(image_path, image_files[1]), 'rb').read(),  # 读取图片文件
+            shopid='shop_fashion'  # 为商品指定卖家
+        )
+        phone_product = Product(
+            proid='pro_phone',
+            name='Smartphone',
+            price=499.99,
+            stock=50,
+            description='Latest model smartphone with amazing features',
+            catid=electronics_category.catid,
+            image=open(os.path.join(image_path, image_files[2]), 'rb').read(),  # 读取图片文件
+            shopid='shop_tech'  # 为商品指定卖家
+        )
+        jacket_product = Product(
+            proid='pro_jacket',
+            name='Winter Jacket',
+            price=79.99,
+            stock=150,
+            description='Warm and cozy winter jacket',
+            catid=clothing_category.catid,
+            image=open(os.path.join(image_path, image_files[3]), 'rb').read(),  # 读取图片文件
+            shopid='shop_fashion'  # 为商品指定卖家
+        )
+        tablet_product = Product(
+            proid='pro_tablet',
+            name='Tablet',
+            price=349.99,
+            stock=80,
+            description='Lightweight tablet with a high-resolution display',
+            catid=electronics_category.catid,
+            image=open(os.path.join(image_path, image_files[4]), 'rb').read(),  # 读取图片文件
+            shopid='shop_tech'  # 为商品指定卖家
+        )
+        db.session.add_all([laptop_product, tshirt_product, phone_product, jacket_product, tablet_product])
+        db.session.commit()  # 提交商品数据
 
         # 创建购物车
         buyer_cart = Cart(

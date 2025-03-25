@@ -1,4 +1,6 @@
 from datetime import datetime
+from sqlalchemy.dialects.mysql import LONGBLOB
+
 from backend import db
 
 
@@ -31,9 +33,13 @@ class Product(db.Model):
     stock = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text)
     catid = db.Column(db.String(64), db.ForeignKey('category.catid'))
-    image = db.Column(db.LargeBinary)
+    shopid = db.Column(db.String(64), db.ForeignKey('shop.shopid'))
+    image = db.Column(LONGBLOB)
     createtime = db.Column(db.DateTime, default=datetime.utcnow)
     updatetime = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # 添加关系
+    shop = db.relationship('Shop', backref=db.backref('products', lazy=True))
 
 
 class Cart(db.Model):
