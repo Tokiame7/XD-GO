@@ -12,17 +12,17 @@ main = Blueprint('main', __name__)
 # 主界面
 @main.route('/', methods=['GET'])
 def index():
-    return "Welcome to the API Home", 200
+    return "Welcome to the XD_GO Home", 200
 
 
 # 测试API
-@main.route('/test', methods=['GET'])
+@main.route('/api/test', methods=['GET'])
 def test():
     return "Welcome to the API Test", 200
 
 
 # 测试从数据库读取数据的 API
-@main.route('/get_users', methods=['GET'])
+@main.route('/api/users/get_users', methods=['GET'])
 def get_users():
     try:
         # 查询所有用户
