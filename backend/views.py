@@ -49,6 +49,7 @@ def get_users():
                    'message': str(e)
                }, 500
 
+
 # 获取商品列表
 @main.route('/api/sell_order/getProduct', methods=['GET'])
 def get_product():
@@ -206,3 +207,43 @@ def login_user():
             "code": 0,
             "message": str(e)
         }), 400
+
+
+# 获取所有商品的API
+@main.route('/api/product/productList', methods=['GET'])
+def get_all_products():
+    try:
+        # 查询所有商品
+        products = Product.query.all()
+
+        # 将商品数据转换为字典列表
+        product_list = []
+        for product in products:
+            category = Category.query.filter_by(catid=product.catid).first()
+            product_data = {
+                'productId': product.proid,
+                'productName': product.name,
+                'price': float(product.price),
+                'description': product.description,
+                'stock': product.stock,
+                'createTime': product.createtime.strftime('%Y-%m-%d %H:%M:%S'),
+                'updateTime': product.updatetime.strftime('%Y-%m-%d %H:%M:%S'),
+                'category': category.name if category else 'N/A',  # 获取商品分类名
+            }
+            product_list.append(product_data)
+
+        # 返回商品数据
+        return jsonify({
+            'status': 200,
+            'message': '获取商品列表成功',
+            'data': {
+                'list': product_list
+            }
+        }), 200
+
+    except Exception as e:
+        # 捕获异常并返回错误信息
+        return jsonify({
+            'status': 500,
+            'message': str(e),
+        }), 500
