@@ -80,7 +80,7 @@ def generate_sample_data():
             stock=100,
             description='High-performance laptop for everyday use',
             catid=electronics_category.catid,
-            image=open(os.path.join(image_path, image_files[0]), 'rb').read(),  # 读取图片文件
+            image='https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34984.jpg',  # 图床 URL
             shopid='shop_tech'  # 为商品指定卖家
         )
         tshirt_product = Product(
@@ -90,7 +90,7 @@ def generate_sample_data():
             stock=200,
             description='Comfortable cotton t-shirt',
             catid=clothing_category.catid,
-            image=open(os.path.join(image_path, image_files[1]), 'rb').read(),  # 读取图片文件
+            image='https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34983.jpg',  # 图床 URL
             shopid='shop_fashion'  # 为商品指定卖家
         )
         phone_product = Product(
@@ -100,7 +100,7 @@ def generate_sample_data():
             stock=50,
             description='Latest model smartphone with amazing features',
             catid=electronics_category.catid,
-            image=open(os.path.join(image_path, image_files[2]), 'rb').read(),  # 读取图片文件
+            image='https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34982.jpg',  # 图床 URL
             shopid='shop_tech'  # 为商品指定卖家
         )
         jacket_product = Product(
@@ -110,7 +110,7 @@ def generate_sample_data():
             stock=150,
             description='Warm and cozy winter jacket',
             catid=clothing_category.catid,
-            image=open(os.path.join(image_path, image_files[3]), 'rb').read(),  # 读取图片文件
+            image='https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34981.jpg',
             shopid='shop_fashion'  # 为商品指定卖家
         )
         tablet_product = Product(
@@ -120,7 +120,7 @@ def generate_sample_data():
             stock=80,
             description='Lightweight tablet with a high-resolution display',
             catid=electronics_category.catid,
-            image=open(os.path.join(image_path, image_files[4]), 'rb').read(),  # 读取图片文件
+            image='https://pic1.imgdb.cn/item/67e2a8e40ba3d5a1d7e34980.jpg',
             shopid='shop_tech'  # 为商品指定卖家
         )
         db.session.add_all([laptop_product, tshirt_product, phone_product, jacket_product, tablet_product])

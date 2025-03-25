@@ -1,5 +1,4 @@
 from datetime import datetime
-from sqlalchemy.dialects.mysql import LONGBLOB
 
 from backend import db
 
@@ -34,7 +33,7 @@ class Product(db.Model):
     description = db.Column(db.Text)
     catid = db.Column(db.String(64), db.ForeignKey('category.catid'))
     shopid = db.Column(db.String(64), db.ForeignKey('shop.shopid'))
-    image = db.Column(LONGBLOB)
+    image = db.Column(db.String(255))  # 修改为 String 类型，存储图片 URL
     createtime = db.Column(db.DateTime, default=datetime.utcnow)
     updatetime = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

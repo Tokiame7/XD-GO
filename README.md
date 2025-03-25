@@ -104,7 +104,7 @@ CREATE TABLE product (
     stock INT NOT NULL,              -- 商品库存
     description TEXT,                -- 商品描述
     catid VARCHAR(64),               -- 商品分类ID
-    image BLOB,                      -- 商品图片（二进制数据）
+    image STRING,                      -- 商品图片的URL
     createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
     FOREIGN KEY (catid) REFERENCES category(catid)  -- 外键关联分类表

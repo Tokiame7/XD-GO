@@ -90,11 +90,6 @@ def get_product():
     # 构建返回数据
     data = []
     for product in products:
-        # 转换图片为 Base64 编码
-        image_base64 = None
-        if product.image:
-            image_base64 = base64.b64encode(product.image).decode('utf-8')  # 转为 Base64 编码
-
         # 获取商品分类
         category = Category.query.filter_by(catid=product.catid).first()
 
@@ -107,7 +102,7 @@ def get_product():
             "createTime": product.createtime.strftime('%Y-%m-%d %H:%M:%S'),
             "updateTime": product.updatetime.strftime('%Y-%m-%d %H:%M:%S'),
             "category": category.name if category else 'N/A',  # 获取商品分类名
-            "imageBase64": image_base64,  # 返回 Base64 编码的图片
+            "imageUrl": product.image,  # 返回图床 URL
             "catid": product.catid,
             "shopId": product.shopid,  # 添加商店信息
             "shopName": product.shop.shopname if product.shop else 'N/A'  # 返回店铺名称
@@ -258,11 +253,6 @@ def get_all_products():
         for product in products:
             category = Category.query.filter_by(catid=product.catid).first()
 
-            # 转换图片为 Base64 编码
-            image_base64 = None
-            if product.image:
-                image_base64 = base64.b64encode(product.image).decode('utf-8')  # 转为 Base64 编码
-
             product_data = {
                 'productId': product.proid,
                 'productName': product.name,
@@ -272,7 +262,7 @@ def get_all_products():
                 'createTime': product.createtime.strftime('%Y-%m-%d %H:%M:%S'),
                 'updateTime': product.updatetime.strftime('%Y-%m-%d %H:%M:%S'),
                 'category': category.name if category else 'N/A',  # 获取商品分类名
-                'imageBase64': image_base64  # 返回图片的 Base64 编码
+                'imageUrl': product.image  # 返回图床 URL
             }
             product_list.append(product_data)
 

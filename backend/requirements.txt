@@ -7,3 +7,4 @@ mysqlclient
 pymysql
 pyjwt
 uuid
+jwt
