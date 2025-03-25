@@ -28,4 +28,4 @@ if __name__ == "__main__":
     with app.app_context():
         upgrade()  # This will apply migrations and create tables
 
-    app.run(port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
