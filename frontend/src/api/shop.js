@@ -1,8 +1,5 @@
 import request from '@/utils/request'
 
-
-//
-
 // 获取热销商品
 export function getHotProducts() {
   return request({

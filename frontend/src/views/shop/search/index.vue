@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <template>
     <div class="search">
         <!-- 搜索头部 -->
