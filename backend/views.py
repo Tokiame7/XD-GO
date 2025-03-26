@@ -280,3 +280,253 @@ def get_all_products():
             'status': 500,
             'message': str(e),
         }), 500
+
+
+
+from functools import wraps
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+
+        # 修正：正确提取 Bearer Token
+        if 'Authorization' in request.headers:
+            auth_header = request.headers['Authorization']
+            token_parts = auth_header.split(' ')
+            if len(token_parts) == 2 and token_parts[0] == 'Bearer':
+                token = token_parts[1]
+
+        if not token:
+            return jsonify({"code": 0, "message": "Token is missing!"}), 401
+
+        try:
+            # 解码 Token（现在仅包含 JWT 字符串）
+            data = jwt.decode(token, 'your_secret_key', algorithms=['HS256'])
+            current_user = User.query.filter_by(userid=data['userid']).first()
+
+            if current_user.role != 'seller':
+                return jsonify({"code": 0, "message": "Seller role required!"}), 403
+
+        except jwt.ExpiredSignatureError:
+            return jsonify({"code": 0, "message": "Token expired!"}), 401
+        except jwt.InvalidTokenError as e:
+            return jsonify({"code": 0, "message": f"Invalid token: {str(e)}"}), 401
+
+        return f(current_user, *args, **kwargs)
+
+    return decorated
+
+
+@main.route('/api/sell_order/updateProduct', methods=['POST'])
+@token_required
+def update_products(current_user):
+    try:
+        # 获取请求数据
+        data = request.get_json()
+
+        # 验证必要字段
+        if not data or 'products' not in data:
+            return jsonify({
+                "code": 0,
+                "message": "Invalid input: Missing required fields"
+            }), 400
+
+        products = data.get('products', [])
+
+        # 验证每个商品数据
+        for product_data in products:
+            if not all(k in product_data for k in ['proid', 'price', 'stock']):
+                return jsonify({
+                    "code": 0,
+                    "message": "Invalid product data: Missing required fields (proid, price or stock)"
+                }), 400
+
+            # 检查价格和库存是否为有效值
+            if product_data['price'] <= 0 or product_data['stock'] < 0:
+                return jsonify({
+                    "code": 0,
+                    "message": f"Invalid product data: Price must be positive and stock must be non-negative (proid: {product_data['proid']})"
+                }), 400
+
+        # 批量更新商品
+        for product_data in products:
+            product = Product.query.filter_by(
+                proid=product_data['proid'],
+                userid=current_user.userid  # 确保商品属于当前卖家
+            ).first()
+
+            if not product:
+                return jsonify({
+                    "code": 0,
+                    "message": f"Product not found or not owned by you (proid: {product_data['proid']})"
+                }), 404
+
+            # 更新商品信息
+            if 'name' in product_data:
+                product.name = product_data['name']
+            if 'price' in product_data:
+                product.price = product_data['price']
+            if 'stock' in product_data:
+                product.stock = product_data['stock']
+            if 'description' in product_data:
+                product.description = product_data['description']
+            if 'catid' in product_data:
+                # 验证分类是否存在
+                category = Category.query.get(product_data['catid'])
+                if not category:
+                    return jsonify({
+                        "code": 0,
+                        "message": f"Category not found (catid: {product_data['catid']})"
+                    }), 404
+                product.catid = product_data['catid']
+
+        # 提交数据库更改
+        db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": "Products updated successfully",
+            "data": {
+                "updated_count": len(products)
+            }
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 0,
+            "message": str(e)
+        }), 400
+
+
+@main.route('/api/sell_order/addProduct', methods=['POST'])
+@token_required
+def add_product(current_user):
+    try:
+        # 1. 获取并验证请求数据
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                "code": 0,
+                "message": "Invalid input: No JSON data provided"
+            }), 400
+
+        # 2. 验证必填字段
+        required_fields = ['name', 'price', 'stock', 'catid']
+        if not all(field in data for field in required_fields):
+            return jsonify({
+                "code": 0,
+                "message": f"Missing required fields: {', '.join(required_fields)}"
+            }), 400
+
+        # 3. 验证数值有效性
+        if data['price'] <= 0 or data['stock'] < 0:
+            return jsonify({
+                "code": 0,
+                "message": "Price must be positive and stock must be non-negative"
+            }), 400
+
+        # 4. 验证分类是否存在
+        category = Category.query.get(data['catid'])
+        if not category:
+            return jsonify({
+                "code": 0,
+                "message": f"Category not found: {data['catid']}"
+            }), 404
+
+        # 5. 检查商品名称是否重复（同一卖家的商品不允许重名）
+        existing_product = Product.query.filter_by(
+            name=data['name'],
+            userid=current_user.userid  # 只检查当前卖家的商品
+        ).first()
+
+        if existing_product:
+            return jsonify({
+                "code": 0,
+                "message": f"Product name '{data['name']}' already exists for your shop"
+            }), 409  # HTTP 409 Conflict
+
+        # 6. 创建新商品
+        new_product = Product(
+            proid=str(uuid.uuid4()),
+            name=data['name'],
+            price=data['price'],
+            stock=data['stock'],
+            description=data.get('description', ''),
+            catid=data['catid'],
+            userid=current_user.userid,
+            image=data.get('image', '')
+        )
+
+        db.session.add(new_product)
+        db.session.commit()
+
+        # 7. 返回成功响应
+        return jsonify({
+            "code": 200,
+            "message": "Product added successfully",
+            "data": {
+                "proid": new_product.proid,
+                "name": new_product.name,
+                "price": float(new_product.price)
+            }
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 0,
+            "message": f"Server error: {str(e)}"
+        }), 500
+
+
+@main.route('/api/sell_order/deleteProduct', methods=['DELETE'])
+@token_required
+def delete_product(current_user):
+    try:
+        # 1. 获取商品ID
+        data = request.get_json()
+        if not data or 'proid' not in data:
+            return jsonify({
+                "code": 0,
+                "message": "Product ID (proid) is required"
+            }), 400
+
+        # 2. 检查商品是否存在
+        product = Product.query.filter_by(proid=data['proid']).first()
+        if not product:
+            return jsonify({
+                "code": 0,
+                "message": f"Product not found with proid: {data['proid']}"
+            }), 404
+
+        # 3. 验证所有权
+        if product.userid != current_user.userid:
+            return jsonify({
+                "code": 0,
+                "message": f"No permission to delete product: {product.name} (proid: {data['proid']})"
+            }), 403
+
+        # 4. 记录待删除的商品名称（提交前获取）
+        deleted_product_name = product.name
+
+        # 5. 执行删除
+        db.session.delete(product)
+        db.session.commit()
+
+        # 6. 返回成功响应（包含商品名称）
+        return jsonify({
+            "code": 200,
+            "message": "Product deleted successfully",
+            "data": {
+                "deleted_proid": data['proid'],
+                "deleted_name": deleted_product_name  # 新增返回字段
+            }
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 0,
+            "message": f"Deletion failed: {str(e)}"
+        }), 500
