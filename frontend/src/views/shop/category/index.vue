@@ -125,7 +125,7 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowUp, ArrowDown, Grid, List } from '@element-plus/icons-vue'
-import { getCategories } from '@/api/shop'
+// import { getCategories } from '@/api/shop'
 
 const route = useRoute()
 const router = useRouter()
