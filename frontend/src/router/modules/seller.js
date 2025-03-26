@@ -1,9 +1,9 @@
 export default {
   path: '/seller',
   component: () => import('@/layouts/SellerLayout.vue'),
-    children :[
+  children: [
     {
-      path:'/',
+      path: '',
       name: 'Myproducts',
       component: () => import('@/views/seller/seller_myproducts/index.vue'),
       meta: {
@@ -11,7 +11,7 @@ export default {
       },
     },
     {
-      path:'/addproducts',
+      path: '/addproducts',
       name: 'Addproducts',
       component: () => import('@/views/seller/seller_addproducts/index.vue'),
       meta: {
