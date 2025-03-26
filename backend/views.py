@@ -3,7 +3,6 @@ from backend.models import *
 from backend.models import Product
 import uuid
 import jwt
-import base64
 import datetime
 
 main = Blueprint('main', __name__)
@@ -61,7 +60,7 @@ def get_product():
         page = int(request.args.get('page', 1))
         page_size = int(request.args.get('pageSize', 10))
         search = request.args.get('search')
-        shop_id = request.args.get('shopid')  # 新增的 shopid 参数，用于过滤指定店铺的商品
+        seller_id = request.args.get('sellerid')  # 新增的 sellerid 参数，用于过滤指定用户的商品
 
     except ValueError:
         return jsonify({"code": 400, "message": "参数格式错误"}), 400
@@ -69,8 +68,8 @@ def get_product():
     query = Product.query
 
     # 如果提供了店铺 ID，则过滤出该店铺的商品
-    if shop_id:
-        query = query.filter_by(shopid=shop_id)
+    if seller_id:
+        query = query.filter_by(shopid=seller_id)
 
     # 如果提供了搜索条件，则按商品名或描述进行模糊搜索
     if search:
@@ -104,8 +103,7 @@ def get_product():
             "category": category.name if category else 'N/A',  # 获取商品分类名
             "imageUrl": product.image,  # 返回图床 URL
             "catid": product.catid,
-            "shopId": product.shopid,  # 添加商店信息
-            "shopName": product.shop.shopname if product.shop else 'N/A'  # 返回店铺名称
+            "sellerId": product.userid,  # 添加商店信息
         }
         data.append(product_data)
 
@@ -262,7 +260,8 @@ def get_all_products():
                 'createTime': product.createtime.strftime('%Y-%m-%d %H:%M:%S'),
                 'updateTime': product.updatetime.strftime('%Y-%m-%d %H:%M:%S'),
                 'category': category.name if category else 'N/A',  # 获取商品分类名
-                'imageUrl': product.image  # 返回图床 URL
+                'imageUrl': product.image,  # 返回图床 URL
+                'sellerId': product.userid  # 添加商店信息
             }
             product_list.append(product_data)
 

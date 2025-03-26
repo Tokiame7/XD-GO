@@ -1,24 +1,5 @@
 # XD-GO
 
-## The  demo structure demo of XD-GO
-
-```plaintext
-
-XD-GO/
-├───README.md                    # 项目说明文档
-├───LICENSE                      # 项目许可证
-├───backend
-│   ├───migrations
-│   │   ├───versions
-│   │   │   └───__pycache__
-│   │   └───__pycache__
-│   └───__pycache__
-└───fronted
-├─── .gitignore                  # Git 忽略文件
-
-
-```
-
 ## 我们如何开发协作
 
 - 前后端分离：前端和后端通过 API 完全分离开发，后端提供 RESTful API，前端通过 Axios 或 Fetch 调用。
@@ -63,7 +44,7 @@ XD-GO/
 
 [API文档](https://6745r7mzhv.apifox.cn/)
 
-![数据库模型](https://cdn.nlark.com/yuque/__mermaid_v3/7025a5d6cae195378819ed2ce286bd20.svg)
+![数据库模型](https://mermaid.ink/svg/pako:eNqtVU1v4jAQ_SuRzwElFELi2wroalWtqFJ66AoJWc4QrCZ21na0pZT_viYBERpTRSo-JGO_p_kee4eoSABhBHLKSCpJvuSOWc9Ps9jZ1fJhKS0ZT51SgWSJ8_hgRTjJoQUURKl_QiYtAHLCsjZ9I3hbiRRZ-1BtWFEYYUWSRIJSZ0JCNGiWg0MlHEULWBbJBbivf5Mfi9nPefxiCZ8SbY_-MvJvmX-M59PnycJivZCik3WgLCeZoTPaOGZcG76gr-cjDW_a0BWVrNBM8Cvx3j9c6wMLYkyncLNKxAtrFb7owU9efdv-r8Xsd9OHQxrt1mu3LCmp69YEDkr-loRrprc38nUeT60TayYPuqfrNFmQZVcxTXSpbul19xSfgumU5DOQlFR3npEb1qVxlX589HpiV3c0djZEtbHT4OMq_erTZdQimdmEVEj2DhZddTdgp8gI_QpnalXXerUW8vL-aXhcFQg7pCiASLVi3Mo817LSe2LVpiwcKrgmjKvGrLdtVplCLspBmuciMQ9V1ShLpDdgMo2wERNYkzLTS7Tke0MlpRZPW04R1rIEF0lRphuE1yRTZleX6fjWnSgF4X-EaG4R3qE3hAeDqD8c-YE3DEeR-Y6HLtoi3IuifuQFXuiF_sAfjaPh3kXvlQavHwXjQRCGd0FwN_aise-iVB48P3oD3PTwRJRcIxwN_f1_ehJEmQ)
 
 ### 1. **用户表（User）**
 
@@ -98,7 +79,7 @@ CREATE TABLE category (
 
 ### 3. **商品表（Product）**
 
-商品表存储商品的详细信息，包括分类、库存、价格、图片等。
+商品表存储商品的详细信息，包括分类、库存、价格、图片等。**此表的卖家由 `userid` 关联，而不再使用商店表 (`shopid`)。**
 
 ```sql
 CREATE TABLE product (
@@ -108,30 +89,16 @@ CREATE TABLE product (
     stock INT NOT NULL,              -- 商品库存
     description TEXT,                -- 商品描述
     catid VARCHAR(64),               -- 商品分类ID
+    userid VARCHAR(64),              -- 卖家ID（关联用户表）
     image STRING,                      -- 商品图片的URL
     createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (catid) REFERENCES category(catid)  -- 外键关联分类表
+    FOREIGN KEY (catid) REFERENCES category(catid),  -- 外键关联分类表
+    FOREIGN KEY (userid) REFERENCES user(userid)    -- 外键关联用户表
 );
 ```
 
-### 4. **商店表（Shop）**
-
-存储卖家的商店信息。
-
-```sql
-CREATE TABLE shop (
-    shopid VARCHAR(64) PRIMARY KEY,    -- 商店ID
-    userid VARCHAR(64),                -- 卖家ID
-    shopname VARCHAR(100),             -- 商店名称
-    shopdesc TEXT,                     -- 商店描述
-    createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
-    updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
-    FOREIGN KEY (userid) REFERENCES user(userid)  -- 外键关联用户表
-);
-```
-
-### 5. **购物车表（Cart）**
+### 4. **购物车表（Cart）**
 
 存储买家购物车的信息。
 
@@ -145,7 +112,7 @@ CREATE TABLE cart (
 );
 ```
 
-### 6. **购物车商品表（CartItem）**
+### 5. **购物车商品表（CartItem）**
 
 存储购物车中每个商品的详细信息。
 
@@ -162,24 +129,24 @@ CREATE TABLE cartitem (
 );
 ```
 
-### 7. **订单表（Order）**
+### 6. **订单表（Order）**
 
-订单表存储买家所创建的订单。
+订单表存储买家所创建的订单。**此表使用 `sellerid` 来关联卖家，而不再使用商店表 (`shopid`)。**
 
 ```sql
 CREATE TABLE `order` (
     orderid VARCHAR(64) PRIMARY KEY,   -- 订单ID
     userid VARCHAR(64),                -- 买家ID
-    shopid VARCHAR(64),                -- 商店ID
+    sellerid VARCHAR(64),              -- 卖家ID
     status ENUM('pending', 'shipped', 'delivered') DEFAULT 'pending',  -- 订单状态（待发货、已发货、已完成）
     createtime DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 创建时间
     updatetime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新时间
     FOREIGN KEY (userid) REFERENCES user(userid),   -- 外键关联用户表
-    FOREIGN KEY (shopid) REFERENCES shop(shopid)    -- 外键关联商店表
+    FOREIGN KEY (sellerid) REFERENCES user(userid)  -- 外键关联卖家
 );
 ```
 
-### 8. **订单商品表（OrderItem）**
+### 7. **订单商品表（OrderItem）**
 
 存储每个订单包含的商品信息。
 
@@ -202,15 +169,15 @@ CREATE TABLE orderitem (
 
 1. **用户表（User）**：包含买家、卖家和管理员信息。
 2. **商品分类表（Category）**：用于商品的分类管理。
-3. **商品表（Product）**：包含商品的详细信息，包括名称、价格、库存、图片等。
-4. **商店表（Shop）**：卖家的商店信息。
-5. **购物车表（Cart）**：买家的购物车信息。
-6. **购物车商品表（CartItem）**：存储购物车中每个商品的详细信息。
-7. **订单表（Order）**：买家创建的订单信息。
-8. **订单商品表（OrderItem）**：存储订单中每个商品的详细信息。
+3. **商品表（Product）**：包含商品的详细信息，包括名称、价格、库存、图片等，且现在通过 `userid` 关联卖家。
+4. **购物车表（Cart）**：买家的购物车信息。
+5. **购物车商品表（CartItem）**：存储购物车中每个商品的详细信息。
+6. **订单表（Order）**：买家创建的订单信息，并通过 `sellerid` 关联卖家。
+7. **订单商品表（OrderItem）**：存储订单中每个商品的详细信息。
 
 ### 表之间的关系
 
-- `USER` 和 `ORDER` 表、`CART` 表、`SHOP` 表有一对多关系。
+- `USER` 和 `ORDER` 表、`CART` 表有一对多关系。
 - `CATEGORY` 和 `PRODUCT` 表有一对多关系。
-- `ORDER` 和 `ORDERITEM` 表、`CART` 和 `CARTITEM` 表、`SHOP` 和 `PRODUCT` 表都有一对多关系。
+- `ORDER` 和 `ORDERITEM` 表、`CART` 和 `CARTITEM` 表都有一对多关系。
+- `USER` 和 `PRODUCT` 表通过 `userid` 进行一对多关系，表示卖家与其商品的关联。

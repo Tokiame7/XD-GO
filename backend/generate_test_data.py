@@ -5,12 +5,6 @@ from datetime import datetime
 
 app = create_app()
 
-# 商品图片路径
-image_path = r"D:\XD-GO\backend\assets"
-
-# 获取图片文件名列表
-image_files = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"]
-
 
 def generate_sample_data():
     with app.app_context():
@@ -19,13 +13,6 @@ def generate_sample_data():
         db.create_all()
 
         # 创建用户
-        admin_user = User(
-            userid='admin_001',
-            username='admin',
-            password='admin123',
-            email='admin@example.com',
-            role='admin'
-        )
         buyer_user = User(
             userid='buyer_001',
             username='john_doe',
@@ -41,24 +28,8 @@ def generate_sample_data():
             email='jane@example.com',
             role='seller'
         )
-        db.session.add_all([admin_user, buyer_user, seller_user])
+        db.session.add_all([buyer_user, seller_user])
         db.session.commit()  # 提交用户数据
-
-        # 创建商店
-        tech_shop = Shop(
-            shopid='shop_tech',
-            userid=seller_user.userid,
-            shopname='Tech Store',
-            shopdesc='Specializing in electronics and gadgets'
-        )
-        fashion_shop = Shop(
-            shopid='shop_fashion',
-            userid=seller_user.userid,
-            shopname='Fashion Boutique',
-            shopdesc='Latest fashion trends'
-        )
-        db.session.add_all([tech_shop, fashion_shop])
-        db.session.commit()  # 提交商店数据
 
         # 创建商品分类
         electronics_category = Category(
@@ -81,7 +52,7 @@ def generate_sample_data():
             description='High-performance laptop for everyday use',
             catid=electronics_category.catid,
             image='https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34984.jpg',  # 图床 URL
-            shopid='shop_tech'  # 为商品指定卖家
+            userid=seller_user.userid  # 为商品指定卖家
         )
         tshirt_product = Product(
             proid='pro_tshirt',
@@ -91,7 +62,7 @@ def generate_sample_data():
             description='Comfortable cotton t-shirt',
             catid=clothing_category.catid,
             image='https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34983.jpg',  # 图床 URL
-            shopid='shop_fashion'  # 为商品指定卖家
+            userid=seller_user.userid  # 为商品指定卖家
         )
         phone_product = Product(
             proid='pro_phone',
@@ -101,7 +72,7 @@ def generate_sample_data():
             description='Latest model smartphone with amazing features',
             catid=electronics_category.catid,
             image='https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34982.jpg',  # 图床 URL
-            shopid='shop_tech'  # 为商品指定卖家
+            userid=seller_user.userid  # 为商品指定卖家
         )
         jacket_product = Product(
             proid='pro_jacket',
@@ -111,7 +82,7 @@ def generate_sample_data():
             description='Warm and cozy winter jacket',
             catid=clothing_category.catid,
             image='https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34981.jpg',
-            shopid='shop_fashion'  # 为商品指定卖家
+            userid=seller_user.userid  # 为商品指定卖家
         )
         tablet_product = Product(
             proid='pro_tablet',
@@ -121,7 +92,7 @@ def generate_sample_data():
             description='Lightweight tablet with a high-resolution display',
             catid=electronics_category.catid,
             image='https://pic1.imgdb.cn/item/67e2a8e40ba3d5a1d7e34980.jpg',
-            shopid='shop_tech'  # 为商品指定卖家
+            userid=seller_user.userid  # 为商品指定卖家
         )
         db.session.add_all([laptop_product, tshirt_product, phone_product, jacket_product, tablet_product])
         db.session.commit()  # 提交商品数据
@@ -152,13 +123,13 @@ def generate_sample_data():
         order_pending = Order(
             orderid='order_pending',
             userid=buyer_user.userid,
-            shopid=tech_shop.shopid,
+            sellerid=seller_user.userid,
             status='pending'
         )
         order_shipped = Order(
             orderid='order_shipped',
             userid=buyer_user.userid,
-            shopid=fashion_shop.shopid,
+            sellerid=seller_user.userid,
             status='shipped'
         )
         db.session.add_all([order_pending, order_shipped])

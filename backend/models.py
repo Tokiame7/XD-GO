@@ -32,13 +32,13 @@ class Product(db.Model):
     stock = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text)
     catid = db.Column(db.String(64), db.ForeignKey('category.catid'))
-    shopid = db.Column(db.String(64), db.ForeignKey('shop.shopid'))
+    userid = db.Column(db.String(64), db.ForeignKey('user.userid'))
     image = db.Column(db.String(255))  # 修改为 String 类型，存储图片 URL
     createtime = db.Column(db.DateTime, default=datetime.utcnow)
     updatetime = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # 添加关系
-    shop = db.relationship('Shop', backref=db.backref('products', lazy=True))
+    user = db.relationship('User', backref=db.backref('products', lazy=True))
 
 
 class Cart(db.Model):
@@ -59,21 +59,11 @@ class CartItem(db.Model):
     updatetime = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
-class Shop(db.Model):
-    __tablename__ = 'shop'
-    shopid = db.Column(db.String(64), primary_key=True)
-    userid = db.Column(db.String(64), db.ForeignKey('user.userid'))
-    shopname = db.Column(db.String(100), nullable=False)
-    shopdesc = db.Column(db.Text)
-    createtime = db.Column(db.DateTime, default=datetime.utcnow)
-    updatetime = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-
 class Order(db.Model):
     __tablename__ = 'order'
     orderid = db.Column(db.String(64), primary_key=True)
     userid = db.Column(db.String(64), db.ForeignKey('user.userid'))
-    shopid = db.Column(db.String(64), db.ForeignKey('shop.shopid'))
+    sellerid = db.Column(db.String(64), db.ForeignKey('user.userid'))
     status = db.Column(db.Enum('pending', 'shipped', 'delivered'), default='pending')
     createtime = db.Column(db.DateTime, default=datetime.utcnow)
     updatetime = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
