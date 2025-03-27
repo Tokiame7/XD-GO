@@ -53,7 +53,7 @@ def get_users():
                }, 500
 
 
-# 卖家获取店铺商品列表
+# 卖家获取店铺商品列表API[GET]   /api/sell_order/getProduct
 @main.route('/api/sell_order/getProduct', methods=['GET'])
 def get_product():
     try:
@@ -121,7 +121,7 @@ def get_product():
     return jsonify(response)
 
 
-# 用户注册接口
+# 用户注册接口API[POST]   /api/users/register
 @main.route('/api/users/register', methods=['POST'])
 def register_user():
     try:
@@ -188,7 +188,7 @@ def register_user():
         }), 400
 
 
-# 用户登录接口
+# 用户登录接口API[GET]   /api/users/login
 @main.route('/api/users/login', methods=['GET'])
 def login_user():
     try:
@@ -240,7 +240,7 @@ def login_user():
         }), 400
 
 
-# 买家首页获取所有商品的API
+# 买家首页获取所有商品的API[GET]   /api/product/productList
 @main.route('/api/product/productList', methods=['GET'])
 def get_all_products():
     try:
@@ -317,7 +317,7 @@ def token_required(f):
     return decorated
 
 
-# 卖家更新自己的商品列表
+# 卖家更新自己的商品列表API[POST]   /api/sell_order/updateProduct
 @main.route('/api/sell_order/updateProduct', methods=['POST'])
 @token_required
 def update_products(current_user):
@@ -400,7 +400,7 @@ def update_products(current_user):
         }), 400
 
 
-# 卖家增加自己的商品
+# 卖家增加自己的商品API[POST]   /api/sell_order/addProduct
 @main.route('/api/sell_order/addProduct', methods=['POST'])
 @token_required
 def add_product(current_user):
@@ -482,7 +482,7 @@ def add_product(current_user):
         }), 500
 
 
-# 卖家删除自己的商品
+# 卖家删除自己的商品API[DELETE]   /api/sell_order/deleteProduct
 @main.route('/api/sell_order/deleteProduct', methods=['DELETE'])
 @token_required
 def delete_product(current_user):
@@ -535,7 +535,7 @@ def delete_product(current_user):
         }), 500
 
 
-# 获取卖家商品详情
+# 卖家获取商品详情API[GET]   /api/product/seller_detail
 @main.route('/api/product/seller_detail', methods=['GET'])
 def seller_product_detail():
     goods_id = request.args.get('goodsId')
@@ -570,7 +570,7 @@ def seller_product_detail():
     return jsonify({"status": 0, "message": "成功", "data": {"detail": data}})
 
 
-# 获取用户个人信息
+# 买家/卖家获取用户个人信息API[GET]   /api/users/info
 @main.route('/api/users/info', methods=['GET'])
 @token_required
 def get_user_info(current_user):
@@ -619,7 +619,7 @@ def get_user_info(current_user):
         }), 500
 
 
-# 修改用户个人地址API[PUT]   /api/users/address_edit
+# 买家修改用户个人地址API[PUT]   /api/users/address_edit
 @main.route('/api/users/address_edit', methods=['PUT'])
 @token_required
 def update_shipping_address(current_user):
@@ -661,7 +661,7 @@ def update_shipping_address(current_user):
         }), 500
 
 
-# 获取某个商品的详细信息API[GET]   /api/product/detail
+# 买家获取某个商品的详细信息API[GET]   /api/product/detail
 @main.route('/api/product/detail', methods=['GET'])
 def get_product_detail():
     try:
@@ -711,7 +711,7 @@ def get_product_detail():
         }), 500  # 500 Internal Server Error
 
 
-# 创建订单发送给卖家API[POST]   /api/buy_order/submit
+# 买家创建订单发送给卖家API[POST]   /api/buy_order/submit
 @main.route('/api/buy_order/submit', methods=['POST'])
 @token_required
 def submit_order(current_user):
@@ -799,6 +799,368 @@ def submit_order(current_user):
                 "status": "pending"
             }
         }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 0,
+            "message": f"Error: {str(e)}"
+        }), 500  # Internal Server Error
+
+
+# 买家添加商品到购物车API[PUT]  /api/cart/add_product
+@main.route('/api/cart/add_product', methods=['PUT'])
+@token_required
+def add_product_to_cart(current_user):
+    try:
+        # Ensure the user is a buyer
+        if current_user.role != 'buyer':
+            return jsonify({
+                "code": 0,
+                "message": "Access denied: Only buyers can add products to cart"
+            }), 403
+
+        # Get the product ID and quantity from the request
+        data = request.get_json()
+        if not data or 'proid' not in data or 'quantity' not in data:
+            return jsonify({
+                "code": 0,
+                "message": "Invalid input: Missing required fields 'proid' and 'quantity'"
+            }), 400
+
+        # Check if the product exists
+        product = Product.query.filter_by(proid=data['proid']).first()
+        if not product:
+            return jsonify({
+                "code": 0,
+                "message": f"Product not found with proid: {data['proid']}"
+            }), 404
+
+        # Check if the user already has the product in their cart
+        cart_item = CartItem.query.filter_by(userid=current_user.userid, proid=data['proid']).first()
+        if cart_item:
+            # Update the quantity if the product is already in the cart
+            cart_item.quantity += data['quantity']
+            db.session.commit()
+        else:
+            # Add the product to the cart if it's not already there
+            cart_item = CartItem(
+                carid=str(uuid.uuid4()),
+                userid=current_user.userid,
+                proid=data['proid'],
+                quantity=data['quantity']
+            )
+            db.session.add(cart_item)
+            db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": "Product added to cart successfully",
+            "data": {
+                "proid": data['proid'],
+                "quantity": data['quantity']
+            }
+        }), 200  # OK
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 0,
+            "message": f"Error: {str(e)}"
+        }), 500  # Internal Server Error
+
+
+# 买家获取购物车列表API[GET]   /api/cart/list
+@main.route('/api/cart/list', methods=['GET'])
+@token_required
+def get_cart_list(current_user):
+    try:
+        # Ensure the user is a buyer
+        if current_user.role != 'buyer':
+            return jsonify({
+                "code": 0,
+                "message": "Access denied: Only buyers can view their cart"
+            }), 403
+
+        # Get the user's cart
+        cart = Cart.query.filter_by(userid=current_user.userid).first()
+        if not cart:
+            return jsonify({
+                "code": 0,
+                "message": "Cart is empty"
+            }), 400
+
+        # Get the cart items
+        cart_items = CartItem.query.filter_by(carid=cart.carid).all()
+        if not cart_items:
+            return jsonify({
+                "code": 0,
+                "message": "Cart is empty"
+            }), 400
+
+        # Get the product details for each item
+        products = []
+        for item in cart_items:
+            product = Product.query.filter_by(proid=item.proid).first()
+            if not product:
+                return jsonify({
+                    "code": 0,
+                    "message": f"Product not found: {item.proid}"
+                }), 404
+
+            products.append({
+                "proid": product.proid,
+                "name": product.name,
+                "price": str(product.price),
+                "quantity": item.quantity,
+                "image": product.image
+            })
+
+        # Return the cart list
+        return jsonify({
+            "code": 200,
+            "message": "Cart list retrieved successfully",
+            "data": {
+                "products": products
+            }
+        }), 200  # OK
+
+    except Exception as e:
+        return jsonify({
+            "code": 0,
+            "message": f"Error: {str(e)}"
+        }), 500  # Internal Server Error
+
+
+# 买家获取订单列表与详情API[GET]    /api/buy_order/list
+@main.route('/api/buy_order/list', methods=['GET'])
+@token_required
+def get_order_list(current_user):
+    try:
+        # Ensure the user is a buyer
+        if current_user.role != 'buyer':
+            return jsonify({
+                "code": 0,
+                "message": "Access denied: Only buyers can view their orders"
+            }), 403
+
+        # Get the user's orders
+        orders = Order.query.filter_by(userid=current_user.userid).all()
+        if not orders:
+            return jsonify({
+                "code": 0,
+                "message": "No orders found"
+            }), 404
+
+        # Get the order details for each order
+        order_list = []
+        for order in orders:
+            order_items = OrderItem.query.filter_by(orderid=order.orderid).all()
+            order_items_data = []
+            for item in order_items:
+                product = Product.query.filter_by(proid=item.proid).first()
+                if not product:
+                    return jsonify({
+                        "code": 0,
+                        "message": f"Product not found: {item.proid}"
+                    }), 404
+
+                order_items_data.append({
+                    "proid": product.proid,
+                    "name": product.name,
+                    "price": str(product.price),
+                    "quantity": item.quantity,
+                    "image": product.image
+                })
+
+            order_list.append({
+                "orderid": order.orderid,
+                "total_price": str(order.total_price),
+                "status": order.status,
+                "createtime": order.createtime.strftime("%Y-%m-%d %H:%M:%S"),
+                "order_items": order_items_data
+            })
+
+        # Return the order list
+        return jsonify({
+            "code": 200,
+            "message": "Order list retrieved successfully",
+            "data": {
+                "orders": order_list
+            }
+        }), 200  # OK
+
+    except Exception as e:
+        return jsonify({
+            "code": 0,
+            "message": f"Error: {str(e)}"
+        }), 500  # Internal Server Error
+
+
+# 卖家获取所有订单列表API[GET]   /api/sell_order/getList
+@main.route('/api/sell_order/list', methods=['GET'])
+@token_required
+def get_sell_order_list(current_user):
+    try:
+        # Ensure the user is a seller
+        if current_user.role !='seller':
+            return jsonify({
+                "code": 0,
+                "message": "Access denied: Only sellers can view their orders"
+            }), 403
+
+        # Get the seller's orders
+        orders = Order.query.filter_by(sellerid=current_user.userid).all()
+        if not orders:
+            return jsonify({
+                "code": 0,
+                "message": "No orders found"
+            }), 404
+
+        # Get the order details for each order
+        order_list = []
+        for order in orders:
+            order_items = OrderItem.query.filter_by(orderid=order.orderid).all()
+            order_items_data = []
+            for item in order_items:
+                product = Product.query.filter_by(proid=item.proid).first()
+                if not product:
+                    return jsonify({
+                        "code": 0,
+                        "message": f"Product not found: {item.proid}"
+                    }), 404
+
+                order_items_data.append({
+                    "proid": product.proid,
+                    "name": product.name,
+                    "price": str(product.price),
+                    "quantity": item.quantity,
+                    "image": product.image
+                })
+
+            order_list.append({
+                "orderid": order.orderid,
+                "total_price": str(order.total_price),
+                "status": order.status,
+                "createtime": order.createtime.strftime("%Y-%m-%d %H:%M:%S"),
+                "order_items": order_items_data
+            })
+
+        # Return the order list
+        return jsonify({
+            "code": 200,
+            "message": "Order list retrieved successfully",
+            "data": {
+                "orders": order_list
+            }
+        }), 200  # OK
+
+    except Exception as e:
+        return jsonify({
+            "code": 0,
+            "message": f"Error: {str(e)}"
+        }), 500  # Internal Server Error
+
+
+# 卖家修改订单状态[PUT]   /api/sell_order/updateStatus
+@main.route('/api/sell_order/updateStatus', methods=['PUT'])
+@token_required
+def update_order_status(current_user):
+    try:
+        # Ensure the user is a seller
+        if current_user.role !='seller':
+            return jsonify({
+                "code": 0,
+                "message": "Access denied: Only sellers can update order status"
+            }), 403
+
+        # Get the order ID and status from the request
+        data = request.get_json()
+        if not data or 'orderid' not in data or'status' not in data:
+            return jsonify({
+                "code": 0,
+                "message": "Invalid input: Missing required fields 'orderid' and'status'"
+            }), 400
+
+        # Check if the order exists
+        order = Order.query.filter_by(orderid=data['orderid']).first()
+        if not order:
+            return jsonify({
+                "code": 0,
+                "message": f"Order not found with orderid: {data['orderid']}"
+            }), 404
+
+        # Check if the status is valid
+        if data['status'] not in ['pending', 'completed', 'cancelled']:
+            return jsonify({
+                "code": 0,
+                "message": f"Invalid status: {data['status']}"
+            }), 400
+
+        # Update the order status
+        order.status = data['status']
+        db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": "Order status updated successfully",
+            "data": {
+                "orderid": data['orderid'],
+                "status": data['status']
+            }
+        }), 200  # OK
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 0,
+            "message": f"Error: {str(e)}"
+        }), 500  # Internal Server Error
+
+
+# 卖家修改商品API[PUT]   /api/product/seller_modify_product
+@main.route('/api/product/seller_modify_product', methods=['PUT'])
+@token_required
+def modify_product(current_user):
+    try:
+        # Ensure the user is a seller
+        if current_user.role !='seller':
+            return jsonify({
+                "code": 0,
+                "message": "Access denied: Only sellers can modify products"
+            }), 403
+
+        # Get the product ID and data from the request
+        data = request.get_json()
+        if not data or 'proid' not in data:  # or any other required fields
+            return jsonify({
+                "code": 0,
+                "message": "Invalid input: Missing required field 'proid'"
+            }), 400
+
+        # Check if the product exists
+        product = Product.query.filter_by(proid=data['proid']).first()
+        if not product:
+            return jsonify({
+                "code": 0,
+                "message": f"Product not found with proid: {data['proid']}"
+            }), 404
+
+        # Update the product data
+        product.name = data.get('name', product.name)
+        product.price = data.get('price', product.price)
+        product.description = data.get('description', product.description)
+        product.image = data.get('image', product.image)
+        product.stock = data.get('stock', product.stock)
+        db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": "Product modified successfully",
+            "data": {
+                "proid": data['proid']
+            }
+        }), 200  # OK
 
     except Exception as e:
         db.session.rollback()
