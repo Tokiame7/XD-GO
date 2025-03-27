@@ -8,7 +8,7 @@
         </el-button> -->
     </div>
     <div>
-      <button class='newtest' @click="sellerProducts.getSellerProductsList()">
+      <button class='newtest' @click="sellerProducts.getSellerProductsList(params.value)"><!-- 传入params.value不是params -->
         显示我已添加的商品
       </button>
     </div>
@@ -39,9 +39,16 @@ import { ArrowRight } from '@element-plus/icons-vue'
 import { useSellerProucts } from '@/stores/seller_products'
 
 
-const params = ref(1,1,'','seller_001')
-const sellerProducts = useSellerProucts()
+const params = ref({
+  page:1,
+  pageSize:10,
+  search:'',
+  sellerid:'seller_001'
+});
+
+const sellerProducts = useSellerProucts()//先创建实例
 console.log(sellerProducts)
+
 
 //sellerProducts.getSellerProductsList()
 </script>
@@ -54,6 +61,7 @@ console.log(sellerProducts)
 }
 
 .section {
+  //display: flex;
   margin-bottom: 40px;
 
   @media (max-width: 768px) {
@@ -72,33 +80,17 @@ console.log(sellerProducts)
     }
   }
 
-  &.flash-sale {
-    .countdown {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
-      .time-block {
-        background-color: #333;
-        color: #fff;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 16px;
-        font-weight: bold;
-      }
-    }
-
-    .flash-sale-card {
-      .progress {
-        margin-top: 8px;
-      }
-    }
-  }
-
   .product-list {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
+
+
+    @media (max-width: 2048px) {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
 
     @media (max-width: 1024px) {
       grid-template-columns: repeat(3, 1fr);
@@ -128,7 +120,8 @@ console.log(sellerProducts)
 
       .product-image {
         position: relative;
-        padding-top: 100%;
+        padding-top: 100%; // 关键：保持宽高比
+        width: 100%; // 确保填满父容器
 
         img {
           position: absolute;
@@ -136,7 +129,7 @@ console.log(sellerProducts)
           left: 0;
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: cover; // 裁剪图片以填充容器
         }
 
         .product-tag {
@@ -150,10 +143,6 @@ console.log(sellerProducts)
 
           &.hot {
             background-color: #f56c6c;
-          }
-
-          &.discount {
-            background-color: #e6a23c;
           }
         }
       }
@@ -178,14 +167,6 @@ console.log(sellerProducts)
           color: #f56c6c;
           font-size: 16px;
           font-weight: bold;
-
-          .original {
-            margin-left: 8px;
-            color: #999;
-            font-size: 12px;
-            text-decoration: line-through;
-            font-weight: normal;
-          }
         }
 
         .sales {
@@ -195,72 +176,6 @@ console.log(sellerProducts)
         }
       }
     }
-  }
-
-  .brand-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-
-    @media (max-width: 1024px) {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-    }
-
-    @media (max-width: 768px) {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    @media (max-width: 480px) {
-      grid-template-columns: repeat(1, 1fr);
-    }
-
-    .brand-card {
-      background-color: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-
-      img {
-        width: 100%;
-        height: 120px;
-        object-fit: cover;
-      }
-
-      .brand-info {
-        padding: 12px;
-        text-align: center;
-
-        h3 {
-          margin: 0 0 8px;
-          font-size: 16px;
-        }
-
-        p {
-          margin: 0 0 8px;
-          font-size: 12px;
-          color: #666;
-        }
-
-        .discount {
-          color: #f56c6c;
-          font-size: 14px;
-          font-weight: bold;
-        }
-      }
-    }
-  }
-
-  .load-more {
-    text-align: center;
-    margin-top: 20px;
   }
 }
 </style>
