@@ -120,7 +120,7 @@ const newProduct = ref({
   image: '',
   createtime: '',
   updatetime: ''
-});
+})
 
 // 表单区域
 const showAddModal = ref(false);

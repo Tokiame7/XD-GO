@@ -12,8 +12,11 @@ export function getProductList(params) {
 // 获取商品详情
 export function getProductDetail(id) {
   return request({
-    url: `/products/${id}`,
-    method: 'get'
+    url: `/api/product/seller_detail`,
+    method: 'get',
+    params: {
+      goodsId: id
+    }
   })
 }
 

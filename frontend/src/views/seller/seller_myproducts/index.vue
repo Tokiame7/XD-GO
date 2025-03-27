@@ -15,7 +15,7 @@
     <div class="product-list">
       <!-- v-for 渲染每一个 myProducts数组中元素，id 每一个的id便于维护dom ， class = 样式 ，点击事件传入方法product为当前商品-->
       <div v-for="product in sellerProducts.sellerProductsList" :key="product.productId" class="product-card"
-        @click="handleProductClick(product)">
+        @click="handleProductClick(product.productId)">
         <div class="product-image">
           <img :src="product.imageUrl" :alt="product.productName">
           <div class="product-tag hot">热销</div><!-- 热销位置样式 -->
@@ -28,6 +28,15 @@
         </div>
       </div>
     </div>
+     <!-- 可以在这里添加展示商品详情的部分 -->
+     <div v-if="getsellerproductDetail.sellerProductDetail">
+      <h2>商品详情</h2>
+      <p>商品名称: {{ getsellerproductDetail.sellerProductDetail.detail.goods_name }}</p>
+      <p>价格: ¥{{ getsellerproductDetail.sellerProductDetail.detail.price }}</p>
+      <!-- 其他详情信息 -->
+     </div>
+
+
   </div>
 
 </template>
@@ -36,7 +45,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ArrowRight } from '@element-plus/icons-vue'
-import { useSellerProucts } from '@/stores/seller_products'
+import { useSellerProucts ,useGetproductDetail} from '@/stores/seller_products'
 
 
 const params = ref({
@@ -47,9 +56,13 @@ const params = ref({
 });
 
 const sellerProducts = useSellerProucts()//先创建实例
+const getsellerproductDetail = useGetproductDetail();//返回的是getsellerproductDetail.detail
 console.log(sellerProducts)
-
-
+console.log(getsellerproductDetail)
+const handleProductClick= (id) =>{
+  const goodsid = ref(id)
+getsellerproductDetail.getSellerProductDetail(goodsid.value);
+}
 //sellerProducts.getSellerProductsList()
 </script>
 
