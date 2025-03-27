@@ -11,6 +11,9 @@
       <el-form-item>
         <el-button type="primary" @click="onSubmit">修改</el-button>
         <el-button @click="cancel">取消</el-button>
+
+        <el-button type="success" @click="goToAddressManage">管理收货地址</el-button>
+
       </el-form-item>
     </el-form>
   </div>
@@ -43,6 +46,14 @@ const onSubmit = () => {
 const cancel = () => {
   router.push('/')
 }
+
+
+// 新增路由跳转方法
+const goToAddressManage = () => {
+    router.push('/address')
+}
+
+
 </script>
 
 <style scoped lang="scss">
