@@ -9,22 +9,22 @@
     </div>
     <div>
       <button class='newtest' @click="sellerProducts.getSellerProductsList()">
-        显示商品
+        显示我已添加的商品
       </button>
     </div>
     <div class="product-list">
       <!-- v-for 渲染每一个 myProducts数组中元素，id 每一个的id便于维护dom ， class = 样式 ，点击事件传入方法product为当前商品-->
-      <div v-for="product in sellerProducts.sellerProductsList" :key="product.id" class="product-card"
+      <div v-for="product in sellerProducts.sellerProductsList" :key="product.productId" class="product-card"
         @click="handleProductClick(product)">
         <div class="product-image">
-          <img :src="product.image" :alt="product.name">
+          <img :src="product.imageUrl" :alt="product.productName">
           <div class="product-tag hot">热销</div><!-- 热销位置样式 -->
         </div>
         <div class="product-info">
-          <h3>{{ product.name }}</h3>
+          <h3>{{ product.productName }}</h3>
           <p class="desc">{{ product.description }}</p>
           <div class="price">¥{{ product.price.toFixed(2) }}</div>
-          <div class="sales">月销 {{ product.monthSales }}+</div>
+          <div class="sales">月销 {{ product.stock }}+</div>
         </div>
       </div>
     </div>
@@ -38,8 +38,11 @@ import { useRouter } from 'vue-router'
 import { ArrowRight } from '@element-plus/icons-vue'
 import { useSellerProucts } from '@/stores/seller_products'
 
+
+const params = ref(1,1,'','seller_001')
 const sellerProducts = useSellerProucts()
 console.log(sellerProducts)
+
 //sellerProducts.getSellerProductsList()
 </script>
 

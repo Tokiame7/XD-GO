@@ -132,7 +132,7 @@ export function deleteShopCategory(id) {
 // 获取店铺商品列表
 export function getShopProducts(params) {
   return request({
-    url: '/seller/products',
+    url: '/api/sell_order/getProduct',
     method: 'get',
     params,
   })

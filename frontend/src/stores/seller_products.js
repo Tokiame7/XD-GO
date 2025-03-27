@@ -85,11 +85,25 @@ export const useSellerProucts = defineStore('sellreproducts', () => {//第一个
 
   //定义修改数据的方法(action 同步+异步)
 
-  const getSellerProductsList = async (params) => {//异步action
-    // const res = await getShopProducts(params)
-    // sellerProductsList.value = res.data //其中data
-    sellerProductsList.value = exampleList//之后和API对接 暂时以example代替
-  }
+  // const getSellerProductsList = async (params) => {//异步action
+  //   // const res = await getShopProducts(params)
+  //   // sellerProductsList.value = res.data //其中data
+  //   sellerProductsList.value = exampleList//之后和API对接 暂时以example代替
+  // }
+
+  const getSellerProductsList = async (params) => {
+    try {
+      // 使用 await 等待 Promise 解决
+      const res = await getShopProducts(params);
+      // 赋值响应数据中的商品列表
+      sellerProductsList.value = res.data;
+    } catch (error) {
+      // 处理请求错误
+      console.error('获取卖家商品列表失败:', error);
+    }
+  };
+
+
   //导出需要的数据和方法
   return {
     sellerProductsList,
@@ -97,14 +111,4 @@ export const useSellerProucts = defineStore('sellreproducts', () => {//第一个
   }
 })
 
-// const getSellerProductsList = async (params) => {
-//   try {
-//       // 使用 await 等待 Promise 解决
-//       const res = await getShopProducts(params);
-//       // 赋值响应数据中的商品列表
-//       sellerProductsList.value = res.data; 
-//   } catch (error) {
-//       // 处理请求错误
-//       console.error('获取卖家商品列表失败:', error);
-//   }
-// };
+
