@@ -563,3 +563,91 @@ def seller_product_detail():
     }
 
     return jsonify({"status": 0, "message": "成功", "data": {"detail": data}})
+
+#获取用户个人信息
+@main.route('/api/users/info', methods=['GET'])
+@token_required
+def get_user_info(current_user):
+    try:
+        # 根据用户角色返回不同的信息
+        if current_user.role == 'buyer':
+            user_info = {
+                'userid': current_user.userid,
+                'username': current_user.username,
+                'email': current_user.email,
+                'phone': current_user.phone,
+                'role': current_user.role,
+                'shipping_address': current_user.shipping_address
+            }
+        elif current_user.role == 'seller':
+            user_info = {
+                'userid': current_user.userid,
+                'username': current_user.username,
+                'email': current_user.email,
+                'phone': current_user.phone,
+                'role': current_user.role
+            }
+        elif current_user.role == 'admin':
+            user_info = {
+                'userid': current_user.userid,
+                'username': current_user.username,
+                'email': current_user.email,
+                'role': current_user.role
+            }
+        else:
+            return jsonify({
+                "code": 0,
+                "message": "Invalid user role"
+            }), 400
+
+        return jsonify({
+            "code": 200,
+            "message": "User info retrieved successfully",
+            "data": user_info
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "code": 0,
+            "message": str(e)
+        }), 500
+
+@main.route('/api/users/address_edit', methods=['PUT'])
+@token_required
+def update_shipping_address(current_user):
+    try:
+        # 验证用户角色
+        if current_user.role != 'buyer':
+            return jsonify({
+                "code": 0,
+                "message": "Access denied: Only buyers can update shipping address"
+            }), 403
+
+        # 获取请求数据
+        data = request.get_json()
+        if not data or 'shipping_address' not in data:
+            return jsonify({
+                "code": 0,
+                "message": "Invalid input: Missing required field 'shipping_address'"
+            }), 400
+
+        # 更新收货地址
+        current_user.shipping_address = data['shipping_address']
+        db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": "Shipping address updated successfully",
+            "data": {
+                "userid": current_user.userid,
+                "username": current_user.username,
+                "new_shipping_address": current_user.shipping_address
+            }
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 0,
+            "message": str(e)
+        }), 500
