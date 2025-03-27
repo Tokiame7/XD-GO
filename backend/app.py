@@ -10,7 +10,9 @@ def create_database_if_not_exists():
     """测试数据库是否存在，不存在则创建"""
     connection = MySQLdb.connect(
         user='root',
+
         password='000150',  # replace with your password
+
         host='localhost'
     )
     cursor = connection.cursor()

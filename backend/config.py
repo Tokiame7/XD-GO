@@ -9,7 +9,9 @@ class Config:
 
 
 class DevelopmentConfig(Config):
+
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:000150@localhost:3306/xd_go'
+
     DEBUG = True
 
 
