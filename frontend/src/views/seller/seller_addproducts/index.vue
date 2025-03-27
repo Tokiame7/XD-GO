@@ -16,14 +16,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(product, index) in products" :key="index">
+        <tr v-for="product in sellerProducts.sellerProductsList" :key="product.productId">
           <td><input type="checkbox" v-model="selectedProducts" :value="product" /></td>
           <td>
             <template v-if="product.isEditing">
-              <input v-model="product.name" placeholder="商品名称" />
+              <input v-model="product.productName" placeholder="商品名称" />
             </template>
             <template v-else>
-              {{ product.name }}
+              {{ product.productName }}
             </template>
           </td>
           <td>
@@ -44,12 +44,12 @@
           </td>
           <td>
             <template v-if="product.isEditing">
-              <button @click="saveProduct(index)">保存</button>
-              <button @click="cancelEdit(index)">取消</button>
+              <button @click="saveProduct(product.productId)">保存</button>
+              <button @click="cancelEdit(product.productId)">取消</button>
             </template>
             <template v-else>
-              <button @click="editProduct(index)">编辑</button>
-              <button @click="deleteProduct(index)">删除</button>
+              <button @click="editProduct(product.productId)">编辑</button>
+              <button @click="deleteProduct(product.productId)">删除</button>
             </template>
           </td>
         </tr>
@@ -72,7 +72,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="showAddModal = false">取消</el-button>
-          <el-button type="primary" @click="handleConfirm">
+          <el-button type="primary" @click="handleConfirm()">
             保存
           </el-button>
         </div>
@@ -82,12 +82,45 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import { useSellerProucts } from '@/stores/seller_products';
+import { update } from 'lodash-es';
+import seller from '@/router/modules/seller';
+
+const params = ref({
+  page: 1,
+  pageSize: 10,
+  search: '',
+  sellerid: 'seller_001'
+});
 // 定义响应式数据
-const products = ref([]);//定义空列表
 const selectedProducts = ref([]);
 const selectAll = ref(false);
-const newProduct = ref({ name: '', price: 0, stock: 0 });
+const sellerProducts = useSellerProucts(); // 先创建实例
+
+onMounted(() => {
+  sellerProducts.getSellerProductsList().then(() => {
+    // 为每个商品对象添加 isEditing 属性
+    sellerProducts.sellerProductsList.forEach(product => {
+      product.isEditing = false;
+    });
+  });
+});
+
+// 在编辑页面上 商品列表的组成 = 原本数据库 + 是否被编辑对象 
+const New_Edit_ProductList = ref([]);
+const newProduct = ref({
+  proid: '',
+  name: '',
+  price: '',
+  stock: '',
+  description: '',
+  catid: '',
+  userid: '',
+  image: '',
+  createtime: '',
+  updatetime: ''
+});
 
 // 表单区域
 const showAddModal = ref(false);
@@ -95,67 +128,62 @@ const form = reactive({
   name: '',
   price: '',
   stock: ''
-})
+});
+
 const handleConfirm = () => {
   console.log('提交form:', form);
-
-}
-
-// // 获取商品数据
-// const fetchProducts = async () => {
-//   try {
-//     const response = await axios.get('/api/products');
-//     products.value = response.data;
-//   } catch (error) {
-//     console.error('获取商品数据失败:', error);
-//   }
-// };
-
-// // 保存商品数据
-// const saveProducts = async () => {
-//   try {
-//     await axios.post('/api/products', products.value);
-//   } catch (error) {
-//     console.error('保存商品数据失败:', error);
-//   }
-// };
-
-
-
+  // 这里可以调用保存表单数据的接口
+};
 
 // 切换全选状态
 const toggleSelectAll = () => {
   if (selectAll.value) {
-    selectedProducts.value = [...products.value];
+    selectedProducts.value = [...sellerProducts.sellerProductsList];
   } else {
     selectedProducts.value = [];
   }
 };
 
 // 编辑商品
-const editProduct = (index) => {
-  products.value[index].isEditing = true;
+const editProduct = (productId) => {
+  const product = sellerProducts.sellerProductsList.find(p => p.productId === productId);
+  if (product) {
+    product.isEditing = true;
+  }
 };
 
 // 保存商品修改
-const saveProduct = (index) => {
-  products.value[index].isEditing = false;
+const saveProduct = (productId) => {
+  const product = sellerProducts.sellerProductsList.find(p => p.productId === productId);
+  if (product) {
+    product.isEditing = false;
+    // 发送数据到后端时移除 isEditing 属性
+    const productToSend = { ...product };
+    delete productToSend.isEditing;
+    // 这里可以调用保存商品修改的接口
+    console.log('发送到后端的数据:', productToSend);
+  }
 };
 
 // 取消编辑
-const cancelEdit = (index) => {
-  // 恢复原始值（这里可以根据需求实现更复杂的逻辑，比如备份原始值）
-  products.value[index].isEditing = false;
+const cancelEdit = (productId) => {
+  const product = sellerProducts.sellerProductsList.find(p => p.productId === productId);
+  if (product) {
+    product.isEditing = false;
+  }
 };
 
 // 删除商品
-const deleteProduct = (index) => {
-  products.value.splice(index, 1);
+const deleteProduct = (productId) => {
+  const index = sellerProducts.sellerProductsList.findIndex(p => p.productId === productId);
+  if (index !== -1) {
+    sellerProducts.sellerProductsList.splice(index, 1);
+  }
 };
 
 // 添加商品
 const addProduct = () => {
-  products.value.push({ ...newProduct.value, isEditing: false });
+  New_Edit_ProductList.value.push({ ...newProduct.value, isEditing: false });
   newProduct.value = { name: '', price: 0, stock: 0 };
   showAddModal.value = false;
 };

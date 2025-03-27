@@ -61,6 +61,19 @@ export default {
         requireAuth: true,
       },
     },
+
+    {
+          path: '/address',
+          name: 'Address',
+          component: () => import('@/views/user/address/UserAddress.vue')
+    },
+
+    {
+          path: '/address/edit/:id?',
+          name: 'AddressEdit',
+          component: () => import('@/views/user/address/AddressEdit.vue')
+    },
+
     {
       path: 'order',
       name: 'Order',
