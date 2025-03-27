@@ -774,12 +774,13 @@ def submit_order(current_user):
             # Deduct stock
             product.stock -= item.quantity
 
-        # Create the order
+        # Create the order (status initially 'pending')
         order = Order(
             orderid=order_id,
             userid=current_user.userid,
             sellerid=cart_items[0].product.userid,  # Assuming all products are from the same seller
-            status='pending'
+            status='pending',
+            total_price=total_price  # Store the total price of the order
         )
         db.session.add(order)
         db.session.add_all(order_items)
@@ -789,16 +790,27 @@ def submit_order(current_user):
         CartItem.query.filter_by(carid=cart.carid).delete()
         db.session.commit()
 
-        # Return the order confirmation
-        return jsonify({
-            "code": 200,
-            "message": "Order submitted successfully",
-            "data": {
-                "orderid": order_id,
-                "total_price": str(total_price),
-                "status": "pending"
-            }
-        }), 200
+        # At this point, initiate the payment process. You can integrate with a payment provider API here.
+        payment_status = initiate_payment(order_id, total_price)
+
+        # If payment is successful, update the order status
+        if payment_status == "success":
+            order.status = 'paid'
+            db.session.commit()
+            return jsonify({
+                "code": 200,
+                "message": "Order submitted and paid successfully",
+                "data": {
+                    "orderid": order_id,
+                    "total_price": str(total_price),
+                    "status": "paid"
+                }
+            }), 200
+        else:
+            return jsonify({
+                "code": 0,
+                "message": "Payment failed, please try again"
+            }), 400
 
     except Exception as e:
         db.session.rollback()
@@ -806,6 +818,17 @@ def submit_order(current_user):
             "code": 0,
             "message": f"Error: {str(e)}"
         }), 500  # Internal Server Error
+
+
+# 支付接口模拟函数，仅供参考
+def initiate_payment(order_id, total_price):
+    # This function would interact with a payment gateway like PayPal, Stripe, etc.
+    # For now, we simulate a successful payment process
+    # Here you would send a request to a payment gateway API, then return success/failure status
+
+    # Example (mocked) payment status: returning success directly.
+    return "success"
+
 
 
 # 买家添加商品到购物车API[PUT]  /api/cart/add_product
