@@ -530,3 +530,36 @@ def delete_product(current_user):
             "code": 0,
             "message": f"Deletion failed: {str(e)}"
         }), 500
+
+@main.route('/api/product/seller_detail', methods=['GET'])
+def seller_product_detail():
+    goods_id = request.args.get('goodsId')
+
+    if not goods_id:
+        return jsonify({"status": 1, "message": "商品ID不能为空", "data": {}})
+
+    product = Product.query.filter_by(proid=goods_id).first()
+
+    if not product:
+        return jsonify({"status": 1, "message": "商品不存在", "data": {}})
+
+    seller = User.query.filter_by(userid=product.userid).first()
+
+    data = {
+        "goods_id": product.proid,
+        "goods_name": product.name,
+        "price": str(product.price),
+        "stock": product.stock,
+        "description": product.description,
+        "category_id": product.catid,
+        "image": product.image,
+        "seller_info": {
+            "seller_id": seller.userid,
+            "seller_name": seller.username,
+            "contact": seller.phone
+        },
+        "createtime": product.createtime.strftime("%Y-%m-%d %H:%M:%S"),
+        "updatetime": product.updatetime.strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    return jsonify({"status": 0, "message": "成功", "data": {"detail": data}})
