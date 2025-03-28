@@ -18,11 +18,10 @@ export function getOrderInfo(orderId) {
 }
 
 // 获取订单列表
-export function getOrderList(params) {
+export function getOrderList() {
   return request({
-    url: '/order/list',
+    url: '/api/sell_order/list',
     method: 'get',
-    params
   })
 }
 

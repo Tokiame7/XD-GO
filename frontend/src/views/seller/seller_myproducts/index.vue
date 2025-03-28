@@ -7,11 +7,6 @@
           查看更多<el-icon><arrow-right /></el-icon>
         </el-button> -->
     </div>
-    <div>
-      <button class='newtest' @click="sellerProducts.getSellerProductsList(params.value)"><!-- 传入params.value不是params -->
-        显示我已添加的商品
-      </button>
-    </div>
     <div class="product-list">
       <!-- v-for 渲染每一个 myProducts数组中元素，id 每一个的id便于维护dom ， class = 样式 ，点击事件传入方法product为当前商品-->
       <div v-for="product in sellerProducts.sellerProductsList" :key="product.productId" class="product-card"
@@ -34,36 +29,54 @@
       <p>商品名称: {{ getsellerproductDetail.sellerProductDetail.detail.goods_name }}</p>
       <p>价格: ¥{{ getsellerproductDetail.sellerProductDetail.detail.price }}</p>
       <!-- 其他详情信息 -->
-     </div>
-
-
+    </div>
   </div>
 
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { ArrowRight } from '@element-plus/icons-vue'
+import { ref, onMounted,watch } from 'vue'
 import { useSellerProucts ,useGetproductDetail} from '@/stores/seller_products'
+import seller from '@/router/modules/seller';
+import { useRouter } from 'vue-router';
 
+//pinia打包 创建实例方法
+const sellerProducts = useSellerProucts()
+const getsellerproductDetail = useGetproductDetail();//数据体（detail）返回的是getsellerproductDetail.detail
 
-const params = ref({
+const userid = reactive({
   page:1,
   pageSize:10,
-  search:'',
-  sellerid:'seller_001'
-});
+  sellerid : 'seller_001',
+  search:''
+})
+const imageloading = ref(false)
+const router = useRouter()
+//onM...组件挂载后紧跟的操作
+onMounted(()=>{
+  sellerProducts.getSellerProductsList(userid)
+  
+})
 
-const sellerProducts = useSellerProucts()//先创建实例
-const getsellerproductDetail = useGetproductDetail();//返回的是getsellerproductDetail.detail
-console.log(sellerProducts)
-console.log(getsellerproductDetail)
+//当商品变化时立即执行一次获取商品
+watch(sellerProducts.sellerProductsList,()=>{
+  sellerProducts.getSellerProductsList()
+},
+{immediate:true}
+)
+
+// setTimeout(()=>{
+//   router.reload()
+// },3000)
+
+//点击图片获得卖家商品详细数据 传入当前商品id
 const handleProductClick= (id) =>{
-  const goodsid = ref(id)
-getsellerproductDetail.getSellerProductDetail(goodsid.value);
+ // const goodsid = ref(id)
+  //传入goodsid
+getsellerproductDetail.getSellerProductDetail(id);
+imageloading = false
 }
-//sellerProducts.getSellerProductsList()
+
 </script>
 
 <style lang="scss" scoped>

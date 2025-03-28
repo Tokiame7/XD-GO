@@ -38,9 +38,9 @@ export function createProduct(data) {
 }
 
 // 卖家 - 更新商品
-export function updateProduct(id, data) {
+export function updateProduct(data) {
   return request({
-    url: `/seller/products/${id}`,
+    url: `/api/sell_order/updateProduct`,
     method: 'put',
     data
   })
