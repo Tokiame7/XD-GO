@@ -477,8 +477,9 @@ def add_product(current_user):
 
     except Exception as e:
         db.session.rollback()
+        print(e)
         return jsonify({
-            "code": 0,
+            "code": 500,
             "message": f"Server error: {str(e)}"
         }), 500
 
@@ -1210,4 +1211,39 @@ def modify_product(current_user):
         return jsonify({
             "code": 0,
             "message": f"Error: {str(e)}"
+        }), 500  # Internal Server Error
+
+
+# 获取所有商品类别API[GET]   /api/product/category
+@main.route('/api/product/category', methods=['GET'])
+def get_all_categories():
+    try:
+        # 查询所有商品类别
+        categories = Category.query.all()
+
+        # 将商品类别数据转换为字典列表
+        category_list = []
+        for category in categories:
+            category_data = {
+                'categoryId': category.catid,
+                'categoryName': category.name,
+                'createTime': category.createtime.strftime('%Y-%m-%d %H:%M:%S'),
+                'updateTime': category.updatetime.strftime('%Y-%m-%d %H:%M:%S')
+            }
+            category_list.append(category_data)
+
+        # 返回商品类别数据
+        return jsonify({
+            'code': 200,
+            'message': '获取商品类别列表成功',
+            'data': {
+                'categories': category_list
+            }
+        }), 200  # OK
+
+    except Exception as e:
+        # 捕获异常并返回错误信息
+        return jsonify({
+            'code': 500,
+            'message': f"Error: {str(e)}"
         }), 500  # Internal Server Error
