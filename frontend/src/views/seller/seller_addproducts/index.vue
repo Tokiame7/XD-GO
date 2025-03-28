@@ -63,9 +63,6 @@
     <el-form-item label="库存">
       <el-input v-model.number="form.stock" />
     </el-form-item>
-    <el-form-item label="分类id">
-      <el-input v-model="form.catid" />
-    </el-form-item>
     <el-form-item label="图片url">
       <el-input v-model="form.image" />
     </el-form-item>
@@ -107,9 +104,6 @@
 <script setup>
 import { ref, reactive, onMounted , watchEffect } from 'vue';
 import { useSellerProucts,useDeleteProduct,useAddProduct } from '@/stores/seller_products';
-import { update } from 'lodash-es';
-import seller from '@/router/modules/seller';
-
 
 const params = ref({
   page: 1,
@@ -117,14 +111,16 @@ const params = ref({
   search: '',
   sellerid: 'seller_001'
 });
-// 定义响应式数据
-const loading = ref(true);//加载对象
-const sellerProducts = useSellerProucts(); // 先创建实例
+
+// 先创建实例
+const sellerProducts = useSellerProucts(); 
 const addproduct = useAddProduct();
 const deleproduct = useDeleteProduct();
+
+const loading = ref(true);//加载对象
 const products = ref([])//当前响应式对象
 const dialogVisible = ref(false)//模态框状态
-//初始化的空表单 ，深层响应
+//初始化的空表单
 const initialform = {
   name: '',
   productId: '',
@@ -138,28 +134,27 @@ const initialform = {
   catid:'',
   sellerId:''
 }
-
 const form1 = {
   name: 'a',
   productId: 'a',
   description: 'a',
   price: 1,
   stock: 1,
-  createTime: 'a',
-  updateTime: 'a',
+  createTime: '',
+  updateTime: '',
   category: 'a',
   image:'a',
-  catid:'a',
+  catid:'cat_clothing',
   sellerId:'seller_001'
 }
-//赋值响应
+//初始化响应
 const form = reactive({...initialform});
 
 //提交表单
 const onSubmit = () => {
   //此处实现提交后端
-addproduct.createProducts(form.value)
-addproduct.createProducts(form1.value)
+addproduct.createProducts(form)
+addproduct.createProducts(form1)
   console.log('submit!')
   //提交后把表单重置
   resetForm();
@@ -176,7 +171,7 @@ onMounted(() => {
   sellerProducts.getSellerProductsList();
 });
 
-//监听数据变化同步数据变化
+//监听数据变化同步数据变化 立即执行一次
 watchEffect(() => {
     console.log('sellerProductsList 发生变化:', sellerProducts.sellerProductsList);
     if (sellerProducts.sellerProductsList.length > 0) {

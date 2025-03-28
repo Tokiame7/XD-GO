@@ -5,15 +5,14 @@ import { Axios } from 'axios'
 //pinia 就是打包数据和方法让这些数据在几个组件间被统一管理
 import { getShopProducts, getOrderList } from '@/api/seller'
 import { getProductDetail, deleteProduct, createProduct } from '@/api/product'
-import seller from '@/router/modules/seller'
 
+
+//获取卖家商品列表
 export const useSellerProucts = defineStore('sellerproducts', () => {//第一个属性是唯一属性
   //定义数据
   const sellerProductsList = ref([])
 
   //定义修改数据的方法(action 同步+异步)
-
-
   const getSellerProductsList = async (params) => {
     try {
       // 使用 await 等待 Promise 解决
@@ -26,8 +25,6 @@ export const useSellerProucts = defineStore('sellerproducts', () => {//第一个
     }
   };
 
-
-
   //导出需要的数据和方法
   return {
     sellerProductsList,
@@ -35,9 +32,9 @@ export const useSellerProucts = defineStore('sellerproducts', () => {//第一个
   }
 })
 
-
+//获得商品详细data.detail = {0 , '成功' , detail}
+//detail = {商品所有信息,卖家信息,创建时间}
 export const useGetproductDetail = defineStore('sellergetproductdetail', () => {
-
 
   const sellerProductDetail = ref()
 
@@ -49,13 +46,14 @@ export const useGetproductDetail = defineStore('sellergetproductdetail', () => {
       console.error('获取商品细节失败', error);
     }
   };
-
   return {
     sellerProductDetail,
     getSellerProductDetail
   }
 })
-//删除方法
+
+
+//删除卖家商品
 export const useDeleteProduct = defineStore('deleteproduct', () => {
 
   const deleName = ref([])
@@ -67,27 +65,24 @@ export const useDeleteProduct = defineStore('deleteproduct', () => {
       console.log('删除商品失败', error);
     }
   }
-
   return {
     DeleteProduct,
     deleName
   }
 })
+
+
 //增加方法
 export const useAddProduct = defineStore('addproduct', () => {
-
 
   const createProducts = async (data) => {
     try {
       const res = await createProduct(data);
       console.log('添加成功:', res);
-      // 刷新商品列表
-      sellerProducts.getSellerProductsList();
     } catch (error) {
       console.log('增加商品失败', error);
     }
   }
-
   return {
     createProducts
   }
@@ -105,7 +100,6 @@ export const useGetOrder = defineStore('getOrder', () => {
       console.log('获取订单失败', error);
     }
   }
-
   return {
     getorders,
     orderList
