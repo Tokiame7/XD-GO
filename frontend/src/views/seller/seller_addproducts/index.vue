@@ -1,91 +1,115 @@
 <template>
   <div>
-    <!-- 顶部按钮 -->
-    <div class="button-container">
-      <button @click="showAddModal = true" class="add-product-button">添加商品</button>
-    </div>
     <!-- 商品列表 -->
-    <table>
-      <thead>
-        <tr>
-          <th><input type="checkbox" v-model="selectAll" @change="toggleSelectAll" /></th>
-          <th>商品名称</th>
-          <th>价格</th>
-          <th>库存</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="product in sellerProducts.sellerProductsList" :key="product.productId">
-          <td><input type="checkbox" v-model="selectedProducts" :value="product" /></td>
-          <td>
-            <template v-if="product.isEditing">
-              <input v-model="product.productName" placeholder="商品名称" />
-            </template>
-            <template v-else>
-              {{ product.productName }}
-            </template>
-          </td>
-          <td>
-            <template v-if="product.isEditing">
-              <input v-model="product.price" placeholder="价格" type="number" />
-            </template>
-            <template v-else>
-              {{ product.price }}
-            </template>
-          </td>
-          <td>
-            <template v-if="product.isEditing">
-              <input v-model="product.stock" placeholder="库存" type="number" />
-            </template>
-            <template v-else>
-              {{ product.stock }}
-            </template>
-          </td>
-          <td>
-            <template v-if="product.isEditing">
-              <button @click="saveProduct(product.productId)">保存</button>
-              <button @click="cancelEdit(product.productId)">取消</button>
-            </template>
-            <template v-else>
-              <button @click="editProduct(product.productId)">编辑</button>
-              <button @click="deleteProduct(product.productId)">删除</button>
-            </template>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <template v-if="loading">
+      <p>数据加载中，请稍候...</p>
+    </template>
+    <template v-else>
+    <el-table :data="products" style="width: 100%" max-height="250">
+    <el-table-column fixed prop="productName" label="商品名" width="150" />
+    <el-table-column prop="productId" label="id" width="120" />
+    <el-table-column prop="price" label="价格" width="80" />
+    <el-table-column prop="stock" label="销量" width="80" />
+    <el-table-column prop="category" label="分类" width="120" />
+    <el-table-column prop="description" label="描述" width="350" />
+    <el-table-column prop="createTime" label="创建时间" width="120" />
+    <el-table-column prop="updateTime" label="更新时间" width="120" />
+    <el-table-column prop="imageUrl" label="图片URL" width="300" />
+    <el-table-column prop="sellerId" label="所属用户" width="120" />
+    <el-table-column prop="catid" label="分类id" width="120" />
+    <el-table-column fixed="right" label="Operations" min-width="120">
+      <template #default="scope">
+        <el-button
+          link
+          type="primary"
+          size="small"
+          @click.prevent="delepro(scope.row.productId)"
+        >
+          Remove
+        </el-button>
+        <el-button
+          link
+          type="primary"
+          size="small"
+          @click.prevent=""
+        >
+          Edit
+        </el-button>
+      </template>
+     </el-table-column>
+     </el-table>
+      <el-button class="mt-4" style="width: 100%" @click="dialogVisible = true">
+        Add Item
+      </el-button>
+      </template>
     <!-- 添加商品模态框 -->
     <!-- 弹出添加商品 -->
-    <el-dialog v-model="showAddModal" title="编辑商品" width="80%">
-      <el-form :model="form">
-        <el-form-item label="商品名称">
-          <el-input v-model="form.name" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="商品价格">
-          <el-input v-model="form.price" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="商品库存">
-          <el-input v-model="form.stock" autocomplete="off" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="showAddModal = false">取消</el-button>
-          <el-button type="primary" @click="handleConfirm()">
-            保存
-          </el-button>
-        </div>
-      </template>
-    </el-dialog>
+    <el-dialog v-model="dialogVisible" :modal="false">
+      <!-- 模态框主内容 -->
+    <el-form :model="form" label-width="auto" style="max-width: 600px">
+      <!-- 第一个框 -->
+    <el-form-item label="商品名称">
+      <el-input v-model="form.name" />
+    </el-form-item>
+    <el-form-item label="商品id">
+      <el-input v-model="form.productId" />
+    </el-form-item>
+    <el-form-item label="描述">
+      <el-input v-model="form.description" />
+    </el-form-item>
+    <el-form-item label="价格">
+      <el-input v-model.number="form.price" />
+    </el-form-item>
+    <el-form-item label="库存">
+      <el-input v-model.number="form.stock" />
+    </el-form-item>
+    <el-form-item label="分类id">
+      <el-input v-model="form.catid" />
+    </el-form-item>
+    <el-form-item label="图片url">
+      <el-input v-model="form.image" />
+    </el-form-item>
+     <!-- 选项框 -->
+    <el-form-item label="商品分类">
+      <el-checkbox-group v-model="form.type">
+        <el-checkbox value="Online activities" name="type">
+          Clothing
+        </el-checkbox>
+        <el-checkbox value="Promotion activities" name="type">
+          Electronics
+        </el-checkbox>
+      </el-checkbox-group>
+    </el-form-item>
+<!-- 多内容框 /文件框-->
+    <el-form-item label="其他">
+      <el-input v-model="form.desc" type="textarea" />
+    </el-form-item>
+
+    <el-form-item>
+      <el-button type="primary" @click="onSubmit">创建商品</el-button>
+      <el-button @click="resetForm">清除内容</el-button>
+    </el-form-item>
+
+  </el-form>
+    <!-- 底部按键 -->
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">
+          确认
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
-import { useSellerProucts } from '@/stores/seller_products';
+import { ref, reactive, onMounted , watchEffect } from 'vue';
+import { useSellerProucts,useDeleteProduct,useAddProduct } from '@/stores/seller_products';
 import { update } from 'lodash-es';
 import seller from '@/router/modules/seller';
+
 
 const params = ref({
   page: 1,
@@ -94,161 +118,78 @@ const params = ref({
   sellerid: 'seller_001'
 });
 // 定义响应式数据
-const selectedProducts = ref([]);
-const selectAll = ref(false);
+const loading = ref(true);//加载对象
 const sellerProducts = useSellerProucts(); // 先创建实例
-
-onMounted(() => {
-  sellerProducts.getSellerProductsList().then(() => {
-    // 为每个商品对象添加 isEditing 属性
-    sellerProducts.sellerProductsList.forEach(product => {
-      product.isEditing = false;
-    });
-  });
-});
-
-// 在编辑页面上 商品列表的组成 = 原本数据库 + 是否被编辑对象 
-const New_Edit_ProductList = ref([]);
-const newProduct = ref({
-  proid: '',
+const addproduct = useAddProduct();
+const deleproduct = useDeleteProduct();
+const products = ref([])//当前响应式对象
+const dialogVisible = ref(false)//模态框状态
+//初始化的空表单 ，深层响应
+const initialform = {
   name: '',
-  price: '',
-  stock: '',
+  productId: '',
   description: '',
-  catid: '',
-  userid: '',
-  image: '',
-  createtime: '',
-  updatetime: ''
-})
+  price: 0,
+  stock: 0,
+  createTime: '',
+  updateTime: '',
+  category: '',
+  image:'',
+  catid:'',
+  sellerId:''
+}
 
-// 表单区域
-const showAddModal = ref(false);
-const form = reactive({
-  name: '',
-  price: '',
-  stock: ''
+const form1 = {
+  name: 'a',
+  productId: 'a',
+  description: 'a',
+  price: 1,
+  stock: 1,
+  createTime: 'a',
+  updateTime: 'a',
+  category: 'a',
+  image:'a',
+  catid:'a',
+  sellerId:'seller_001'
+}
+//赋值响应
+const form = reactive({...initialform});
+
+//提交表单
+const onSubmit = () => {
+  //此处实现提交后端
+addproduct.createProducts(form.value)
+addproduct.createProducts(form1.value)
+  console.log('submit!')
+  //提交后把表单重置
+  resetForm();
+}
+
+//重置表单函数
+const resetForm = () => {
+  // 使用 Object.assign 重置表单数据
+  Object.assign(form, initialform);
+};
+
+//整个组件挂载后的行为
+onMounted(() => {
+  sellerProducts.getSellerProductsList();
 });
 
-const handleConfirm = () => {
-  console.log('提交form:', form);
-  // 这里可以调用保存表单数据的接口
-};
+//监听数据变化同步数据变化
+watchEffect(() => {
+    console.log('sellerProductsList 发生变化:', sellerProducts.sellerProductsList);
+    if (sellerProducts.sellerProductsList.length > 0) {
+        products.value = sellerProducts.sellerProductsList;
+        loading.value = false;//不要忘记加载
+    }
+});
 
-// 切换全选状态
-const toggleSelectAll = () => {
-  if (selectAll.value) {
-    selectedProducts.value = [...sellerProducts.sellerProductsList];
-  } else {
-    selectedProducts.value = [];
-  }
-};
-
-// 编辑商品
-const editProduct = (productId) => {
-  const product = sellerProducts.sellerProductsList.find(p => p.productId === productId);
-  if (product) {
-    product.isEditing = true;
-  }
-};
-
-// 保存商品修改
-const saveProduct = (productId) => {
-  const product = sellerProducts.sellerProductsList.find(p => p.productId === productId);
-  if (product) {
-    product.isEditing = false;
-    // 发送数据到后端时移除 isEditing 属性
-    const productToSend = { ...product };
-    delete productToSend.isEditing;
-    // 这里可以调用保存商品修改的接口
-    console.log('发送到后端的数据:', productToSend);
-  }
-};
-
-// 取消编辑
-const cancelEdit = (productId) => {
-  const product = sellerProducts.sellerProductsList.find(p => p.productId === productId);
-  if (product) {
-    product.isEditing = false;
-  }
-};
-
-// 删除商品
-const deleteProduct = (productId) => {
-  const index = sellerProducts.sellerProductsList.findIndex(p => p.productId === productId);
-  if (index !== -1) {
-    sellerProducts.sellerProductsList.splice(index, 1);
-  }
-};
-
-// 添加商品
-const addProduct = () => {
-  New_Edit_ProductList.value.push({ ...newProduct.value, isEditing: false });
-  newProduct.value = { name: '', price: 0, stock: 0 };
-  showAddModal.value = false;
-};
+//删除商品
+const delepro = (proid)=>{
+  deleproduct.DeleteProduct(proid);
+}
 </script>
 
 <style scoped>
-.button-container {
-  margin-bottom: 2px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
-}
-
-.modal {
-  display: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.add-product-button {
-  background-color: #003366;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.add-product-button:active {
-  background-color: #336699;
-}
 </style>

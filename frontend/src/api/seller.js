@@ -156,13 +156,7 @@ export function updateProduct(id, data) {
   })
 }
 
-// 删除商品
-export function deleteProduct(id) {
-  return request({
-    url: `/seller/product/${id}`,
-    method: 'delete',
-  })
-}
+
 
 // 商品上下架
 export function updateProductStatus(id, status) {
@@ -270,10 +264,10 @@ export function getOrderStats() {
     method: 'get',
   })
 }
-
+//获取订单列表
 export function getOrderList(params) {
   return request({
-    url: '/seller/orders',
+    url: '/api/sell_order/list',
     method: 'get',
     params,
   })

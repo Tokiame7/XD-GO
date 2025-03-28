@@ -31,7 +31,7 @@ export function getCategories() {
 // 卖家 - 创建商品
 export function createProduct(data) {
   return request({
-    url: '/seller/products',
+    url: '/api/sell_order/addProduct',
     method: 'post',
     data
   })
@@ -49,7 +49,10 @@ export function updateProduct(id, data) {
 // 卖家 - 删除商品
 export function deleteProduct(id) {
   return request({
-    url: `/seller/products/${id}`,
-    method: 'delete'
+    url: `/api/sell_order/deleteProduct`,
+    method: 'delete',
+    data: {
+      proid: id
+    }
   })
 }

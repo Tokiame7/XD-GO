@@ -12,6 +12,7 @@
           <el-menu mode="horizontal" :router="true" :default-active="activeMenu">
             <el-menu-item index="/seller">您的商品</el-menu-item>
             <el-menu-item index="/addproducts">编辑商品</el-menu-item>
+            <el-menu-item index="/sellerorders">我的订单</el-menu-item>
             <el-menu-item index="/order">切换为买家</el-menu-item>
           </el-menu>
         </div>
