@@ -133,17 +133,17 @@ def generate_sample_data():
             CartItem(
                 carid=buyer_cart.carid,
                 proid=products[0].proid,
-                quantity=1
+                quantity=5
             ),
             CartItem(
                 carid=buyer_cart.carid,
                 proid=products[1].proid,
-                quantity=2
+                quantity=5
             ),
             CartItem(
                 carid=buyer_cart.carid,
                 proid=products[5].proid,
-                quantity=1
+                quantity=5
             )
         ]
         db.session.add_all(cart_items)
