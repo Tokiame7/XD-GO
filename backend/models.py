@@ -65,8 +65,11 @@ class Order(db.Model):
     userid = db.Column(db.String(64), db.ForeignKey('user.userid'))
     sellerid = db.Column(db.String(64), db.ForeignKey('user.userid'))
     status = db.Column(db.Enum('pending', 'shipped', 'delivered'), default='pending')
+    totalprice = db.Column(db.Numeric(10, 2), nullable=False, default=0.00)
     createtime = db.Column(db.DateTime, default=datetime.utcnow)
     updatetime = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    items = db.relationship('OrderItem', backref='order', lazy=True)
 
 
 class OrderItem(db.Model):
