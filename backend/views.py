@@ -710,112 +710,136 @@ def get_product_detail():
 @token_required
 def submit_order(current_user):
     try:
-        # Ensure the user is a buyer
+        # 确保用户是买家
         if current_user.role != 'buyer':
             return jsonify({
-                "code": 0,
+                "code": 403,
                 "message": "Access denied: Only buyers can submit orders"
             }), 403
 
-        # Retrieve user's cart
+        # 获取购物车信息
         cart = Cart.query.filter_by(userid=current_user.userid).first()
         if not cart:
             return jsonify({
-                "code": 0,
+                "code": 400,
                 "message": "Cart is empty"
             }), 400
 
         cart_items = CartItem.query.filter_by(carid=cart.carid).all()
         if not cart_items:
             return jsonify({
-                "code": 0,
+                "code": 400,
                 "message": "No items in the cart"
             }), 400
 
-        # Initialize order details
-        order_id = str(uuid.uuid4())
-        total_price = 0
-        order_items = []
-
-        # Loop through cart items and check stock
+        # 按卖家分组商品
+        grouped_items = {}
         for item in cart_items:
             product = Product.query.filter_by(proid=item.proid).first()
             if not product:
                 return jsonify({
-                    "code": 0,
+                    "code": 404,
                     "message": f"Product not found: {item.proid}"
                 }), 404
 
             if item.quantity > product.stock:
                 return jsonify({
-                    "code": 0,
+                    "code": 400,
                     "message": f"Insufficient stock for product: {product.name}"
                 }), 400
 
-            # Calculate total price for the order
-            total_price += product.price * item.quantity
+            if product.userid not in grouped_items:
+                grouped_items[product.userid] = []
+            grouped_items[product.userid].append((item, product))
 
-            # Add item to order items
-            order_item = OrderItem(
-                orderid=order_id,
-                proid=product.proid,
-                productname=product.name,
-                price=product.price,
-                quantity=item.quantity
-            )
-            order_items.append(order_item)
+        # 开始数据库事务
+        total_orders = []
+        try:
+            for seller_id, items in grouped_items.items():
+                # 创建新订单
+                order_id = str(uuid.uuid4())
+                totalprice = 0
+                order_items = []
 
-            # Deduct stock
-            product.stock -= item.quantity
+                for item, product in items:
+                    totalprice += product.price * item.quantity
+                    order_items.append(OrderItem(
+                        orderid=order_id,
+                        proid=product.proid,
+                        productname=product.name,
+                        price=product.price,
+                        quantity=item.quantity
+                    ))
+                    # 减少库存
+                    product.stock -= item.quantity
 
-        # Create the order (status initially 'pending')
-        order = Order(
-            orderid=order_id,
-            userid=current_user.userid,
-            sellerid=cart_items[0].product.userid,  # Assuming all products are from the same seller
-            status='pending',
-            total_price=total_price  # Store the total price of the order
-        )
-        db.session.add(order)
-        db.session.add_all(order_items)
-        db.session.commit()
-
-        # Clear the user's cart
-        CartItem.query.filter_by(carid=cart.carid).delete()
-        db.session.commit()
-
-        # At this point, initiate the payment process. You can integrate with a payment provider API here.
-        payment_status = initiate_payment(order_id, total_price)
-
-        # If payment is successful, update the order status
-        if payment_status == "success":
-            order.status = 'paid'
-            db.session.commit()
-            return jsonify({
-                "code": 200,
-                "message": "Order submitted and paid successfully",
-                "data": {
+                # 创建订单记录
+                order = Order(
+                    orderid=order_id,
+                    userid=current_user.userid,
+                    sellerid=seller_id,
+                    status='pending',
+                    totalprice=totalprice
+                )
+                db.session.add(order)
+                db.session.add_all(order_items)
+                total_orders.append({
                     "orderid": order_id,
-                    "total_price": str(total_price),
-                    "status": "paid"
-                }
-            }), 200
-        else:
+                    "sellerid": seller_id,
+                    "totalprice": totalprice
+                })
+
+            # 提交订单和库存更新
+            db.session.commit()
+
+            # 清空购物车
+            CartItem.query.filter_by(carid=cart.carid).delete()
+            db.session.commit()
+
+        except Exception as e:
+            db.session.rollback()
             return jsonify({
-                "code": 0,
-                "message": "Payment failed, please try again"
-            }), 400
+                "code": 500,
+                "message": f"Database error: {str(e)}"
+            }), 500
+
+        # 支付处理
+        payment_results = []
+        for order in total_orders:
+            payment_status = initiate_payment(order["orderid"], order["totalprice"])
+            if payment_status == "success":
+                # 更新订单状态为已支付
+                order_record = Order.query.filter_by(orderid=order["orderid"]).first()
+                order_record.status = 'paid'
+                db.session.commit()
+                payment_results.append({
+                    "orderid": order["orderid"],
+                    "totalprice": str(order["totalprice"]),
+                    "status": "paid"
+                })
+            else:
+                payment_results.append({
+                    "orderid": order["orderid"],
+                    "totalprice": str(order["totalprice"]),
+                    "status": "payment_failed"
+                })
+
+        return jsonify({
+            "code": 200,
+            "message": "Order submission complete",
+            "data": payment_results
+        }), 200
 
     except Exception as e:
         db.session.rollback()
         return jsonify({
-            "code": 0,
-            "message": f"Error: {str(e)}"
-        }), 500  # Internal Server Error
+            "code": 500,
+            "message": f"Server error: {str(e)}"
+        }), 500
 
 
 # 支付接口模拟函数，仅供参考
-def initiate_payment(order_id, total_price):
+def initiate_payment(order_id, totalprice):
     # This function would interact with a payment gateway like PayPal, Stripe, etc.
     # For now, we simulate a successful payment process
     # Here you would send a request to a payment gateway API, then return success/failure status
@@ -832,7 +856,7 @@ def add_product_to_cart(current_user):
         # Ensure the user is a buyer
         if current_user.role != 'buyer':
             return jsonify({
-                "code": 0,
+                "code": 403,
                 "message": "Access denied: Only buyers can add products to cart"
             }), 403
 
@@ -840,7 +864,7 @@ def add_product_to_cart(current_user):
         data = request.get_json()
         if not data or 'proid' not in data or 'quantity' not in data:
             return jsonify({
-                "code": 0,
+                "code": 400,
                 "message": "Invalid input: Missing required fields 'proid' and 'quantity'"
             }), 400
 
@@ -848,7 +872,7 @@ def add_product_to_cart(current_user):
         product = Product.query.filter_by(proid=data['proid']).first()
         if not product:
             return jsonify({
-                "code": 0,
+                "code": 404,
                 "message": f"Product not found with proid: {data['proid']}"
             }), 404
 
@@ -881,7 +905,7 @@ def add_product_to_cart(current_user):
     except Exception as e:
         db.session.rollback()
         return jsonify({
-            "code": 0,
+            "code": 500,
             "message": f"Error: {str(e)}"
         }), 500  # Internal Server Error
 
@@ -956,7 +980,7 @@ def get_order_list(current_user):
         # Ensure the user is a buyer
         if current_user.role != 'buyer':
             return jsonify({
-                "code": 0,
+                "code": 403,
                 "message": "Access denied: Only buyers can view their orders"
             }), 403
 
@@ -964,7 +988,7 @@ def get_order_list(current_user):
         orders = Order.query.filter_by(userid=current_user.userid).all()
         if not orders:
             return jsonify({
-                "code": 0,
+                "code": 404,
                 "message": "No orders found"
             }), 404
 
@@ -991,7 +1015,7 @@ def get_order_list(current_user):
 
             order_list.append({
                 "orderid": order.orderid,
-                "total_price": str(order.total_price),
+                "totalprice": str(order.totalprice),
                 "status": order.status,
                 "createtime": order.createtime.strftime("%Y-%m-%d %H:%M:%S"),
                 "order_items": order_items_data
@@ -1007,6 +1031,7 @@ def get_order_list(current_user):
         }), 200  # OK
 
     except Exception as e:
+        print(e)
         return jsonify({
             "code": 0,
             "message": f"Error: {str(e)}"
@@ -1021,15 +1046,16 @@ def get_sell_order_list(current_user):
         # Ensure the user is a seller
         if current_user.role != 'seller':
             return jsonify({
-                "code": 0,
+                "code": 403,
                 "message": "Access denied: Only sellers can view their orders"
             }), 403
 
         # Get the seller's orders
         orders = Order.query.filter_by(sellerid=current_user.userid).all()
+        print(orders)
         if not orders:
             return jsonify({
-                "code": 0,
+                "code": 404,
                 "message": "No orders found"
             }), 404
 
@@ -1042,7 +1068,7 @@ def get_sell_order_list(current_user):
                 product = Product.query.filter_by(proid=item.proid).first()
                 if not product:
                     return jsonify({
-                        "code": 0,
+                        "code": 404,
                         "message": f"Product not found: {item.proid}"
                     }), 404
 
@@ -1056,7 +1082,7 @@ def get_sell_order_list(current_user):
 
             order_list.append({
                 "orderid": order.orderid,
-                "total_price": str(order.total_price),
+                "totalprice": str(order.totalprice),
                 "status": order.status,
                 "createtime": order.createtime.strftime("%Y-%m-%d %H:%M:%S"),
                 "order_items": order_items_data
@@ -1072,8 +1098,9 @@ def get_sell_order_list(current_user):
         }), 200  # OK
 
     except Exception as e:
+        print(e)
         return jsonify({
-            "code": 0,
+            "code": 500,
             "message": f"Error: {str(e)}"
         }), 500  # Internal Server Error
 

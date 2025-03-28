@@ -11,7 +11,7 @@ def create_database_if_not_exists():
     connection = MySQLdb.connect(
         user='root',
 
-        password='1234',  # replace with your password
+        password='003620',  # replace with your password
 
         host='localhost'
     )
@@ -30,4 +30,4 @@ if __name__ == "__main__":
     with app.app_context():
         upgrade()  # This will apply migrations and create tables
 
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
