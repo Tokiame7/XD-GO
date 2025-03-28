@@ -346,7 +346,8 @@ def update_products(current_user):
             if product_data['price'] <= 0 or product_data['stock'] < 0:
                 return jsonify({
                     "code": 0,
-                    "message": f"Invalid product data: Price must be positive and stock must be non-negative (proid: {product_data['proid']})"
+                    "message": f"Invalid product data: Price must be positive "
+                               f"and stock must be non-negative (proid: {product_data['proid']}) "
                 }), 400
 
         # 批量更新商品
@@ -688,7 +689,7 @@ def get_product_detail():
         data = {
             "goods_id": product.proid,
             "goods_name": product.name,
-            "price": str(product.price),     # 转换为字符串，前端显示时会自动转换回数字
+            "price": str(product.price),  # 转换为字符串，前端显示时会自动转换回数字
             "stock": product.stock,
             "description": product.description,
             "category_id": product.catid,
@@ -828,7 +829,6 @@ def initiate_payment(order_id, total_price):
 
     # Example (mocked) payment status: returning success directly.
     return "success"
-
 
 
 # 买家添加商品到购物车API[PUT]  /api/cart/add_product
@@ -1026,7 +1026,7 @@ def get_order_list(current_user):
 def get_sell_order_list(current_user):
     try:
         # Ensure the user is a seller
-        if current_user.role !='seller':
+        if current_user.role != 'seller':
             return jsonify({
                 "code": 0,
                 "message": "Access denied: Only sellers can view their orders"
@@ -1091,7 +1091,7 @@ def get_sell_order_list(current_user):
 def update_order_status(current_user):
     try:
         # Ensure the user is a seller
-        if current_user.role !='seller':
+        if current_user.role != 'seller':
             return jsonify({
                 "code": 0,
                 "message": "Access denied: Only sellers can update order status"
@@ -1099,7 +1099,7 @@ def update_order_status(current_user):
 
         # Get the order ID and status from the request
         data = request.get_json()
-        if not data or 'orderid' not in data or'status' not in data:
+        if not data or 'orderid' not in data or 'status' not in data:
             return jsonify({
                 "code": 0,
                 "message": "Invalid input: Missing required fields 'orderid' and'status'"
@@ -1147,7 +1147,7 @@ def update_order_status(current_user):
 def modify_product(current_user):
     try:
         # Ensure the user is a seller
-        if current_user.role !='seller':
+        if current_user.role != 'seller':
             return jsonify({
                 "code": 0,
                 "message": "Access denied: Only sellers can modify products"

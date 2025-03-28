@@ -5,6 +5,5 @@ flask_sqlalchemy
 SQLAlchemy
 mysqlclient
 pymysql
-pyjwt
+PyJWT
 uuid
-jwt
