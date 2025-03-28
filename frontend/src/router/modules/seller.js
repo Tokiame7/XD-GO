@@ -17,6 +17,14 @@ export default {
       meta: {
         title: '添加商品',
       },
+    },
+    {
+      path: '/sellerorders',
+      name: 'SellerOrders',
+      component: () => import('@/views/seller/seller_order/index.vue'),
+      meta: {
+        title: '我的订单',
+      },
     }
   ],
 }

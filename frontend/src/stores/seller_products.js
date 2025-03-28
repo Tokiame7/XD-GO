@@ -3,8 +3,8 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'//ref 让数据变为响应式数据 ref()\ref([]) 可以是单个数据、数组、对象
 import { Axios } from 'axios'
 //pinia 就是打包数据和方法让这些数据在几个组件间被统一管理
-import { getShopProducts } from '@/api/seller'
-import { getProductDetail } from '@/api/product'
+import { getShopProducts, getOrderList } from '@/api/seller'
+import { getProductDetail, deleteProduct, createProduct } from '@/api/product'
 import seller from '@/router/modules/seller'
 
 export const useSellerProucts = defineStore('sellerproducts', () => {//第一个属性是唯一属性
@@ -25,6 +25,8 @@ export const useSellerProucts = defineStore('sellerproducts', () => {//第一个
       console.error('获取卖家商品列表失败:', error);
     }
   };
+
+
 
   //导出需要的数据和方法
   return {
@@ -51,5 +53,61 @@ export const useGetproductDetail = defineStore('sellergetproductdetail', () => {
   return {
     sellerProductDetail,
     getSellerProductDetail
+  }
+})
+//删除方法
+export const useDeleteProduct = defineStore('deleteproduct', () => {
+
+  const deleName = ref([])
+  const DeleteProduct = async (proid) => {
+    try {
+      const res = await deleteProduct(proid);
+      deleName.value = res.data
+    } catch (error) {
+      console.log('删除商品失败', error);
+    }
+  }
+
+  return {
+    DeleteProduct,
+    deleName
+  }
+})
+//增加方法
+export const useAddProduct = defineStore('addproduct', () => {
+
+
+  const createProducts = async (data) => {
+    try {
+      const res = await createProduct(data);
+      console.log('添加成功:', res);
+      // 刷新商品列表
+      sellerProducts.getSellerProductsList();
+    } catch (error) {
+      console.log('增加商品失败', error);
+    }
+  }
+
+  return {
+    createProducts
+  }
+})
+
+//获取订单列表
+export const useGetOrder = defineStore('getOrder', () => {
+  const orderList = ref([])
+  const getorders = async () => {
+    try {
+      const res = await getOrderList();
+      console.log('获取订单成功:', res);
+      orderList.value = res.data
+    } catch (error) {
+      console.log('获取订单失败', error);
+    }
+  }
+
+  return {
+    getorders,
+    orderList
   }
 })
