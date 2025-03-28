@@ -594,13 +594,6 @@ def get_user_info(current_user):
                 'phone': current_user.phone,
                 'role': current_user.role
             }
-        elif current_user.role == 'admin':
-            user_info = {
-                'userid': current_user.userid,
-                'username': current_user.username,
-                'email': current_user.email,
-                'role': current_user.role
-            }
         else:
             return jsonify({
                 "code": 0,
