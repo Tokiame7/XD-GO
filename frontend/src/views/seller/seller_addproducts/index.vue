@@ -54,17 +54,22 @@
     <el-form-item label="描述">
       <el-input v-model="form.description" />
     </el-form-item>
-    <el-form-item label="价格*">
+    <el-form-item label="价格*(>0)">
       <el-input v-model.number="form.price" />
     </el-form-item>
-    <el-form-item label="库存*">
+    <el-form-item label="库存*(>0)">
       <el-input v-model.number="form.stock" />
     </el-form-item>
     <el-form-item label="图片url">
       <el-input v-model="form.image" />
     </el-form-item>
+    <el-form-item label="catid*">
+      <el-input v-model="form.catid" />
+      <text>cat_clothing、</text>
+      <text>cat_electronics</text>
+    </el-form-item>
      <!-- 选项框 -->
-    <el-form-item label="商品分类*">
+    <!-- <el-form-item label="商品分类*">
       <el-checkbox-group v-model="form.type">
         <el-checkbox value="Online activities" name="type">
           Clothing
@@ -73,7 +78,7 @@
           Electronics
         </el-checkbox>
       </el-checkbox-group>
-    </el-form-item>
+    </el-form-item> -->
 <!-- 多内容框 /文件框-->
     <el-form-item label="其他">
       <el-input v-model="form.desc" type="textarea" />
@@ -137,8 +142,8 @@ const form = reactive({...initialform});
 //提交表单
 const onSubmit = () => {
   //此处实现提交后端
-addproduct.createProducts(form)
-  console.log('submit!')
+ addproduct.createProducts(form)
+  console.log('submit!',form)
   //提交后把表单重置
   resetForm();
 }

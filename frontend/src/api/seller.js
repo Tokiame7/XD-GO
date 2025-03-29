@@ -98,7 +98,7 @@ export function deleteNotice(id) {
 // 获取店铺分类列表
 export function getShopCategories() {
   return request({
-    url: '/seller/shop/categories',
+    url: '/api/product/category',
     method: 'get',
   })
 }
