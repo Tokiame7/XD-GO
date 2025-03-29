@@ -68,10 +68,6 @@ def get_product():
 
     query = Product.query
 
-    # 如果提供了店铺 ID，则过滤出该店铺的商品
-    if seller_id:
-        query = query.filter_by(shopid=seller_id)
-
     # 如果提供了搜索条件，则按商品名或描述进行模糊搜索
     if search:
         query = query.filter(
@@ -530,6 +526,7 @@ def delete_product(current_user):
         }), 200
 
     except Exception as e:
+        print(e)
         db.session.rollback()
         return jsonify({
             "code": 0,
@@ -1114,7 +1111,7 @@ def update_order_status(current_user):
         # Ensure the user is a seller
         if current_user.role != 'seller':
             return jsonify({
-                "code": 0,
+                "code": 403,
                 "message": "Access denied: Only sellers can update order status"
             }), 403
 
@@ -1122,7 +1119,7 @@ def update_order_status(current_user):
         data = request.get_json()
         if not data or 'orderid' not in data or 'status' not in data:
             return jsonify({
-                "code": 0,
+                "code": 400,
                 "message": "Invalid input: Missing required fields 'orderid' and'status'"
             }), 400
 
@@ -1135,7 +1132,7 @@ def update_order_status(current_user):
             }), 404
 
         # Check if the status is valid
-        if data['status'] not in ['pending', 'completed', 'cancelled']:
+        if data['status'] not in ['pending', 'delivered', 'shipped']:
             return jsonify({
                 "code": 0,
                 "message": f"Invalid status: {data['status']}"
@@ -1157,7 +1154,7 @@ def update_order_status(current_user):
     except Exception as e:
         db.session.rollback()
         return jsonify({
-            "code": 0,
+            "code": 500,
             "message": f"Error: {str(e)}"
         }), 500  # Internal Server Error
 
