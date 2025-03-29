@@ -5,7 +5,7 @@
       <div class="header-content">
         <!-- 左侧导航 -->
         <div class="nav-left">
-          <router-link to="/" class="logo">
+          <router-link to="/seller" class="logo">
             <img src="" alt="logo">
             <span>XD商城</span>
           </router-link>

@@ -95,7 +95,7 @@ export const useGetOrder = defineStore('getOrder', () => {
     try {
       const res = await getOrderList();
       console.log('获取订单成功:', res);
-      orderList.value = res.data
+      orderList.value = res.data.orders
     } catch (error) {
       console.log('获取订单失败', error);
     }
