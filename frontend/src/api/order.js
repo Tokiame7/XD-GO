@@ -66,12 +66,15 @@ export function getSellerOrders(params) {
   })
 }
 
-// 卖家 - 发货
-export function shipOrder(id, data) {
+// 卖家 - 发货 修改订单状态
+export function shipOrder(id, status) {
   return request({
-    url: `/seller/orders/${id}/ship`,
-    method: 'post',
-    data
+    url: `/api/sell_order/updateStatus`,
+    method: 'put',
+    data: {
+      orderid: id,
+      status: status
+    }
   })
 }
 

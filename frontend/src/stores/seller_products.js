@@ -5,6 +5,7 @@ import { Axios } from 'axios'
 //pinia 就是打包数据和方法让这些数据在几个组件间被统一管理
 import { getShopProducts, getOrderList, getShopCategories } from '@/api/seller'
 import { getProductDetail, deleteProduct, createProduct } from '@/api/product'
+import { shipOrder } from '@/api/order'
 
 
 
@@ -73,7 +74,7 @@ export const useDeleteProduct = defineStore('deleteproduct', () => {
 })
 
 
-//增加方法
+//增加卖家商品
 export const useAddProduct = defineStore('addproduct', () => {
 
   const createProducts = async (data) => {
@@ -122,5 +123,23 @@ export const useGetshopCatid = defineStore('getcatid', () => {
   return {
     getcatid,
     catidList
+  }
+})
+
+//修改订单状态
+export const useShiporder = defineStore('shiporderstatus', () => {
+
+  const orderstatus = ref([]);
+  const shipOrderstatus = async (id, status) => {
+    try {
+      const res = await shipOrder(id, status);
+      orderstatus.value = res.data
+    } catch (error) {
+      console.log('获取分类id失败', error)
+    }
+  }
+  return {
+    orderstatus,
+    shipOrderstatus
   }
 })
