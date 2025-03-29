@@ -9,6 +9,40 @@ from functools import wraps
 main = Blueprint('main', __name__)
 
 
+# token_required 装饰器, 用于验证 Token 并获取当前用户信息
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+
+        # 修正：正确提取 Bearer Token
+        if 'Authorization' in request.headers:
+            auth_header = request.headers['Authorization']
+            token_parts = auth_header.split(' ')
+            if len(token_parts) == 2 and token_parts[0] == 'Bearer':
+                token = token_parts[1]
+
+        if not token:
+            return jsonify({"code": 0, "message": "Token is missing!"}), 401
+
+        try:
+            # 解码 Token（现在仅包含 JWT 字符串）
+            data = jwt.decode(token, 'your_secret_key', algorithms=['HS256'])
+            current_user = User.query.filter_by(userid=data['userid']).first()
+
+            if current_user.role != 'seller':
+                return jsonify({"code": 0, "message": "Seller role required!"}), 403
+
+        except jwt.ExpiredSignatureError:
+            return jsonify({"code": 0, "message": "Token expired!"}), 401
+        except jwt.InvalidTokenError as e:
+            return jsonify({"code": 0, "message": f"Invalid token: {str(e)}"}), 401
+
+        return f(current_user, *args, **kwargs)
+
+    return decorated
+
+
 # 主界面
 @main.route('/', methods=['GET'])
 def index():
@@ -55,18 +89,21 @@ def get_users():
 
 # 卖家获取店铺商品列表API[GET]   /api/sell_order/getProduct
 @main.route('/api/sell_order/getProduct', methods=['GET'])
-def get_product():
+@token_required
+def get_product(current_user):
     try:
         # 获取查询参数
         page = int(request.args.get('page', 1))
         page_size = int(request.args.get('pageSize', 10))
         search = request.args.get('search')
-        seller_id = request.args.get('sellerid')  # 新增的 sellerid 参数，用于过滤指定用户的商品
+
+        # 使用当前卖家的userid来过滤商品
+        seller_id = current_user.userid
 
     except ValueError:
         return jsonify({"code": 400, "message": "参数格式错误"}), 400
 
-    query = Product.query
+    query = Product.query.filter_by(userid=seller_id)
 
     # 如果提供了搜索条件，则按商品名或描述进行模糊搜索
     if search:
@@ -114,7 +151,7 @@ def get_product():
             "pageSize": page_size
         }
     }
-    return jsonify(response)
+    return jsonify(response
 
 
 # 用户注册接口API[POST]   /api/users/register
@@ -277,40 +314,6 @@ def get_all_products():
             'status': 500,
             'message': str(e),
         }), 500
-
-
-# token_required 装饰器, 用于验证 Token 并获取当前用户信息
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = None
-
-        # 修正：正确提取 Bearer Token
-        if 'Authorization' in request.headers:
-            auth_header = request.headers['Authorization']
-            token_parts = auth_header.split(' ')
-            if len(token_parts) == 2 and token_parts[0] == 'Bearer':
-                token = token_parts[1]
-
-        if not token:
-            return jsonify({"code": 0, "message": "Token is missing!"}), 401
-
-        try:
-            # 解码 Token（现在仅包含 JWT 字符串）
-            data = jwt.decode(token, 'your_secret_key', algorithms=['HS256'])
-            current_user = User.query.filter_by(userid=data['userid']).first()
-
-            if current_user.role != 'seller':
-                return jsonify({"code": 0, "message": "Seller role required!"}), 403
-
-        except jwt.ExpiredSignatureError:
-            return jsonify({"code": 0, "message": "Token expired!"}), 401
-        except jwt.InvalidTokenError as e:
-            return jsonify({"code": 0, "message": f"Invalid token: {str(e)}"}), 401
-
-        return f(current_user, *args, **kwargs)
-
-    return decorated
 
 
 # 卖家更新自己的商品列表API[POST]   /api/sell_order/updateProduct
