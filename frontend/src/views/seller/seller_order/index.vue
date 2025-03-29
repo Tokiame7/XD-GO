@@ -5,10 +5,9 @@
 <template v-else>
     <el-table :data="OrderList" stripe style="width: 100%">
       <el-table-column prop="orderid" label="订单id" width="180" />
-      <el-table-column prop="totalPrice" label="订单名" width="180" />
-      <el-table-column prop="status" label="status" />
+      <el-table-column prop="totalprice" label="总价格" width="180" />
+      <el-table-column prop="status" label="status" width ='180' />
       <el-table-column prop="createtime" label="创建时间" />
-      <el-table-column prop="orderItems" label="订单详细" />
     </el-table>
   </template>
 </template>
@@ -30,7 +29,6 @@ onMounted(() => {
 watchEffect(() => {
     console.log('orderlist 发生变化:', GetOrder.orderList);
     if (GetOrder.orderList.length > 0) {
-        tableData.value = GetOrder.orderList;
         loading.value = false;//不要忘记加载
     }
 });

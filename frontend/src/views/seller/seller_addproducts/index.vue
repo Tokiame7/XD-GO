@@ -48,26 +48,23 @@
       <!-- 模态框主内容 -->
     <el-form :model="form" label-width="auto" style="max-width: 600px">
       <!-- 第一个框 -->
-    <el-form-item label="商品名称">
+    <el-form-item label="商品名称*">
       <el-input v-model="form.name" />
-    </el-form-item>
-    <el-form-item label="商品id">
-      <el-input v-model="form.productId" />
     </el-form-item>
     <el-form-item label="描述">
       <el-input v-model="form.description" />
     </el-form-item>
-    <el-form-item label="价格">
+    <el-form-item label="价格*">
       <el-input v-model.number="form.price" />
     </el-form-item>
-    <el-form-item label="库存">
+    <el-form-item label="库存*">
       <el-input v-model.number="form.stock" />
     </el-form-item>
     <el-form-item label="图片url">
       <el-input v-model="form.image" />
     </el-form-item>
      <!-- 选项框 -->
-    <el-form-item label="商品分类">
+    <el-form-item label="商品分类*">
       <el-checkbox-group v-model="form.type">
         <el-checkbox value="Online activities" name="type">
           Clothing
@@ -134,19 +131,6 @@ const initialform = {
   catid:'',
   sellerId:''
 }
-const form1 = {
-  name: 'a',
-  productId: 'a',
-  description: 'a',
-  price: 1,
-  stock: 1,
-  createTime: '',
-  updateTime: '',
-  category: 'a',
-  image:'a',
-  catid:'cat_clothing',
-  sellerId:'seller_001'
-}
 //初始化响应
 const form = reactive({...initialform});
 
@@ -154,7 +138,6 @@ const form = reactive({...initialform});
 const onSubmit = () => {
   //此处实现提交后端
 addproduct.createProducts(form)
-addproduct.createProducts(form1)
   console.log('submit!')
   //提交后把表单重置
   resetForm();
