@@ -151,7 +151,7 @@ def get_product(current_user):
             "pageSize": page_size
         }
     }
-    return jsonify(response
+    return jsonify(response), 200
 
 
 # 用户注册接口API[POST]   /api/users/register
