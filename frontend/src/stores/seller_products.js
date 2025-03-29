@@ -3,8 +3,9 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'//ref 让数据变为响应式数据 ref()\ref([]) 可以是单个数据、数组、对象
 import { Axios } from 'axios'
 //pinia 就是打包数据和方法让这些数据在几个组件间被统一管理
-import { getShopProducts, getOrderList } from '@/api/seller'
+import { getShopProducts, getOrderList, getShopCategories } from '@/api/seller'
 import { getProductDetail, deleteProduct, createProduct } from '@/api/product'
+
 
 
 //获取卖家商品列表
@@ -103,5 +104,23 @@ export const useGetOrder = defineStore('getOrder', () => {
   return {
     getorders,
     orderList
+  }
+})
+
+//获取所有catid
+export const useGetshopCatid = defineStore('getcatid', () => {
+
+  const catidList = ref([]);
+  const getcatid = async () => {
+    try {
+      const res = await getShopCategories();
+      catidList.value = res.data
+    } catch (error) {
+      console.log('获取分类id失败', error)
+    }
+  }
+  return {
+    getcatid,
+    catidList
   }
 })
