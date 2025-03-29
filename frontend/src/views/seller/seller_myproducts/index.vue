@@ -55,7 +55,6 @@ const router = useRouter()
 //onM...组件挂载后紧跟的操作
 onMounted(()=>{
   sellerProducts.getSellerProductsList(userid)
-  
 })
 
 //当商品变化时立即执行一次获取商品
@@ -108,7 +107,7 @@ imageloading = false
 
   .product-list {
     display: grid;
-    
+
     grid-template-columns: repeat(5, 1fr);
     gap: 20px;
 
