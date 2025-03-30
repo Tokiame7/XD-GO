@@ -1,0 +1,4209 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "XD-GO",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/api/users/register": {
+      "post": {
+        "summary": "用户注册",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "用户名",
+            "required": true,
+            "example": "string",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "密码",
+            "required": true,
+            "example": "string",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "邮箱",
+            "required": true,
+            "example": "string",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "电话",
+            "required": true,
+            "example": "string",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "description": "角色",
+            "required": true,
+            "example": "buyer | seller",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "userid": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "userid",
+                        "username",
+                        "role"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "User registered successfully",
+                  "data": {
+                    "userid": "string",
+                    "username": "string",
+                    "role": "buyer | seller | admin"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "x-400:Bad Request": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/users/login": {
+      "get": {
+        "summary": "用户登录",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "用户名",
+            "required": true,
+            "example": "gaowei",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "密码",
+            "required": true,
+            "example": "123456",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "userid": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "userid",
+                        "username",
+                        "role",
+                        "token"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Login successful",
+                  "data": {
+                    "userid": "uuid12345",
+                    "username": "john_doe",
+                    "role": "buyer",
+                    "token": "JWT_TOKEN"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/users/info": {
+      "get": {
+        "summary": "获取用户信息",
+        "deprecated": false,
+        "description": "refer to heima 27",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "userid": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "phone": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        },
+                        "shippingAddress": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "userid",
+                        "username",
+                        "email",
+                        "phone",
+                        "role",
+                        "shippingAddress"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "买家",
+                    "value": {
+                      "code": 200,
+                      "message": "User info retrieved successfully",
+                      "data": {
+                        "userid": "user_123",
+                        "username": "John Doe",
+                        "email": "john.doe@example.com",
+                        "phone": "1234567890",
+                        "role": "buyer",
+                        "shipping_address": "123 Main St, City, Country"
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "卖家",
+                    "value": {
+                      "code": 200,
+                      "message": "User info retrieved successfully",
+                      "data": {
+                        "userid": "user_123",
+                        "username": "John Doe",
+                        "email": "john.doe@example.com",
+                        "phone": "1234567890",
+                        "role": "seller"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/users/add_address": {
+      "get": {
+        "summary": "添加收货列表",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Access-Token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "form": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "phone": {
+                        "type": "string"
+                      },
+                      "region": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "integer"
+                            },
+                            "label": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "value",
+                            "label"
+                          ]
+                        }
+                      },
+                      "detail": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "phone",
+                      "region",
+                      "detail"
+                    ]
+                  }
+                },
+                "required": [
+                  "form"
+                ]
+              },
+              "example": {
+                "form": {
+                  "name": "张小二",
+                  "phone": "18999292929",
+                  "region": [
+                    {
+                      "value": 782,
+                      "label": "上海"
+                    },
+                    {
+                      "value": 783,
+                      "label": "上海市"
+                    },
+                    {
+                      "value": 785,
+                      "label": "徐汇区"
+                    }
+                  ],
+                  "detail": "北京路1号楼8888室"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/users/address_edit": {
+      "put": {
+        "summary": "编辑收货地址信息",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "shipping_address ",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "userid": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "newShippingAddress": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "userid",
+                        "username",
+                        "newShippingAddress"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Shipping address updated successfully",
+                  "data": {
+                    "userid": "user_123",
+                    "username": "John Doe",
+                    "new_shipping_address": "456 New Street, City, Country"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/category": {
+      "get": {
+        "summary": "全部商品分类",
+        "deprecated": false,
+        "description": "refer to heima26\n*感觉不一定有用*",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "catid": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "parent_id": {
+                                "type": "string"
+                              },
+                              "image_id": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "sort": {
+                                "type": "string"
+                              },
+                              "children": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "catid": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "parent_id": {
+                                      "type": "string"
+                                    },
+                                    "image_id": {
+                                      "type": "string"
+                                    },
+                                    "status": {
+                                      "type": "string"
+                                    },
+                                    "sort": {
+                                      "type": "string"
+                                    },
+                                    "image": {
+                                      "type": "object",
+                                      "properties": {
+                                        "file_id": {
+                                          "type": "string"
+                                        },
+                                        "group_id": {
+                                          "type": "string"
+                                        },
+                                        "channel": {
+                                          "type": "string"
+                                        },
+                                        "storage": {
+                                          "type": "string"
+                                        },
+                                        "domain": {
+                                          "type": "string"
+                                        },
+                                        "file_type": {
+                                          "type": "string"
+                                        },
+                                        "file_name": {
+                                          "type": "string"
+                                        },
+                                        "file_path": {
+                                          "type": "string"
+                                        },
+                                        "file_size": {
+                                          "type": "string"
+                                        },
+                                        "file_ext": {
+                                          "type": "string"
+                                        },
+                                        "cover": {
+                                          "type": "string"
+                                        },
+                                        "uploader_id": {
+                                          "type": "string"
+                                        },
+                                        "is_recycle": {
+                                          "type": "string"
+                                        },
+                                        "is_delete": {
+                                          "type": "string"
+                                        },
+                                        "update_time": {
+                                          "type": "string"
+                                        },
+                                        "preview_url": {
+                                          "type": "string"
+                                        },
+                                        "external_url": {
+                                          "type": "string",
+                                          "description": "cba.itlike.com/public/uploads/10001/20230320/6166fdce6dea7c37fcd"
+                                        }
+                                      },
+                                      "required": [
+                                        "file_id",
+                                        "group_id",
+                                        "channel",
+                                        "storage",
+                                        "domain",
+                                        "file_type",
+                                        "file_name",
+                                        "file_path",
+                                        "file_size",
+                                        "file_ext",
+                                        "cover",
+                                        "uploader_id",
+                                        "is_recycle",
+                                        "is_delete",
+                                        "update_time",
+                                        "preview_url",
+                                        "external_url"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "catid",
+                                    "name",
+                                    "parent_id",
+                                    "image_id",
+                                    "status",
+                                    "sort",
+                                    "image"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "list"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": "{\n  \"status\": 200,\n  \"message\": \"success\",\n  \"data\": {\n    \"list\": [\n      {\n        \"catid\": \"10016\",\n        \"name\": \"热门推荐\",\n        \"parent_id\": \"0\",\n        \"image_id\": \"0\",\n        \"status\": \"1\",\n        \"sort\": \"1\",\n        \"children\": [\n          {\n            \"catid\": \"10036\",\n            \"name\": \"手机\",\n            \"parent_id\": \"10016\",\n            \"image_id\": \"10148\",\n            \"status\": \"1\",\n            \"sort\": \"1\",\n            \"image\": {\n              \"file_id\": \"10148\",\n              \"group_id\": \"10013\",\n              \"channel\": \"10\",\n              \"storage\": \"local\",\n              \"domain\": \"\",\n              \"file_type\": \"10\",\n              \"file_name\": \"img0.png\",\n              \"file_path\": \"10001/20230320/f871b65f88d19fd894845451873c7035.png\",\n              \"file_size\": \"2492\",\n              \"file_ext\": \"png\",\n              \"cover\": \"\",\n              \"uploader_id\": \"0\",\n              \"is_recycle\": \"0\",\n              \"is_delete\": \"0\",\n              \"update_time\": \"2023-03-20 17:23:57\",\n              \"preview_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/f871b65f88d19fd894845451873c7035.png\",\n              \"external_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/f871b65f88d19fd894845451873c7035.png\"\n            }\n          },\n          {\n            \"catid\": \"10037\",\n            \"name\": \"平板电脑\",\n            \"parent_id\": \"10016\",\n            \"image_id\": \"10149\",\n            \"status\": \"1\",\n            \"sort\": \"2\",\n            \"image\": {\n              \"file_id\": \"10149\",\n              \"group_id\": \"10013\",\n              \"channel\": \"10\",\n              \"storage\": \"local\",\n              \"domain\": \"\",\n              \"file_type\": \"10\",\n              \"file_name\": \"img1.png\",\n              \"file_path\": \"10001/20230320/43db9277c381eef488544252757ebef8.png\",\n              \"file_size\": \"10019\",\n              \"file_ext\": \"png\",\n              \"cover\": \"\",\n              \"uploader_id\": \"0\",\n              \"is_recycle\": \"0\",\n              \"is_delete\": \"0\",\n              \"update_time\": \"2023-03-20 17:23:57\",\n              \"preview_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/43db9277c381eef488544252757ebef8.png\",\n              \"external_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/43db9277c381eef488544252757ebef8.png\"\n            }\n          },\n          {\n            \"catid\": \"10038\",\n            \"name\": \"热水器\",\n            \"parent_id\": \"10016\",\n            \"image_id\": \"10146\",\n            \"status\": \"1\",\n            \"sort\": \"3\",\n            \"image\": {\n              \"file_id\": \"10146\",\n              \"group_id\": \"10013\",\n              \"channel\": \"10\",\n              \"storage\": \"local\",\n              \"domain\": \"\",\n              \"file_type\": \"10\",\n              \"file_name\": \"img2.png\",\n              \"file_path\": \"10001/20230320/ff30e80831c1f16f4d090116f55c0912.png\",\n              \"file_size\": \"6328\",\n              \"file_ext\": \"png\",\n              \"cover\": \"\",\n              \"uploader_id\": \"0\",\n              \"is_recycle\": \"0\",\n              \"is_delete\": \"0\",\n              \"update_time\": \"2023-03-20 17:23:57\",\n              \"preview_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/ff30e80831c1f16f4d090116f55c0912.png\",\n              \"external_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/ff30e80831c1f16f4d090116f55c0912.png\"\n            }\n          },\n          {\n            \"catid\": \"10039\",\n            \"name\": \"冰箱\",\n            \"parent_id\": \"10016\",\n            \"image_id\": \"10147\",\n            \"status\": \"1\",\n            \"sort\": \"4\",\n            \"image\": {\n              \"file_id\": \"10147\",\n              \"group_id\": \"10013\",\n              \"channel\": \"10\",\n              \"storage\": \"local\",\n              \"domain\": \"\",\n              \"file_type\": \"10\",\n              \"file_name\": \"img3.png\",\n              \"file_path\": \"10001/20230320/a70fd1db54e5cb283a2e2c5bd20329ce.png\",\n              \"file_size\": \"2635\",\n              \"file_ext\": \"png\",\n              \"cover\": \"\",\n              \"uploader_id\": \"0\",\n              \"is_recycle\": \"0\",\n              \"is_delete\": \"0\",\n              \"update_time\": \"2023-03-20 17:23:57\",\n              \"preview_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/a70fd1db54e5cb283a2e2c5bd20329ce.png\",\n              \"external_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/a70fd1db54e5cb283a2e2c5bd20329ce.png\"\n            }\n          },\n          {\n            \"catid\": \"10040\",\n            \"name\": \"电风扇\",\n            \"parent_id\": \"10016\",\n            \"image_id\": \"10150\",\n            \"status\": \"1\",\n            \"sort\": \"5\",\n            \"image\": {\n              \"file_id\": \"10150\",\n              \"group_id\": \"10013\",\n              \"channel\": \"10\",\n              \"storage\": \"local\",\n              \"domain\": \"\",\n              \"file_type\": \"10\",\n              \"file_name\": \"img4.png\",\n              \"file_path\": \"10001/20230320/94842ecc23df77a534052ee01eb3989d.png\",\n              \"file_size\": \"1778\",\n              \"file_ext\": \"png\",\n              \"cover\": \"\",\n              \"uploader_id\": \"0\",\n              \"is_recycle\": \"0\",\n              \"is_delete\": \"0\",\n              \"update_time\": \"2023-03-20 17:23:57\",\n              \"preview_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/94842ecc23df77a534052ee01eb3989d.png\",\n              \"external_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/94842ecc23df77a534052ee01eb3989d.png\"\n            }\n          },\n          {\n            \"catid\": \"10041\",\n            \"name\": \"奶粉\",\n            \"parent_id\": \"10016\",\n            \"image_id\": \"10151\",\n            \"status\": \"1\",\n            \"sort\": \"6\",\n            \"image\": {\n              \"file_id\": \"10151\",\n              \"group_id\": \"10013\",\n              \"channel\": \"10\",\n              \"storage\": \"local\",\n              \"domain\": \"\",\n              \"file_type\": \"10\",\n              \"file_name\": \"img5.png\",\n              \"file_path\": \"10001/20230320/beab1b310c450d97ccf9ef85702afdca.png\",\n              \"file_size\": \"281447\",\n              \"file_ext\": \"png\",\n              \"cover\": \"\",\n              \"uploader_id\": \"0\",\n              \"is_recycle\": \"0\",\n              \"is_delete\": \"0\",\n              \"update_time\": \"2023-03-20 17:23:57\",\n              \"preview_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/beab1b310c450d97ccf9ef85702afdca.png\",\n              \"external_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/beab1b310c450d97ccf9ef85702afdca.png\"\n            }\n          },\n          {\n            \"catid\": \"10042\",\n            \"name\": \"白酒\",\n            \"parent_id\": \"10016\",\n            \"image_id\": \"10154\",\n            \"status\": \"1\",\n            \"sort\": \"7\",\n            \"image\": {\n              \"file_id\": \"10154\",\n              \"group_id\": \"10013\",\n              \"channel\": \"10\",\n              \"storage\": \"local\",\n              \"domain\": \"\",\n              \"file_type\": \"10\",\n              \"file_name\": \"img6.png\",\n              \"file_path\": \"10001/20230320/cea722f494e41aad0307c7271f92aaf7.png\",\n              \"file_size\": \"28199\",\n              \"file_ext\": \"png\",\n              \"cover\": \"\",\n              \"uploader_id\": \"0\",\n              \"is_recycle\": \"0\",\n              \"is_delete\": \"0\",\n              \"update_time\": \"2023-03-20 17:23:57\",\n              \"preview_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/cea722f494e41aad0307c7271f92aaf7.png\",\n              \"external_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/cea722f494e41aad0307c7271f92aaf7.png\"\n            }\n          },\n          {\n            \"catid\": \"10043\",\n            \"name\": \"电火锅\",\n            \"parent_id\": \"10016\",\n            \"image_id\": \"10152\",\n            \"status\": \"1\",\n            \"sort\": \"8\",\n            \"image\": {\n              \"file_id\": \"10152\",\n              \"group_id\": \"10013\",\n              \"channel\": \"10\",\n              \"storage\": \"local\",\n              \"domain\": \"\",\n              \"file_type\": \"10\",\n              \"file_name\": \"img7.png\",\n              \"file_path\": \"10001/20230320/f0c5575a00bcb50929ae79560ae2d9dd.png\",\n              \"file_size\": \"10171\",\n              \"file_ext\": \"png\",\n              \"cover\": \"\",\n              \"uploader_id\": \"0\",\n              \"is_recycle\": \"0\",\n              \"is_delete\": \"0\",\n              \"update_time\": \"2023-03-20 17:23:57\",\n              \"preview_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/f0c5575a00bcb50929ae79560ae2d9dd.png\",\n              \"external_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/f0c5575a00bcb50929ae79560ae2d9dd.png\"\n            }\n          },\n          {\n            \"catid\": \"10044\",\n            \"name\": \"牛奶\",\n            \"parent_id\": \"10016\",\n            \"image_id\": \"10155\",\n            \"status\": \"1\",\n            \"sort\": \"9\",\n            \"image\": {\n              \"file_id\": \"10155\",\n              \"group_id\": \"10013\",\n              \"channel\": \"10\",\n              \"storage\": \"local\",\n              \"domain\": \"\",\n              \"file_type\": \"10\",\n              \"file_name\": \"img8.png\",\n              \"file_path\": \"10001/20230320/6166fdce6dea7c37fcd3917e3d119f30.png\",\n              \"file_size\": \"25955\",\n              \"file_ext\": \"png\",\n              \"cover\": \"\",\n              \"uploader_id\": \"0\",\n              \"is_recycle\": \"0\",\n              \"is_delete\": \"0\",\n              \"update_time\": \"2023-03-20 17:23:57\",\n              \"preview_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/6166fdce6dea7c37fcd3917e3d119f30.png\",\n              \"external_url\": \"http://cba.itlike.com/public/uploads/10001/20230320/6166fdce6dea7c37fcd"
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/search": {
+      "get": {
+        "summary": "商品搜索",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "sortType",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortPrice",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "goodName",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "object",
+                          "properties": {
+                            "total": {
+                              "type": "integer"
+                            },
+                            "per_page": {
+                              "type": "integer"
+                            },
+                            "current_page": {
+                              "type": "integer"
+                            },
+                            "last_page": {
+                              "type": "integer"
+                            },
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "goods_id": {
+                                    "type": "integer"
+                                  },
+                                  "goods_name": {
+                                    "type": "string"
+                                  },
+                                  "goods_price_min": {
+                                    "type": "string"
+                                  },
+                                  "stock_total": {
+                                    "type": "integer"
+                                  },
+                                  "selling_point": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "goods_id",
+                                  "goods_name",
+                                  "goods_price_min",
+                                  "stock_total",
+                                  "selling_point"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "total",
+                            "per_page",
+                            "current_page",
+                            "last_page",
+                            "data"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "list"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/detail": {
+      "get": {
+        "summary": "商品详情",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "goodsId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "10040",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "goodsId": {
+                          "type": "string"
+                        },
+                        "goodsName": {
+                          "type": "string"
+                        },
+                        "price": {
+                          "type": "string"
+                        },
+                        "stock": {
+                          "type": "integer"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "categoryId": {
+                          "type": "string"
+                        },
+                        "categoryName": {
+                          "type": "string"
+                        },
+                        "image": {
+                          "type": "string"
+                        },
+                        "createtime": {
+                          "type": "string"
+                        },
+                        "updatetime": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "goodsId",
+                        "goodsName",
+                        "price",
+                        "stock",
+                        "description",
+                        "categoryId",
+                        "categoryName",
+                        "image",
+                        "createtime",
+                        "updatetime"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Product detail retrieved successfully",
+                  "data": {
+                    "goods_id": "unique_product_id",
+                    "goods_name": "Laptop",
+                    "price": "999.99",
+                    "stock": 50,
+                    "description": "High-end laptop for gaming",
+                    "category_id": "cat_electronics",
+                    "category_name": "Electronics",
+                    "image": "https://example.com/image.jpg",
+                    "createtime": "2025-03-27 10:00:00",
+                    "updatetime": "2025-03-27 10:30:00"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/comment": {
+      "get": {
+        "summary": "商品评论",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "gooesId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "10038",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": 2,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "comment_id": {
+                                "type": "integer"
+                              },
+                              "score": {
+                                "type": "integer"
+                              },
+                              "content": {
+                                "type": "string"
+                              },
+                              "is_picture": {
+                                "type": "integer"
+                              },
+                              "user_id": {
+                                "type": "integer"
+                              },
+                              "store_id": {
+                                "type": "integer"
+                              },
+                              "create_time": {
+                                "type": "string"
+                              },
+                              "user": {
+                                "type": "object",
+                                "properties": {
+                                  "user_id": {
+                                    "type": "integer"
+                                  },
+                                  "nick_name": {
+                                    "type": "string"
+                                  },
+                                  "avatar_url": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "user_id",
+                                  "nick_name",
+                                  "avatar_url"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "comment_id",
+                              "score",
+                              "content",
+                              "is_picture",
+                              "user_id",
+                              "store_id",
+                              "create_time",
+                              "user"
+                            ]
+                          }
+                        },
+                        "total": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "list",
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/comment/total": {
+      "get": {
+        "summary": "获取商品评论总数",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "goodId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "10038",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "object",
+                          "properties": {
+                            "all": {
+                              "type": "integer"
+                            },
+                            "praise": {
+                              "type": "integer"
+                            },
+                            "review": {
+                              "type": "integer"
+                            },
+                            "negative": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "all",
+                            "praise",
+                            "review",
+                            "negative"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/comment/list": {
+      "get": {
+        "summary": "获取商品评价列表",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "scoreType",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": 0,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "goodsId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "object",
+                          "properties": {
+                            "total": {
+                              "type": "integer"
+                            },
+                            "per_page": {
+                              "type": "integer"
+                            },
+                            "current_page": {
+                              "type": "integer"
+                            },
+                            "last_page": {
+                              "type": "integer"
+                            },
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "comment_id": {
+                                    "type": "integer"
+                                  },
+                                  "score": {
+                                    "type": "integer"
+                                  },
+                                  "content": {
+                                    "type": "string"
+                                  },
+                                  "is_picture": {
+                                    "type": "integer"
+                                  },
+                                  "user_id": {
+                                    "type": "integer"
+                                  },
+                                  "store_id": {
+                                    "type": "integer"
+                                  },
+                                  "create_time": {
+                                    "type": "string"
+                                  },
+                                  "user": {
+                                    "type": "object",
+                                    "properties": {
+                                      "user_id": {
+                                        "type": "integer"
+                                      },
+                                      "nick_name": {
+                                        "type": "string"
+                                      },
+                                      "avatar_url": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "user_id",
+                                      "nick_name",
+                                      "avatar_url"
+                                    ]
+                                  },
+                                  "orderGoods": {
+                                    "type": "object",
+                                    "properties": {
+                                      "order_goods_id": {
+                                        "type": "integer"
+                                      },
+                                      "goods_id": {
+                                        "type": "integer"
+                                      },
+                                      "goods_name": {
+                                        "type": "string"
+                                      },
+                                      "image_id": {
+                                        "type": "integer"
+                                      }
+                                    },
+                                    "required": [
+                                      "order_goods_id",
+                                      "goods_id",
+                                      "goods_name",
+                                      "image_id"
+                                    ]
+                                  },
+                                  "images": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "id": {
+                                          "type": "integer"
+                                        },
+                                        "comment_id": {
+                                          "type": "integer"
+                                        },
+                                        "image_id": {
+                                          "type": "integer"
+                                        },
+                                        "image_url": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "required": [
+                                        "id",
+                                        "comment_id",
+                                        "image_id",
+                                        "image_url"
+                                      ]
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "comment_id",
+                                  "score",
+                                  "content",
+                                  "is_picture",
+                                  "user_id",
+                                  "store_id",
+                                  "create_time",
+                                  "user",
+                                  "orderGoods",
+                                  "images"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "total",
+                            "per_page",
+                            "current_page",
+                            "last_page",
+                            "data"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "list"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/productList": {
+      "get": {
+        "summary": "获取首页所有商品列表",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "productId": {
+                                "type": "string"
+                              },
+                              "productName": {
+                                "type": "string"
+                              },
+                              "price": {
+                                "type": "number"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "stock": {
+                                "type": "integer"
+                              },
+                              "createTime": {
+                                "type": "string"
+                              },
+                              "updateTime": {
+                                "type": "string"
+                              },
+                              "category": {
+                                "type": "string"
+                              },
+                              "imageUrl": {
+                                "type": "string"
+                              },
+                              "sellerId": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "list"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "status": 200,
+                  "message": "获取商品列表成功",
+                  "data": {
+                    "list": [
+                      {
+                        "productId": "pro_laptop",
+                        "productName": "Laptop",
+                        "price": 999.99,
+                        "description": "High-performance laptop for everyday use",
+                        "stock": 100,
+                        "createTime": "2025-03-27 10:00:00",
+                        "updateTime": "2025-03-27 10:30:00",
+                        "category": "Electronics",
+                        "imageUrl": "https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34984.jpg",
+                        "sellerId": "seller_001"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/cart/list": {
+      "get": {
+        "summary": "获取购物车商品列表",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "必须携带 token 用于身份验证",
+            "required": false,
+            "example": "1741f74aed758a688515f72572dc8e37",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "products": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "proid": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "price": {
+                                "type": "string"
+                              },
+                              "quantity": {
+                                "type": "integer"
+                              },
+                              "image": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "proid",
+                              "name",
+                              "price",
+                              "quantity",
+                              "image"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "products"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Cart list retrieved successfully",
+                  "data": {
+                    "products": [
+                      {
+                        "proid": "unique_product_id_1",
+                        "name": "Laptop",
+                        "price": "999.99",
+                        "quantity": 2,
+                        "image": "https://example.com/laptop.jpg"
+                      },
+                      {
+                        "proid": "unique_product_id_2",
+                        "name": "Mouse",
+                        "price": "20.99",
+                        "quantity": 1,
+                        "image": "https://example.com/mouse.jpg"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/cart/update": {
+      "post": {
+        "summary": "更新商品列表",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Access-Token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "string",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "goodsId": {
+                    "type": "string",
+                    "description": "商品ID"
+                  },
+                  "goodsNum": {
+                    "type": "string",
+                    "description": "数量"
+                  },
+                  "goodsSkuId": {
+                    "type": "string",
+                    "description": "库存"
+                  }
+                },
+                "required": [
+                  "goodsId",
+                  "goodsNum",
+                  "goodsSkuId"
+                ]
+              },
+              "example": {
+                "goodsId": "string",
+                "goodsNum": "number",
+                "goodsSkuId": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "cartTotal": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cartTotal"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "status": 200,
+                  "message": "更新成功",
+                  "data": {
+                    "cartTotal": "integer"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/cart/clear": {
+      "post": {
+        "summary": "删除购物车商品",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Access-Token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cartIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "cartIds"
+                ]
+              },
+              "example": {
+                "cartIds": [
+                  "string"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "cartTotal": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cartTotal"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/cart/total_quantity": {
+      "get": {
+        "summary": "购物车商品总数",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Access-Token,strin",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "cartTotal": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "cartTotal"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/cart/add_product": {
+      "put": {
+        "summary": "添加商品到购物车",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "proid": {
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "proid",
+                  "quantity"
+                ]
+              },
+              "example": {
+                "proid": "unique_product_id",
+                "quantity": 2
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "proid": {
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "proid",
+                        "quantity"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Product added to cart successfully",
+                  "data": {
+                    "proid": "unique_product_id",
+                    "quantity": 2
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/buy_order/list": {
+      "get": {
+        "summary": "我的订单",
+        "deprecated": false,
+        "description": "refer to heima 30",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "orders": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "orderid": {
+                                "type": "string"
+                              },
+                              "totalPrice": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "createtime": {
+                                "type": "string"
+                              },
+                              "orderItems": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "proid": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "price": {
+                                      "type": "string"
+                                    },
+                                    "quantity": {
+                                      "type": "integer"
+                                    },
+                                    "image": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "proid",
+                                    "name",
+                                    "price",
+                                    "quantity",
+                                    "image"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "orders"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Order list retrieved successfully",
+                  "data": {
+                    "orders": [
+                      {
+                        "orderid": "unique_order_id_1",
+                        "total_price": "1020.99",
+                        "status": "pending",
+                        "createtime": "2025-03-27 10:00:00",
+                        "order_items": [
+                          {
+                            "proid": "unique_product_id_1",
+                            "name": "Laptop",
+                            "price": "999.99",
+                            "quantity": 2,
+                            "image": "https://example.com/laptop.jpg"
+                          },
+                          {
+                            "proid": "unique_product_id_2",
+                            "name": "Mouse",
+                            "price": "20.99",
+                            "quantity": 1,
+                            "image": "https://example.com/mouse.jpg"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/buy_order/detail": {
+      "get": {
+        "summary": "订单详情",
+        "deprecated": false,
+        "description": "refer to heima 31",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "platform",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Access-Token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "catid": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "parent_id": {
+                                "type": "string"
+                              },
+                              "image": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "integer"
+                              },
+                              "sort": {
+                                "type": "integer"
+                              },
+                              "children": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "catid": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "parent_id": {
+                                      "type": "string"
+                                    },
+                                    "image": {
+                                      "type": "string"
+                                    },
+                                    "status": {
+                                      "type": "integer"
+                                    },
+                                    "sort": {
+                                      "type": "integer"
+                                    }
+                                  },
+                                  "required": [
+                                    "catid",
+                                    "name",
+                                    "parent_id",
+                                    "image",
+                                    "status",
+                                    "sort"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "catid",
+                              "name",
+                              "parent_id",
+                              "image",
+                              "status",
+                              "sort",
+                              "children"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "list"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/sell_order/cancel": {
+      "post": {
+        "summary": "取消订单",
+        "deprecated": false,
+        "description": "refer to heima 32",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Access-Token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "orderId"
+                ]
+              },
+              "example": {
+                "orderId": 10027
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/buy_order/submit": {
+      "post": {
+        "summary": "提交订单",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cartId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "cartId"
+                ]
+              },
+              "example": {
+                "cartId": "cart_buyer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "orderid": {
+                          "type": "string"
+                        },
+                        "total_price": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "orderid",
+                        "total_price",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Order submitted and paid successfully",
+                  "data": {
+                    "orderid": "order_id_generated",
+                    "total_price": "order_total_price",
+                    "status": "paid"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/buy_order/receive": {
+      "post": {
+        "summary": "订单确认收货",
+        "deprecated": false,
+        "description": "33",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Access-Token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "orderId"
+                ]
+              },
+              "example": {
+                "orderId": 10028
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/buy_order/comment": {
+      "post": {
+        "summary": "提交评价",
+        "deprecated": false,
+        "description": "36",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Access-Token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "platform",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "string"
+                  },
+                  "form": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "goods_id": {
+                          "type": "integer"
+                        },
+                        "order_goods_id": {
+                          "type": "integer"
+                        },
+                        "score": {
+                          "type": "integer"
+                        },
+                        "content": {
+                          "type": "string"
+                        },
+                        "imageList": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {}
+                          }
+                        },
+                        "uploaded": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "goods_id",
+                        "order_goods_id",
+                        "score",
+                        "content",
+                        "imageList",
+                        "uploaded"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "orderId",
+                  "form"
+                ]
+              },
+              "example": {
+                "orderId": "10028",
+                "form": [
+                  {
+                    "goods_id": 10038,
+                    "order_goods_id": 10033,
+                    "score": 10,
+                    "content": "这个手机很不错",
+                    "imageList": [
+                      {},
+                      {}
+                    ],
+                    "uploaded": [
+                      "10307",
+                      "10308"
+                    ]
+                  },
+                  {
+                    "goods_id": 10040,
+                    "order_goods_id": 10034,
+                    "score": 20,
+                    "content": "这个酒太辣了",
+                    "imageList": [],
+                    "uploaded": []
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "status": 200,
+                  "message": "订单完成评价",
+                  "data": []
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/buy_order/refund": {
+      "post": {
+        "summary": "申请售后",
+        "deprecated": false,
+        "description": "37",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Access-Token",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "platform",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderGoodsId": {
+                    "type": "string"
+                  },
+                  "form": {
+                    "type": "object",
+                    "properties": {
+                      "images": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "type": {
+                        "type": "integer"
+                      },
+                      "content": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "images",
+                      "type",
+                      "content"
+                    ]
+                  }
+                },
+                "required": [
+                  "orderGoodsId",
+                  "form"
+                ]
+              },
+              "example": {
+                "orderGoodsId": "10033",
+                "form": {
+                  "images": [
+                    "10309"
+                  ],
+                  "type": 10,
+                  "content": "手机坏了， 我要退款"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/sell_order/getList": {
+      "get": {
+        "summary": "卖家获取订单列表",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "orders": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "orderid": {
+                                "type": "string"
+                              },
+                              "totalPrice": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "createtime": {
+                                "type": "string"
+                              },
+                              "orderItems": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "proid": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "price": {
+                                      "type": "string"
+                                    },
+                                    "quantity": {
+                                      "type": "integer"
+                                    },
+                                    "image": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "proid",
+                                    "name",
+                                    "price",
+                                    "quantity",
+                                    "image"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "orders"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Order list retrieved successfully",
+                  "data": {
+                    "orders": [
+                      {
+                        "orderid": "unique_order_id_1",
+                        "total_price": "1020.99",
+                        "status": "pending",
+                        "createtime": "2025-03-27 10:00:00",
+                        "order_items": [
+                          {
+                            "proid": "unique_product_id_1",
+                            "name": "Laptop",
+                            "price": "999.99",
+                            "quantity": 2,
+                            "image": "https://example.com/laptop.jpg"
+                          },
+                          {
+                            "proid": "unique_product_id_2",
+                            "name": "Mouse",
+                            "price": "20.99",
+                            "quantity": 1,
+                            "image": "https://example.com/mouse.jpg"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {}
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "x-404:Not Found: 商品未找到": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/sell_order/updateStatus": {
+      "put": {
+        "summary": "修改订单状态",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderid": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "orderid",
+                  "status"
+                ]
+              },
+              "example": {
+                "orderid": "unique_order_id_1",
+                "status": "completed"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "orderid": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "orderid",
+                        "status"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Order status updated successfully",
+                  "data": {
+                    "orderid": "unique_order_id_1",
+                    "status": "completed"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/sell_order/searchOrder": {
+      "get": {
+        "summary": "卖家搜索订单",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "sellerId",
+            "in": "query",
+            "description": "卖家ID (对应于 user 表中的 userid，角色为 \"seller\")",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "buyerId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每页数量 (可选，默认 10)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer {token} (卖家身份验证)",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "page": {
+                          "type": "integer"
+                        },
+                        "pageSize": {
+                          "type": "integer"
+                        },
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "orderId": {
+                                "type": "string"
+                              },
+                              "buyerId": {
+                                "type": "string"
+                              },
+                              "orderStatus": {
+                                "type": "string"
+                              },
+                              "createTime": {
+                                "type": "string"
+                              },
+                              "totalAmount": {
+                                "type": "integer"
+                              },
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "itemId": {
+                                      "type": "integer"
+                                    },
+                                    "productId": {
+                                      "type": "string"
+                                    },
+                                    "productName": {
+                                      "type": "string"
+                                    },
+                                    "quantity": {
+                                      "type": "integer"
+                                    },
+                                    "price": {
+                                      "type": "integer"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "page",
+                        "pageSize",
+                        "list"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/sell_order/getProduct": {
+      "get": {
+        "summary": "卖家获取个体商品列表",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "productId": {
+                            "type": "string"
+                          },
+                          "productName": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "price": {
+                            "type": "number"
+                          },
+                          "stock": {
+                            "type": "integer"
+                          },
+                          "createTime": {
+                            "type": "string"
+                          },
+                          "updateTime": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "imageUrl": {
+                            "type": "string"
+                          },
+                          "catid": {
+                            "type": "string"
+                          },
+                          "sellerId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "page": {
+                          "type": "integer"
+                        },
+                        "pageSize": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "page",
+                        "pageSize"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data",
+                    "pagination"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "获取商品列表成功",
+                  "data": [
+                    {
+                      "productId": "pro_laptop",
+                      "productName": "Laptop",
+                      "description": "High-performance laptop for everyday use",
+                      "price": 999.99,
+                      "stock": 100,
+                      "createTime": "2025-03-27 10:00:00",
+                      "updateTime": "2025-03-27 10:30:00",
+                      "category": "Electronics",
+                      "imageUrl": "https://pic1.imgdb.cn/item/67e2a8e50ba3d5a1d7e34984.jpg",
+                      "catid": "cat_electronics",
+                      "sellerId": "seller_001"
+                    }
+                  ],
+                  "pagination": {
+                    "total": 1,
+                    "page": 1,
+                    "pageSize": 10
+                  }
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/sell_order/updateProduct": {
+      "post": {
+        "summary": "卖家更新个体商品列表",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "proid": {
+                          "type": "string"
+                        },
+                        "price": {
+                          "type": "number"
+                        },
+                        "stock": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "catid": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "proid",
+                        "price",
+                        "stock"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "products"
+                ]
+              },
+              "example": {
+                "shopid": "shop123",
+                "products": [
+                  {
+                    "proid": "prod001",
+                    "name": "新商品名称",
+                    "price": 199.99,
+                    "stock": 50,
+                    "description": "新的商品描述",
+                    "catid": "cat789"
+                  },
+                  {
+                    "proid": "prod002",
+                    "price": 89.99,
+                    "stock": 100
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "updatedCount": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "updatedCount"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Products updated successfully",
+                  "data": {
+                    "updated_count": 2
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/seller_detail": {
+      "get": {
+        "summary": "卖家商品详情页",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "goodsId",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "detail": {
+                          "type": "object",
+                          "properties": {
+                            "goodsId": {
+                              "type": "string"
+                            },
+                            "goodsName": {
+                              "type": "string"
+                            },
+                            "price": {
+                              "type": "string"
+                            },
+                            "stock": {
+                              "type": "integer"
+                            },
+                            "description": {
+                              "type": "string"
+                            },
+                            "categoryId": {
+                              "type": "string"
+                            },
+                            "image": {
+                              "type": "string"
+                            },
+                            "sellerInfo": {
+                              "type": "object",
+                              "properties": {
+                                "sellerId": {
+                                  "type": "string"
+                                },
+                                "sellerName": {
+                                  "type": "string"
+                                },
+                                "contact": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "sellerId",
+                                "sellerName",
+                                "contact"
+                              ]
+                            },
+                            "createtime": {
+                              "type": "string"
+                            },
+                            "updatetime": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "goodsId",
+                            "goodsName",
+                            "price",
+                            "stock",
+                            "description",
+                            "categoryId",
+                            "image",
+                            "sellerInfo",
+                            "createtime",
+                            "updatetime"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "detail"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "status": 0,
+                  "message": "成功",
+                  "data": {
+                    "detail": {
+                      "goods_id": "unique_product_id",
+                      "goods_name": "Laptop",
+                      "price": "999.99",
+                      "stock": 50,
+                      "description": "High-end laptop for gaming",
+                      "category_id": "cat_electronics",
+                      "image": "https://example.com/image.jpg",
+                      "seller_info": {
+                        "seller_id": "seller_001",
+                        "seller_name": "John Doe",
+                        "contact": "123456789"
+                      },
+                      "createtime": "2025-03-27 10:00:00",
+                      "updatetime": "2025-03-27 10:30:00"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/addProduct": {
+      "post": {
+        "summary": "卖家添加商品",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "stock": {
+                    "type": "integer"
+                  },
+                  "catid": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "price",
+                  "stock",
+                  "catid",
+                  "description",
+                  "image"
+                ]
+              },
+              "example": {
+                "name": "New Laptop",
+                "price": 999.99,
+                "stock": 50,
+                "catid": "cat_electronics",
+                "description": "High-end laptop for gaming",
+                "image": "https://example.com/image.jpg"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "proid": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "price": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "proid",
+                        "name",
+                        "price"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Product added successfully",
+                  "data": {
+                    "proid": "unique_product_id",
+                    "name": "New Laptop",
+                    "price": 999.99
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/seller_modify_product": {
+      "put": {
+        "summary": "卖家修改商品API",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "proid": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "stock": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "proid",
+                  "name",
+                  "price",
+                  "description",
+                  "image",
+                  "stock"
+                ]
+              },
+              "example": {
+                "proid": "unique_product_id",
+                "name": "New Product Name",
+                "price": 149.99,
+                "description": "Updated description for the product",
+                "image": "https://example.com/new_image.jpg",
+                "stock": 100
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "proid": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "proid"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Product modified successfully",
+                  "data": {
+                    "proid": "unique_product_id"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/product/deleteProduct": {
+      "delete": {
+        "summary": "卖家删除商品",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "proid": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "proid"
+                ]
+              },
+              "example": {
+                "proid": "unique_product_id"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "deletedProid": {
+                          "type": "string"
+                        },
+                        "deletedName": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "deletedProid",
+                        "deletedName"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "message": "Product deleted successfully",
+                  "data": {
+                    "deleted_proid": "unique_product_id",
+                    "deleted_name": "Old Laptop"
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pet": {
+        "required": [
+          "name",
+          "photoUrls",
+          "id",
+          "category",
+          "tags",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Pet ID"
+          },
+          "category": {
+            "$ref": "#/components/schemas/Category",
+            "description": "group"
+          },
+          "name": {
+            "type": "string",
+            "description": "name",
+            "examples": [
+              "doggie"
+            ]
+          },
+          "photoUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "image URL"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "description": "tag"
+          },
+          "status": {
+            "type": "string",
+            "description": "Pet Sales Status",
+            "enum": [
+              "available",
+              "pending",
+              "sold"
+            ]
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Category ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Category Name"
+          }
+        }
+      },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Tag ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tag Name"
+          }
+        }
+      }
+    },
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}
