@@ -1,57 +1,57 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <h2>用户登录</h2>
+      <h2>User Login</h2>
 
-      <!-- 登录方式切换 -->
+      <!-- Login type toggle -->
       <div class="login-type">
         <el-radio-group v-model="loginType">
-          <el-radio-button value="account">账号密码登录</el-radio-button>
-          <!-- <el-radio-button value="phone">手机验证码登录</el-radio-button> -->
+          <el-radio-button value="account">Account Login</el-radio-button>
+          <!-- <el-radio-button value="phone">SMS Code Login</el-radio-button> -->
         </el-radio-group>
       </div>
 
-      <!-- 账号密码登录 -->
+      <!-- Account login form -->
       <el-form v-if="loginType === 'account'" ref="accountFormRef" :model="accountForm" :rules="accountRules">
         <el-form-item prop="username">
-          <el-input v-model="accountForm.username" placeholder="请输入用户名" prefix-icon="User" />
+          <el-input v-model="accountForm.username" placeholder="Please enter username" prefix-icon="User" />
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="accountForm.password" type="password" placeholder="请输入密码" prefix-icon="Lock"
-            show-password />
+          <el-input v-model="accountForm.password" type="password" placeholder="Please enter password"
+            prefix-icon="Lock" show-password />
         </el-form-item>
       </el-form>
 
-      <!-- 手机验证码登录 -->
+      <!-- SMS code login form -->
       <!-- <el-form v-else ref="phoneFormRef" :model="phoneForm" :rules="phoneRules">
         <el-form-item prop="phone">
-          <el-input v-model="phoneForm.phone" placeholder="请输入手机号" prefix-icon="Iphone" />
+          <el-input v-model="phoneForm.phone" placeholder="Please enter phone number" prefix-icon="Iphone" />
         </el-form-item>
         <el-form-item prop="code">
           <div class="verify-code">
-            <el-input v-model="phoneForm.code" placeholder="请输入验证码" prefix-icon="Key" />
+            <el-input v-model="phoneForm.code" placeholder="Please enter verification code" prefix-icon="Key" />
             <el-button :disabled="!!countdown" @click="handleSendCode">
-              {{ countdown ? `${countdown}秒后重新获取` : '获取验证码' }}
+              {{ countdown ? `Resend in ${countdown}s` : 'Get Verification Code' }}
             </el-button>
           </div>
         </el-form-item>
       </el-form> -->
 
-      <!-- 记住密码 -->
+      <!-- Remember password -->
       <!-- <div class="remember" v-if="loginType === 'account'">
-        <el-checkbox v-model="remember">记住密码</el-checkbox>
-         <el-link type="primary" @click="handleForgotPassword">忘记密码？</el-link>
+        <el-checkbox v-model="remember">Remember password</el-checkbox>
+         <el-link type="primary" @click="handleForgotPassword">Forgot password?</el-link>
       </div> -->
 
-      <!-- 登录按钮 -->
+      <!-- Login button -->
       <el-button type="primary" :loading="loading" class="submit-btn" @click="handleLogin">
-        登录
+        Login
       </el-button>
 
-      <!-- 注册链接 -->
+      <!-- Register link -->
       <div class="register">
-        还没有账号？
-        <el-link type="primary" @click="handleRegister">立即注册</el-link>
+        Don't have an account?
+        <el-link type="primary" @click="handleRegister">Register now</el-link>
       </div>
     </div>
   </div>
@@ -68,12 +68,10 @@ import { useUserStore } from '@/stores/user'
 const router = useRouter()
 const userStore = useUserStore()
 
-// 登录方式
+// Login type
 const loginType = ref('account')
 
-// 买家登录还是卖家登录
-
-// 账号密码登录表单
+// Account login form
 const accountFormRef = ref()
 const accountForm = reactive({
   username: '',
@@ -81,25 +79,25 @@ const accountForm = reactive({
 })
 const accountRules = {
   username: [
-    { required: true, message: '请输入用户名/手机号/邮箱', trigger: 'blur' }
+    { required: true, message: 'Please enter username/phone/email', trigger: 'blur' }
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, message: '密码不能少于6位', trigger: 'blur' }
+    { required: true, message: 'Please enter password', trigger: 'blur' },
+    { min: 6, message: 'Password must be at least 6 characters', trigger: 'blur' }
   ]
 }
 
-// 登录处理
+// Login handler
 const loading = ref(false)
 const handleLogin = async () => {
   try {
     loading.value = true
 
-    // 表单验证
+    // Form validation
     const formRef = accountFormRef.value
     await formRef.validate()
 
-    // 发请求
+    // Send request
     const { data } = await login(JSON.parse(JSON.stringify(accountForm)))
     console.log(data);
     userStore.setUser(data.token, {
@@ -108,27 +106,22 @@ const handleLogin = async () => {
       role: data.role
     })
 
-    // 登录成功
-    ElMessage.success('登录成功')
+    // Login success
+    ElMessage.success('Login successful')
     if (data.role === 'seller') {
       router.push('/seller')
-    } else if (data.role === 'buyer'){
+    } else if (data.role === 'buyer') {
       router.push('/')
     }
   } catch (error) {
-    console.error('登录失败:', error.response.data.message)
+    console.error('Login failed:', error.response.data.message)
     ElMessage.error(error.response.data.message)
   } finally {
     loading.value = false
   }
 }
 
-// 忘记密码
-// const handleForgotPassword = () => {
-//   router.push('/forgot-password')
-// }
-
-// 注册
+// Register
 const handleRegister = () => {
   router.push('/register')
 }
