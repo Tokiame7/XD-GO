@@ -43,15 +43,15 @@ export default {
         requireAuth: true,
       },
     },
-    // {
-    //   path: 'checkout',
-    //   name: 'Checkout',
-    //   component: () => import('@/views/shop/checkout/index.vue'),
-    //   meta: {
-    //     title: '订单结算',
-    //     requireAuth: true,
-    //   },
-    // },
+    {
+     path: 'checkout',
+       name: 'Checkout',
+       component: () => import('@/views/shop/checkout/index.vue'),
+       meta: {
+         title: '订单结算',
+         requireAuth: true,
+       },
+     },
     {
       path: 'user',
       name: 'User',
@@ -83,24 +83,24 @@ export default {
         requireAuth: true,
       },
     },
-    // {
-    //   path: 'order/:id',
-    //   name: 'OrderDetail',
-    //   component: () => import('@/views/shop/order/detail.vue'),
-    //   meta: {
-    //     title: '订单详情',
-    //     requireAuth: true,
-    //   },
-    // },
-    // {
-    //   path: 'order/success',
-    //   name: 'OrderSuccess',
-    //   component: () => import('@/views/shop/order/success.vue'),
-    //   meta: {
-    //     title: '下单成功',
-    //     requireAuth: true,
-    //   },
-    // },
+    {
+      path: 'order/:id',
+      name: 'OrderDetail',
+      component: () => import('@/views/shop/order/index.vue'),
+      meta: {
+        title: '订单详情',
+        requireAuth: true,
+      },
+    },
+     {
+       path: 'order/success',
+       name: 'OrderSuccess',
+       component: () => import('@/views/shop/order/success.vue'),
+       meta: {
+         title: '下单成功',
+         requireAuth: true,
+       },
+     },
     // {
     //   path: 'refund/:id',
     //   name: 'Refund',
