@@ -2,7 +2,7 @@
   <!-- 我的商品 -->
   <div class="section my-products">
     <div class="section-header">
-      <h2>我的商品</h2>
+      <h2>MyProducts</h2>
       <!-- <el-button text @click="handleViewMore()">
           查看更多<el-icon><arrow-right /></el-icon>
         </el-button> -->
@@ -13,21 +13,21 @@
         @click="handleProductClick(product.productId)">
         <div class="product-image">
           <img :src="product.imageUrl" :alt="product.productName">
-          <div class="product-tag hot">热销</div><!-- 热销位置样式 -->
+          <div class="product-tag hot">HOT</div><!-- 热销位置样式 -->
         </div>
         <div class="product-info">
           <h3>{{ product.productName }}</h3>
           <p class="desc">{{ product.description }}</p>
           <div class="price">¥{{ product.price.toFixed(2) }}</div>
-          <div class="sales">月销 {{ product.stock }}+</div>
+          <div class="sales">MonthStock {{ product.stock }}+</div>
         </div>
       </div>
     </div>
      <!-- 可以在这里添加展示商品详情的部分 -->
      <div v-if="getsellerproductDetail.sellerProductDetail">
-      <h2>商品详情</h2>
-      <p>商品名称: {{ getsellerproductDetail.sellerProductDetail.detail.goods_name }}</p>
-      <p>价格: ¥{{ getsellerproductDetail.sellerProductDetail.detail.price }}</p>
+      <h2>ProductsDetail</h2>
+      <p>Products'name: {{ getsellerproductDetail.sellerProductDetail.detail.goods_name }}</p>
+      <p>Price: ¥{{ getsellerproductDetail.sellerProductDetail.detail.price }}</p>
       <!-- 其他详情信息 -->
     </div>
   </div>
