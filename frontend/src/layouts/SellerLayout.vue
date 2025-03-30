@@ -7,13 +7,13 @@
         <div class="nav-left">
           <router-link to="/seller" class="logo">
             <img src="" alt="logo">
-            <span>XD Mall</span>
+            <span>XD_GO</span>
           </router-link>
           <el-menu mode="horizontal" :router="true" :default-active="activeMenu">
-            <el-menu-item index="/seller">Your Products</el-menu-item>
-            <el-menu-item index="/addproducts">Edit Products</el-menu-item>
-            <el-menu-item index="/sellerorders">My Orders</el-menu-item>
-            <el-menu-item index="/order">Switch to Buyer</el-menu-item>
+            <el-menu-item index="/seller">MyProducts</el-menu-item>
+            <el-menu-item index="/addproducts">EditProducts</el-menu-item>
+            <el-menu-item index="/sellerorders">MyOrders</el-menu-item>
+            <el-menu-item index="/order">Switch To Buyer</el-menu-item>
           </el-menu>
         </div>
 

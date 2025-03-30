@@ -1130,16 +1130,18 @@ def update_order_status(current_user):
         order = Order.query.filter_by(orderid=data['orderid']).first()
         if not order:
             return jsonify({
-                "code": 0,
+                "code": 404,
                 "message": f"Order not found with orderid: {data['orderid']}"
             }), 404
 
         # Check if the status is valid
         if data['status'] not in ['pending', 'delivered', 'shipped']:
             return jsonify({
-                "code": 0,
+                "code": 400,
                 "message": f"Invalid status: {data['status']}"
             }), 400
+
+        data['status'] = 'shipped'
 
         # Update the order status
         order.status = data['status']

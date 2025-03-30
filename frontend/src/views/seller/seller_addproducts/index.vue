@@ -2,21 +2,21 @@
   <div>
     <!-- 商品列表 -->
     <template v-if="loading">
-      <p>数据加载中，请稍候...</p>
+      <p>Pageloading,waiting...</p>
     </template>
     <template v-else>
     <el-table :data="products" style="width: 100%" max-height="250">
-    <el-table-column fixed prop="productName" label="商品名" width="150" />
+    <el-table-column fixed prop="productName" label="Product'name" width="150" />
     <el-table-column prop="productId" label="id" width="120" />
-    <el-table-column prop="price" label="价格" width="80" />
-    <el-table-column prop="stock" label="销量" width="80" />
-    <el-table-column prop="category" label="分类" width="120" />
-    <el-table-column prop="description" label="描述" width="350" />
-    <el-table-column prop="createTime" label="创建时间" width="120" />
-    <el-table-column prop="updateTime" label="更新时间" width="120" />
-    <el-table-column prop="imageUrl" label="图片URL" width="300" />
-    <el-table-column prop="sellerId" label="所属用户" width="120" />
-    <el-table-column prop="catid" label="分类id" width="120" />
+    <el-table-column prop="price" label="Price" width="80" />
+    <el-table-column prop="stock" label="Stock" width="80" />
+    <el-table-column prop="category" label="Category" width="120" />
+    <el-table-column prop="description" label="Description" width="350" />
+    <el-table-column prop="createTime" label="CreateTime" width="120" />
+    <el-table-column prop="updateTime" label="UpdateTime" width="120" />
+    <el-table-column prop="imageUrl" label="ImageUrl" width="300" />
+    <el-table-column prop="sellerId" label="Owner" width="120" />
+    <el-table-column prop="catid" label="Categoryid" width="120" />
     <el-table-column fixed="right" label="Operations" min-width="120">
       <template #default="scope">
         <el-button
@@ -48,23 +48,28 @@
       <!-- 模态框主内容 -->
     <el-form :model="form" label-width="auto" style="max-width: 600px">
       <!-- 第一个框 -->
-    <el-form-item label="商品名称*">
+    <el-form-item label="ProductName*">
       <el-input v-model="form.name" />
     </el-form-item>
-    <el-form-item label="描述">
+    <el-form-item label="Description">
       <el-input v-model="form.description" />
     </el-form-item>
-    <el-form-item label="价格*">
+    <el-form-item label="Price*(>0)">
       <el-input v-model.number="form.price" />
     </el-form-item>
-    <el-form-item label="库存*">
+    <el-form-item label="Stock*(>0)">
       <el-input v-model.number="form.stock" />
     </el-form-item>
-    <el-form-item label="图片url">
+    <el-form-item label="Imageurl">
       <el-input v-model="form.image" />
     </el-form-item>
+    <el-form-item label="catid*">
+      <el-input v-model="form.catid" />
+      <text>cat_clothing、</text>
+      <text>cat_electronics</text>
+    </el-form-item>
      <!-- 选项框 -->
-    <el-form-item label="商品分类*">
+    <!-- <el-form-item label="商品分类*">
       <el-checkbox-group v-model="form.type">
         <el-checkbox value="Online activities" name="type">
           Clothing
@@ -73,24 +78,24 @@
           Electronics
         </el-checkbox>
       </el-checkbox-group>
-    </el-form-item>
+    </el-form-item> -->
 <!-- 多内容框 /文件框-->
-    <el-form-item label="其他">
+    <el-form-item label="Other">
       <el-input v-model="form.desc" type="textarea" />
     </el-form-item>
 
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">创建商品</el-button>
-      <el-button @click="resetForm">清除内容</el-button>
+      <el-button type="primary" @click="onSubmit">Create</el-button>
+      <el-button @click="resetForm">Delete</el-button>
     </el-form-item>
 
   </el-form>
     <!-- 底部按键 -->
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="dialogVisible = false">esc</el-button>
         <el-button type="primary" @click="dialogVisible = false">
-          确认
+          confirm
         </el-button>
       </div>
     </template>
@@ -137,8 +142,8 @@ const form = reactive({...initialform});
 //提交表单
 const onSubmit = () => {
   //此处实现提交后端
-addproduct.createProducts(form)
-  console.log('submit!')
+ addproduct.createProducts(form)
+  console.log('submit!',form)
   //提交后把表单重置
   resetForm();
 }
