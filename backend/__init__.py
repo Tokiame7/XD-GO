@@ -21,7 +21,7 @@ def create_app():
     migrate.init_app(app, db)
 
     # 注册蓝图
-    from backend.views import main
-    app.register_blueprint(main)
+    from backend.views import register_blueprints
+    register_blueprints(app)
 
     return app
