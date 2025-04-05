@@ -115,7 +115,8 @@ export const useGetshopCatid = defineStore('getcatid', () => {
   const getcatid = async () => {
     try {
       const res = await getShopCategories();
-      catidList.value = res.data
+      console.log('获取分类id成功', res);
+      catidList.value = res.data.categories
     } catch (error) {
       console.log('获取分类id失败', error)
     }
