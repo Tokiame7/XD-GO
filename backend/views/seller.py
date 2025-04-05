@@ -73,6 +73,41 @@ def get_product(current_user):
     return jsonify(response), 200
 
 
+# 卖家获取商品详情API[GET]   /seller_detail
+@main.route('/seller_detail', methods=['GET'])
+def seller_product_detail():
+    goods_id = request.args.get('goodsId')
+
+    if not goods_id:
+        return jsonify({"status": 1, "message": "商品ID不能为空", "data": {}})
+
+    product = Product.query.filter_by(proid=goods_id).first()
+
+    if not product:
+        return jsonify({"status": 1, "message": "商品不存在", "data": {}})
+
+    seller = User.query.filter_by(userid=product.userid).first()
+
+    data = {
+        "goods_id": product.proid,
+        "goods_name": product.name,
+        "price": str(product.price),
+        "stock": product.stock,
+        "description": product.description,
+        "category_id": product.catid,
+        "image": product.image,
+        "seller_info": {
+            "seller_id": seller.userid,
+            "seller_name": seller.username,
+            "contact": seller.phone
+        },
+        "createtime": product.createtime.strftime("%Y-%m-%d %H:%M:%S"),
+        "updatetime": product.updatetime.strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+    return jsonify({"status": 0, "message": "成功", "data": {"detail": data}})
+
+
 # 卖家更新自己的商品列表API[POST]   /updateProduct
 @main.route('/updateProduct', methods=['POST'])
 @token_required
@@ -84,7 +119,7 @@ def update_products(current_user):
         # 验证必要字段
         if not data or 'products' not in data:
             return jsonify({
-                "code": 0,
+                "code": 400,
                 "message": "Invalid input: Missing required fields"
             }), 400
 
@@ -94,14 +129,14 @@ def update_products(current_user):
         for product_data in products:
             if not all(k in product_data for k in ['proid', 'price', 'stock']):
                 return jsonify({
-                    "code": 0,
+                    "code": 400,
                     "message": "Invalid product data: Missing required fields (proid, price or stock)"
                 }), 400
 
             # 检查价格和库存是否为有效值
             if product_data['price'] <= 0 or product_data['stock'] < 0:
                 return jsonify({
-                    "code": 0,
+                    "code": 400,
                     "message": f"Invalid product data: Price must be positive "
                                f"and stock must be non-negative (proid: {product_data['proid']}) "
                 }), 400
@@ -115,7 +150,7 @@ def update_products(current_user):
 
             if not product:
                 return jsonify({
-                    "code": 0,
+                    "code": 404,
                     "message": f"Product not found or not owned by you (proid: {product_data['proid']})"
                 }), 404
 
@@ -133,7 +168,7 @@ def update_products(current_user):
                 category = Category.query.get(product_data['catid'])
                 if not category:
                     return jsonify({
-                        "code": 0,
+                        "code": 404,
                         "message": f"Category not found (catid: {product_data['catid']})"
                     }), 404
                 product.catid = product_data['catid']
@@ -395,21 +430,20 @@ def update_order_status(current_user):
                 "code": 400,
                 "message": f"Invalid status: {data['status']}"
             }), 400
+        if data['status'] == 'pending' and order.status not in ['shipped', 'delivered']:
+            data['status'] = 'shipped'
+            # Update the order status
+            order.status = data['status']
+            db.session.commit()
 
-        data['status'] = 'shipped'
-
-        # Update the order status
-        order.status = data['status']
-        db.session.commit()
-
-        return jsonify({
-            "code": 200,
-            "message": "Order status updated successfully",
-            "data": {
-                "orderid": data['orderid'],
-                "status": data['status']
-            }
-        }), 200  # OK
+            return jsonify({
+                "code": 200,
+                "message": "Order status updated successfully",
+                "data": {
+                    "orderid": data['orderid'],
+                    "status": data['status']
+                }
+            }), 200  # OK
 
     except Exception as e:
         db.session.rollback()

@@ -153,7 +153,7 @@ def get_user_info(current_user):
             }
         else:
             return jsonify({
-                "code": 0,
+                "code": 400,
                 "message": "Invalid user role"
             }), 400
 
@@ -165,7 +165,7 @@ def get_user_info(current_user):
 
     except Exception as e:
         return jsonify({
-            "code": 0,
+            "code": 500,
             "message": str(e)
         }), 500
 

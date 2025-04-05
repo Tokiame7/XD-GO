@@ -133,7 +133,6 @@ def submit_order(current_user):
         total_orders = []
         try:
             for seller_id, items in grouped_items.items():
-                # 创建新订单
                 order_id = str(uuid.uuid4())
                 totalprice = 0
                 order_items = []
@@ -155,57 +154,58 @@ def submit_order(current_user):
                     orderid=order_id,
                     userid=current_user.userid,
                     sellerid=seller_id,
-                    status='pending',
+                    status='unpaid',  # 初始状态为unpaid
                     totalprice=totalprice
                 )
-                db.session.add(order)
-                db.session.add_all(order_items)
+                # 订单项添加到订单列表中
                 total_orders.append({
                     "orderid": order_id,
                     "sellerid": seller_id,
-                    "totalprice": totalprice
+                    "totalprice": totalprice,
+                    "order_items": order_items
                 })
 
-            # 提交订单和库存更新
-            db.session.commit()
+            # 在支付之前不保存订单，只有在支付成功后才提交订单
+            payment_results = []
+            for order in total_orders:
+                # 模拟支付接口
+                payment_status = initiate_payment(order["orderid"], order["totalprice"])
+                if payment_status == "success":
+                    # 更新订单状态为pending
+                    order_record = Order.query.filter_by(orderid=order["orderid"]).first()
+                    order_record.status = 'pending'  # 支付成功，设置为pending
+                    db.session.add(order_record)
+                    db.session.add_all(order["order_items"])  # 添加订单项
+                    db.session.commit()
 
-            # 清空购物车
-            CartItem.query.filter_by(carid=cart.carid).delete()
-            db.session.commit()
+                    # 清空购物车
+                    CartItem.query.filter_by(carid=cart.carid).delete()
+                    db.session.commit()
 
+                    payment_results.append({
+                        "orderid": order["orderid"],
+                        "totalprice": str(order["totalprice"]),
+                        "status": "pending"  # 支付成功，订单状态变为pending
+                    })
+                else:
+                    # 如果支付失败，则不提交订单，保留购物车
+                    payment_results.append({
+                        "orderid": order["orderid"],
+                        "totalprice": str(order["totalprice"]),
+                        "status": "cancelled"  # 支付失败，订单取消
+                    })
+
+            return jsonify({
+                "code": 200,
+                "message": "Order submission complete",
+                "data": payment_results
+            }), 200
         except Exception as e:
             db.session.rollback()
             return jsonify({
                 "code": 500,
                 "message": f"Database error: {str(e)}"
             }), 500
-
-        # 支付处理
-        payment_results = []
-        for order in total_orders:
-            payment_status = initiate_payment(order["orderid"], order["totalprice"])
-            if payment_status == "success":
-                # 更新订单状态为已支付
-                order_record = Order.query.filter_by(orderid=order["orderid"]).first()
-                order_record.status = 'paid'
-                db.session.commit()
-                payment_results.append({
-                    "orderid": order["orderid"],
-                    "totalprice": str(order["totalprice"]),
-                    "status": "paid"
-                })
-            else:
-                payment_results.append({
-                    "orderid": order["orderid"],
-                    "totalprice": str(order["totalprice"]),
-                    "status": "payment_failed"
-                })
-
-        return jsonify({
-            "code": 200,
-            "message": "Order submission complete",
-            "data": payment_results
-        }), 200
 
     except Exception as e:
         db.session.rollback()
