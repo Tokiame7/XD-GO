@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend.models import db, Product, Category, Order, OrderItem
+from backend.models import db, Product, Category, Order, OrderItem, User
 from backend.views.auth import token_required
 import uuid
 
