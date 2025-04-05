@@ -4,7 +4,7 @@ import { ref } from 'vue'//ref 让数据变为响应式数据 ref()\ref([]) 可�
 import { Axios } from 'axios'
 //pinia 就是打包数据和方法让这些数据在几个组件间被统一管理
 import { getShopProducts, getOrderList, getShopCategories } from '@/api/seller'
-import { getProductDetail, deleteProduct, createProduct } from '@/api/product'
+import { getProductDetail, deleteProduct, createProduct, updateProduct } from '@/api/product'
 import { shipOrder } from '@/api/order'
 
 
@@ -142,5 +142,23 @@ export const useShiporder = defineStore('shiporderstatus', () => {
   return {
     orderstatus,
     shipOrderstatus
+  }
+})
+
+//修改商品信息
+export const useUpdateProduct = defineStore('updateproduct', () => {
+
+  const updateproductList = ref([]);
+  const upDateproduct = async (data) => {
+    try {
+      const res = await updateProduct(data);
+      updateproductList.value = res.data
+    } catch (error) {
+      console.log('更新商品失败', error)
+    }
+  }
+  return {
+    updateproductList,
+    upDateproduct
   }
 })

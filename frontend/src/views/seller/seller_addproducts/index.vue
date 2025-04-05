@@ -31,7 +31,7 @@
           link
           type="primary"
           size="small"
-          @click.prevent=""
+          @click="updatePro(scope.row)"
         >
           Edit
         </el-button>
@@ -68,7 +68,7 @@
         <div>Can Choose:</div>
         <div v-for="cat in catId" :key="cat.categoryId" class="Catids">
           <div>
-            {{ cat.categoryName }}、
+            {{ cat.categoryId }}、
           </div>
         </div>
       </el-form-item>
@@ -93,13 +93,51 @@
         </div>
       </template>
     </el-dialog>
+    <el-dialog v-model="dialogVisible_2" :modal="false">
+      <!-- 模态框主内容 -->
+      <el-form :model="upform" label-width="auto" style="max-width: 600px">
+        <!-- 第一个框 -->
+      <el-form-item label="ProductName">
+        <el-input v-model="upform.productName" />
+      </el-form-item>
+      <el-form-item label="Description">
+        <el-input v-model="upform.description" />
+      </el-form-item>
+      <el-form-item label="Price(>0)">
+        <el-input v-model.number="upform.price" />
+      </el-form-item>
+      <el-form-item label="Stock(>0)">
+        <el-input v-model.number="upform.stock" />
+      </el-form-item>
+      <el-form-item label="Imageurl">
+        <el-input v-model="upform.imageUrl" />
+      </el-form-item>
+            <!-- 多内容框 /文件框-->
+      <el-form-item label="Other">
+        <el-input v-model="form.desc" type="textarea" />
+      </el-form-item>
 
+      <el-form-item>
+        <el-button type="primary" @click="onSubmitUpdate">OK</el-button>
+      </el-form-item>
+
+      </el-form>
+      <!-- 底部按键 -->
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogVisible_2 = false">esc</el-button>
+          <el-button type="primary" @click="dialogVisible_2 = false">
+            confirm
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted , watchEffect } from 'vue';
-import { useSellerProucts,useDeleteProduct,useAddProduct,useGetshopCatid } from '@/stores/seller_products';
+import { useSellerProucts,useDeleteProduct,useAddProduct,useGetshopCatid, useUpdateProduct } from '@/stores/seller_products';
 import { get } from 'lodash-es';
 
 
@@ -108,12 +146,13 @@ const sellerProducts = useSellerProucts();
 const addproduct = useAddProduct();
 const deleproduct = useDeleteProduct();
 const getshopCatid = useGetshopCatid();
-
+const updateproduct = useUpdateProduct();
 const loading = ref(true);//加载对象
 const products = ref([])//当前响应式对象
 const dialogVisible = ref(false)//模态框状态
+const dialogVisible_2 = ref(false)
 const catId = ref([])//所有catid
-//初始化的空表单
+//初始化的空表单 增加商品栏
 const initialform = {
   name: '',
   productId: '',
@@ -129,7 +168,7 @@ const initialform = {
 }
 //初始化响应
 const form = reactive({...initialform});
-
+const upform = reactive({});
 //提交表单
 const onSubmit = () => {
   //此处实现提交后端
@@ -139,11 +178,26 @@ const onSubmit = () => {
   resetForm();
 }
 
+const onSubmitUpdate = () =>{
+  updateproduct.upDateproduct(upform);
+  console.log('商品更新成功',upform);
+}
 //重置表单函数
 const resetForm = () => {
   // 使用 Object.assign 重置表单数据
   Object.assign(form, initialform);
 };
+
+//覆盖将要提交的更新表格
+const updatePro = (uppro) => {
+  Object.assign(upform , uppro);
+  dialogVisible_2.value = true;
+};
+
+//删除商品
+const delepro = (proid)=>{
+  deleproduct.DeleteProduct(proid);
+}
 
 //整个组件挂载后的行为
 onMounted(() => {
@@ -167,10 +221,6 @@ watchEffect(() => {
     }
 });
 
-//删除商品
-const delepro = (proid)=>{
-  deleproduct.DeleteProduct(proid);
-}
 </script>
 
 <style scoped>
