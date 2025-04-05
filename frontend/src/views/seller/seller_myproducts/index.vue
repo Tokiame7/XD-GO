@@ -37,24 +37,15 @@
 <script setup>
 import { ref, onMounted,watch } from 'vue'
 import { useSellerProucts ,useGetproductDetail} from '@/stores/seller_products'
-import seller from '@/router/modules/seller';
-import { useRouter } from 'vue-router';
+
 
 //pinia打包 创建实例方法
 const sellerProducts = useSellerProucts()
 const getsellerproductDetail = useGetproductDetail();//数据体（detail）返回的是getsellerproductDetail.detail
 
-const userid = reactive({
-  page:1,
-  pageSize:10,
-  sellerid : 'seller_001',
-  search:''
-})
-const imageloading = ref(false)
-const router = useRouter()
 //onM...组件挂载后紧跟的操作
 onMounted(()=>{
-  sellerProducts.getSellerProductsList(userid)
+  sellerProducts.getSellerProductsList()
 })
 
 //当商品变化时立即执行一次获取商品
@@ -64,16 +55,9 @@ watch(sellerProducts.sellerProductsList,()=>{
 {immediate:true}
 )
 
-// setTimeout(()=>{
-//   router.reload()
-// },3000)
-
 //点击图片获得卖家商品详细数据 传入当前商品id
 const handleProductClick= (id) =>{
- // const goodsid = ref(id)
-  //传入goodsid
-getsellerproductDetail.getSellerProductDetail(id);
-imageloading = false
+  getsellerproductDetail.getSellerProductDetail(id);
 }
 
 </script>
