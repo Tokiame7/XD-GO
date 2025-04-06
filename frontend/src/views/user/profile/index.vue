@@ -20,6 +20,8 @@
         <el-input v-model="form.shipping_address" />
       </el-form-item>
 
+    <el-button type="primary" @click="goToEdit">修改个人信息</el-button>
+
       <el-form-item>
         <!--<el-button type="primary" @click="onSubmit">修改</el-button>-->
         <el-button @click="cancel">返回主页</el-button>
@@ -28,9 +30,8 @@
           type="success"
           @click="goToAddressManage"
           v-if="userStore.userInfo.role === 'buyer'"
-        >
-          管理收货地址
-        </el-button>
+        >管理收货地址</el-button>
+
       </el-form-item>
     </el-form>
   </div>
@@ -88,6 +89,14 @@ const cancel = () => {
 const goToAddressManage = () => {
   router.push('/address')
 }
+
+// 新增跳转方法
+const goToEdit = () => {
+    router.push('/user/edit')
+}
+
+
+
 </script>
 
 <style scoped lang="scss">

@@ -83,6 +83,19 @@ export default {
           }
       },
 
+
+      // 在原有路由基础上新增修改个人信息
+      {
+          path: 'user/edit',
+          name: 'UserEdit',
+          component: () => import('@/views/user/EditInfo.vue'),
+          meta: {
+              title: '修改个人信息',
+              requireAuth: true
+          }
+      },
+
+
     {
       path: 'order',
       name: 'Order',

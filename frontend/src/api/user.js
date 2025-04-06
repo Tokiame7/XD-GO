@@ -73,6 +73,21 @@ export function getAddressDetail(id) {
   })
 }
 
+
+
+// 新增个人信息修改接口
+export function updateUserInfo(data) {
+    return request({
+        url: '/api/users/info_edit',
+        method: 'put',
+        data
+    })
+}
+
+
+
+
+
 // 获取收藏列表
 export function getFavorites() {
   return request({
