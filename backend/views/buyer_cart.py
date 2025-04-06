@@ -35,8 +35,18 @@ def add_product_to_cart(current_user):
                 "message": f"Product not found with proid: {data['proid']}"
             }), 404
 
+        # Get the cart for the user (if it doesn't exist, create one)
+        cart = Cart.query.filter_by(userid=current_user.userid).first()
+        if not cart:
+            cart = Cart(
+                carid=str(uuid.uuid4()),
+                userid=current_user.userid
+            )
+            db.session.add(cart)
+            db.session.commit()
+
         # Check if the user already has the product in their cart
-        cart_item = CartItem.query.filter_by(userid=current_user.userid, proid=data['proid']).first()
+        cart_item = CartItem.query.filter_by(carid=cart.carid, proid=data['proid']).first()
         if cart_item:
             # Update the quantity if the product is already in the cart
             cart_item.quantity += data['quantity']
@@ -44,8 +54,7 @@ def add_product_to_cart(current_user):
         else:
             # Add the product to the cart if it's not already there
             cart_item = CartItem(
-                carid=str(uuid.uuid4()),
-                userid=current_user.userid,
+                carid=cart.carid,
                 proid=data['proid'],
                 quantity=data['quantity']
             )
@@ -62,6 +71,7 @@ def add_product_to_cart(current_user):
         }), 200  # OK
 
     except Exception as e:
+        print(f"Error: {str(e)}")
         db.session.rollback()
         return jsonify({
             "code": 500,

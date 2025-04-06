@@ -104,7 +104,7 @@ export function getSimilarProducts(id, params) {
 // 获取购物车列表
 export function getCartList() {
   return request({
-    url: '/shop/cart',
+    url: '/api/shop/cart',
     method: 'get',
   })
 }
@@ -112,8 +112,8 @@ export function getCartList() {
 // 添加商品到购物车
 export function addToCart(data) {
   return request({
-    url: '/shop/cart/add',
-    method: 'post',
+    url: '/api/cart/add_product',
+    method: 'put',
     data,
   })
 }
