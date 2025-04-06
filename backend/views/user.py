@@ -210,3 +210,50 @@ def update_shipping_address(current_user):
             "code": 0,
             "message": str(e)
         }), 500
+
+# 用户更改个人信息接口API[PUT]   /profile_edit
+@main.route('/profile_edit', methods=['PUT'])
+@token_required
+def update_profile(current_user):
+    try:
+        # 获取请求数据
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        phone = data.get('phone')
+        shipping_address = data.get('shipping_address')
+
+        # 更新用户信息
+        if username:
+            current_user.username = username
+        if email:
+            current_user.email = email
+        if phone:
+            current_user.phone = phone
+        if shipping_address:
+            current_user.shipping_address = shipping_address
+
+        # 提交到数据库
+        db.session.commit()
+
+        # 返回更新后的用户信息
+        user_info = {
+            'userid': current_user.userid,
+            'username': current_user.username,
+            'email': current_user.email,
+            'phone': current_user.phone,
+            'shipping_address': current_user.shipping_address
+        }
+
+        return jsonify({
+            "code": 200,
+            "message": "Profile updated successfully",
+            "data": user_info
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 0,
+            "message": str(e)
+        }), 500
