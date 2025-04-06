@@ -27,41 +27,43 @@ export function getUserInfo() {
   })
 }
 
-// 获取地址列表
+//获取地址列表（改）
 export function getAddressList() {
-  return request({
-    url: '/api/users/address',
-    method: 'get',
-  })
+    return request({
+        url: '/api/users/info', // 复用获取用户信息的接口
+        method: 'get',
+    })
 }
 
 // 添加收获地址
-export function addAddress(data) {
-  return request({
-    url: '/api/users/add_address',
-    method: 'post',
-    data,
-  })
-}
+
+// export function addAddress(data) {
+//  return request({
+//    url: '/api/users/add_address',
+//   method: 'post',
+//   data,
+//  })
+// }
 
 // 更新地址（修改后）
-export function updateAddress(data) { // 移除 id 参数，因为后端不需要地址ID
+export function updateAddress(data) { // 移除id参数
     return request({
-        url: '/address_edit', // 与后端路由完全一致
+        url: '/api/users/address_edit',
         method: 'put',
         data: {
-            shipping_address: data // 确保字段名与后端匹配
+            shipping_address: data.detail // 映射到后端字段
         }
     })
 }
 
 // 删除地址
-export function deleteAddress(id) {
-  return request({
-    url: `/user/address/${id}`,
-    method: 'delete',
-  })
-}
+
+ //export function deleteAddress(id) {
+ // return request({
+ //   url: `/user/address/${id}`,
+ //   method: 'delete',
+ //  })
+ // }
 
 // 获取地址详情
 export function getAddressDetail(id) {

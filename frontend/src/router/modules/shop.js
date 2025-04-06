@@ -62,17 +62,26 @@ export default {
       },
     },
 
-    {
+      {
           path: '/address',
           name: 'Address',
-          component: () => import('@/views/user/address/UserAddress.vue')
-    },
-
-    {
+          component: () => import('@/views/user/address/UserAddress.vue'),
+          meta: { // 新增这个meta配置
+              requireAuth: true,
+              buyerOnly: true,
+              title: '收货地址管理'
+          }
+      },
+      {
           path: '/address/edit/:id?',
           name: 'AddressEdit',
-          component: () => import('@/views/user/address/AddressEdit.vue')
-    },
+          component: () => import('@/views/user/address/AddressEdit.vue'),
+          meta: { // 新增这个meta配置
+              requireAuth: true,
+              buyerOnly: true,
+              title: '编辑收货地址'
+          }
+      },
 
     {
       path: 'order',
