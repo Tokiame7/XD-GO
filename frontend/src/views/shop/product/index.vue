@@ -79,6 +79,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { ElMessage } from 'element-plus'
 import { useGoodsStore } from '@/stores/goods'
+import { addToCart } from '@/api/shop'
 
 const router = useRouter()
 const route = useRoute()
@@ -94,7 +95,7 @@ const quantity = ref(1)
 const loading = ref(false)
 
 // 加入购物车
-const handleAddToCart = () => {
+const handleAddToCart = async () => {
   // 检查是否选择了所有规格
 
   // 构建商品信息
@@ -106,7 +107,14 @@ const handleAddToCart = () => {
   }
 
   // 添加到购物车
+  // 更新仓库
   cartStore.addToCart(cartItem, quantity.value)
+  // 发请求
+  const res = await addToCart(JSON.stringify({
+    proid: curGood.value.productId,
+    quantity: quantity.value
+  }))
+  console.log(res);
   ElMessage.success('已添加到购物车')
 }
 
