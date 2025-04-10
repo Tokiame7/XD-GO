@@ -451,3 +451,41 @@ def update_order_status(current_user):
             "code": 500,
             "message": f"Error: {str(e)}"
         }), 500  # Internal Server Error
+# 卖家获取热销商品列表（简单实现：按库存量降序）[GET]   /hotProducts
+@main.route('/hotProducts', methods=['GET'])
+@token_required
+def get_hot_products(current_user):
+    try:
+        # 确保用户是卖家
+        if current_user.role != 'seller':
+            return jsonify({"code": 403, "message": "无权访问"}), 403
+
+        # 查询当前卖家的商品，按库存降序排列
+        products = Product.query.filter_by(userid=current_user.userid)\
+            .order_by(Product.stock.desc()).all()
+
+        # 构建响应数据
+        data = []
+        for product in products:
+            category = Category.query.get(product.catid)
+            product_data = {
+                "productId": product.proid,
+                "productName": product.name,
+                "price": float(product.price),
+                "stock": product.stock,
+                "imageUrl": product.image,
+                "category": category.name if category else 'N/A'
+            }
+            data.append(product_data)
+
+        return jsonify({
+            "code": 200,
+            "message": "获取热销商品成功",
+            "data": data
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": f"服务器错误: {str(e)}"
+        }), 500
