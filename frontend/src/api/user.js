@@ -27,39 +27,43 @@ export function getUserInfo() {
   })
 }
 
-// 获取地址列表
+//获取地址列表（改）
 export function getAddressList() {
-  return request({
-    url: '/api/users/address',
-    method: 'get',
-  })
+    return request({
+        url: '/api/users/info', // 复用获取用户信息的接口
+        method: 'get',
+    })
 }
 
 // 添加收获地址
-export function addAddress(data) {
-  return request({
-    url: '/api/users/add_address',
-    method: 'post',
-    data,
-  })
-}
 
-// 更新地址
-export function updateAddress(id, data) {
-  return request({
-    url: `/user/address/${id}`,
-    method: 'put',
-    data,
-  })
+// export function addAddress(data) {
+//  return request({
+//    url: '/api/users/add_address',
+//   method: 'post',
+//   data,
+//  })
+// }
+
+// 更新地址（修改后）
+export function updateAddress(data) { // 移除id参数
+    return request({
+        url: '/api/users/address_edit',
+        method: 'put',
+        data: {
+            shipping_address: data.detail // 映射到后端字段
+        }
+    })
 }
 
 // 删除地址
-export function deleteAddress(id) {
-  return request({
-    url: `/user/address/${id}`,
-    method: 'delete',
-  })
-}
+
+ //export function deleteAddress(id) {
+ // return request({
+ //   url: `/user/address/${id}`,
+ //   method: 'delete',
+ //  })
+ // }
 
 // 获取地址详情
 export function getAddressDetail(id) {
@@ -68,6 +72,21 @@ export function getAddressDetail(id) {
     method: 'get',
   })
 }
+
+
+
+// 新增个人信息修改接口
+export function updateUserInfo(data) {
+    return request({
+        url: '/api/users/info_edit',
+        method: 'put',
+        data
+    })
+}
+
+
+
+
 
 // 获取收藏列表
 export function getFavorites() {
