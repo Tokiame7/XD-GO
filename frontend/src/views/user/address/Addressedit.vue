@@ -20,7 +20,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getAddressDetail, addAddress, updateAddress } from '@/api/user'
+import { getAddressDetail, updateAddress } from '@/api/user'
 
 const route = useRoute()
 const router = useRouter()
