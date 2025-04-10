@@ -83,14 +83,12 @@ def login_user():
         # 获取查询参数
         username = request.args.get('username')
         password = request.args.get('password')
-
         # 验证输入参数
         if not username or not password:
             return jsonify({
                 "code": 0,
                 "message": "Invalid input: Missing required fields"
             }), 400
-
         # 查询用户
         user = User.query.filter_by(username=username, password=password).first()
         if not user:
@@ -98,16 +96,14 @@ def login_user():
                 "code": 0,
                 "message": "Invalid input: Incorrect username or password"
             }), 401
-
         # 生成 JWT Token
         token_payload = {
             'userid': user.userid,
             'username': user.username,
             'role': user.role,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # Token 有效期为 1 小时
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)  # Token 有效期为 1 小时
         }
         token = jwt.encode(token_payload, 'your_secret_key', algorithm='HS256')  # 使用密钥和算法生成 Token
-
         # 返回登录成功信息
         return jsonify({
             "code": 200,
@@ -119,7 +115,6 @@ def login_user():
                 "token": token  # 返回生成的 Token
             }
         }), 200
-
     except Exception as e:
         # 捕获异常并返回错误信息
         return jsonify({
@@ -202,6 +197,54 @@ def update_shipping_address(current_user):
                 "username": current_user.username,
                 "new_shipping_address": current_user.shipping_address
             }
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 0,
+            "message": str(e)
+        }), 500
+
+
+# 用户更改个人信息接口API[PUT]   /profile_edit
+@main.route('/profile_edit', methods=['PUT'])
+@token_required
+def update_profile(current_user):
+    try:
+        # 获取请求数据
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        phone = data.get('phone')
+        shipping_address = data.get('shipping_address')
+
+        # 更新用户信息
+        if username:
+            current_user.username = username
+        if email:
+            current_user.email = email
+        if phone:
+            current_user.phone = phone
+        if shipping_address:
+            current_user.shipping_address = shipping_address
+
+        # 提交到数据库
+        db.session.commit()
+
+        # 返回更新后的用户信息
+        user_info = {
+            'userid': current_user.userid,
+            'username': current_user.username,
+            'email': current_user.email,
+            'phone': current_user.phone,
+            'shipping_address': current_user.shipping_address
+        }
+
+        return jsonify({
+            "code": 200,
+            "message": "Profile updated successfully",
+            "data": user_info
         }), 200
 
     except Exception as e:
