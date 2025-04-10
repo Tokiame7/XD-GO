@@ -1,86 +1,76 @@
 <template>
   <div>
     <!-- 商品列表 -->
-    <template v-if="loading">
+    <div v-if="loading">
       <p>Pageloading,waiting...</p>
-    </template>
-    <template v-else>
-    <el-table :data="products" style="width: 100%" max-height="250">
-    <el-table-column fixed prop="productName" label="Product'name" width="150" />
-    <el-table-column prop="productId" label="id" width="120" />
-    <el-table-column prop="price" label="Price" width="80" />
-    <el-table-column prop="stock" label="Stock" width="80" />
-    <el-table-column prop="category" label="Category" width="120" />
-    <el-table-column prop="description" label="Description" width="350" />
-    <el-table-column prop="createTime" label="CreateTime" width="120" />
-    <el-table-column prop="updateTime" label="UpdateTime" width="120" />
-    <el-table-column prop="imageUrl" label="ImageUrl" width="300" />
-    <el-table-column prop="sellerId" label="Owner" width="120" />
-    <el-table-column prop="catid" label="Categoryid" width="120" />
-    <el-table-column fixed="right" label="Operations" min-width="120">
-      <template #default="scope">
-        <el-button
-          link
-          type="primary"
-          size="small"
-          @click.prevent="delepro(scope.row.productId)"
-        >
-          Remove
-        </el-button>
-        <el-button
-          link
-          type="primary"
-          size="small"
-          @click="updatePro(scope.row)"
-        >
-          Edit
-        </el-button>
-      </template>
-     </el-table-column>
-     </el-table>
-      <el-button class="mt-4" style="width: 100%" @click="dialogVisible = true">
-        Add Item
-      </el-button>
-      </template>
+    </div>
+    <div v-else>
+      <el-table :data="products" style="width: 100%" max-height="1000">
+        <el-table-column fixed prop="productName" label="Product'name" width="150" />
+        <el-table-column prop="productId" label="id" width="120" />
+        <el-table-column prop="price" label="Price" width="80" />
+        <el-table-column prop="stock" label="Stock" width="80" />
+        <el-table-column prop="category" label="Category" width="120" />
+        <el-table-column prop="description" label="Description" width="350" />
+        <el-table-column prop="createTime" label="CreateTime" width="120" />
+        <el-table-column prop="updateTime" label="UpdateTime" width="120" />
+        <el-table-column prop="imageUrl" label="ImageUrl" width="300" />
+        <el-table-column prop="sellerId" label="Owner" width="120" />
+        <el-table-column prop="catid" label="Categoryid" width="120" />
+        <el-table-column fixed="right" label="Operations" min-width="120">
+          <template #default="scope">
+            <el-button link type="primary" size="small" @click.prevent="delepro(scope.row.productId)">
+              Remove
+            </el-button>
+            <el-button link type="primary" size="small" @click="updatePro(scope.row)">
+              Edit
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-button class="mt-4" style="width: 100%" @click="dialogVisible = true">
+      Add Item
+    </el-button>
     <!-- 添加商品模态框 -->
     <!-- 弹出添加商品 -->
     <el-dialog v-model="dialogVisible" :modal="false">
       <!-- 模态框主内容 -->
       <el-form :model="form" label-width="auto" style="max-width: 600px">
         <!-- 第一个框 -->
-      <el-form-item label="ProductName*">
-        <el-input v-model="form.name" />
-      </el-form-item>
-      <el-form-item label="Description">
-        <el-input v-model="form.description" />
-      </el-form-item>
-      <el-form-item label="Price*(>0)">
-        <el-input v-model.number="form.price" />
-      </el-form-item>
-      <el-form-item label="Stock*(>0)">
-        <el-input v-model.number="form.stock" />
-      </el-form-item>
-      <el-form-item label="Imageurl">
-        <el-input v-model="form.image" />
-      </el-form-item>
-      <el-form-item label="catid*">
-        <el-input v-model="form.catid" />
-        <div>Can Choose:</div>
-        <div v-for="cat in catId" :key="cat.categoryId" class="Catids">
-          <div>
-            {{ cat.categoryId }}、
+        <el-form-item label="ProductName*">
+          <el-input v-model="form.name" />
+        </el-form-item>
+        <el-form-item label="Description">
+          <el-input v-model="form.description" />
+        </el-form-item>
+        <el-form-item label="Price*(>0)">
+          <el-input v-model.number="form.price" />
+        </el-form-item>
+        <el-form-item label="Stock*(>0)">
+          <el-input v-model.number="form.stock" />
+        </el-form-item>
+        <el-form-item label="Imageurl">
+          <el-input v-model="form.image" />
+        </el-form-item>
+        <el-form-item label="catid*">
+          <el-input v-model="form.catid" />
+          <div>Can Choose:</div>
+          <div v-for="cat in catId" :key="cat.categoryId" class="Catids">
+            <div>
+              {{ cat.categoryId }}、
+            </div>
           </div>
-        </div>
-      </el-form-item>
-            <!-- 多内容框 /文件框-->
-      <el-form-item label="Other">
-        <el-input v-model="form.desc" type="textarea" />
-      </el-form-item>
+        </el-form-item>
+        <!-- 多内容框 /文件框-->
+        <el-form-item label="Other">
+          <el-input v-model="form.desc" type="textarea" />
+        </el-form-item>
 
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button @click="resetForm">Delete</el-button>
-      </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">Create</el-button>
+          <el-button @click="resetForm">Delete</el-button>
+        </el-form-item>
 
       </el-form>
       <!-- 底部按键 -->
@@ -97,29 +87,29 @@
       <!-- 模态框主内容 -->
       <el-form :model="upform" label-width="auto" style="max-width: 600px">
         <!-- 第一个框 -->
-      <el-form-item label="ProductName">
-        <el-input v-model="upform.productName" />
-      </el-form-item>
-      <el-form-item label="Description">
-        <el-input v-model="upform.description" />
-      </el-form-item>
-      <el-form-item label="Price(>0)">
-        <el-input v-model.number="upform.price" />
-      </el-form-item>
-      <el-form-item label="Stock(>0)">
-        <el-input v-model.number="upform.stock" />
-      </el-form-item>
-      <el-form-item label="Imageurl">
-        <el-input v-model="upform.imageUrl" />
-      </el-form-item>
-            <!-- 多内容框 /文件框-->
-      <el-form-item label="Other">
-        <el-input v-model="form.desc" type="textarea" />
-      </el-form-item>
+        <el-form-item label="ProductName">
+          <el-input v-model="upform.productName" />
+        </el-form-item>
+        <el-form-item label="Description">
+          <el-input v-model="upform.description" />
+        </el-form-item>
+        <el-form-item label="Price(>0)">
+          <el-input v-model.number="upform.price" />
+        </el-form-item>
+        <el-form-item label="Stock(>0)">
+          <el-input v-model.number="upform.stock" />
+        </el-form-item>
+        <el-form-item label="Imageurl">
+          <el-input v-model="upform.imageUrl" />
+        </el-form-item>
+        <!-- 多内容框 /文件框-->
+        <el-form-item label="Other">
+          <el-input v-model="form.desc" type="textarea" />
+        </el-form-item>
 
-      <el-form-item>
-        <el-button type="primary" @click="onSubmitUpdate">OK</el-button>
-      </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmitUpdate">OK</el-button>
+        </el-form-item>
 
       </el-form>
       <!-- 底部按键 -->
@@ -136,13 +126,14 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted , watchEffect } from 'vue';
-import { useSellerProucts,useDeleteProduct,useAddProduct,useGetshopCatid, useUpdateProduct } from '@/stores/seller_products';
-import { get } from 'lodash-es';
+console.log('nihao');
+
+import { ref, reactive, onMounted, watch } from 'vue';
+import { useSellerProucts, useDeleteProduct, useAddProduct, useGetshopCatid, useUpdateProduct } from '@/stores/seller_products';
 
 
 // 先创建实例
-const sellerProducts = useSellerProucts(); 
+const sellerProducts = useSellerProucts();
 const addproduct = useAddProduct();
 const deleproduct = useDeleteProduct();
 const getshopCatid = useGetshopCatid();
@@ -162,25 +153,25 @@ const initialform = {
   createTime: '',
   updateTime: '',
   category: '',
-  image:'',
-  catid:'',
-  sellerId:''
+  image: '',
+  catid: '',
+  sellerId: ''
 }
 //初始化响应
-const form = reactive({...initialform});
+const form = reactive({ ...initialform });
 const upform = reactive({});
 //提交表单
 const onSubmit = () => {
   //此处实现提交后端
- addproduct.createProducts(form)
-  console.log('submit!',form)
+  addproduct.createProducts(form)
+  console.log('submit!', form)
   //提交后把表单重置
   resetForm();
 }
 
-const onSubmitUpdate = () =>{
+const onSubmitUpdate = () => {
   updateproduct.upDateproduct(upform);
-  console.log('商品更新成功',upform);
+  console.log('商品更新成功', upform);
 }
 //重置表单函数
 const resetForm = () => {
@@ -190,12 +181,12 @@ const resetForm = () => {
 
 //覆盖将要提交的更新表格
 const updatePro = (uppro) => {
-  Object.assign(upform , uppro);
+  Object.assign(upform, uppro);
   dialogVisible_2.value = true;
 };
 
 //删除商品
-const delepro = (proid)=>{
+const delepro = (proid) => {
   deleproduct.DeleteProduct(proid);
 }
 
@@ -203,25 +194,20 @@ const delepro = (proid)=>{
 onMounted(() => {
   sellerProducts.getSellerProductsList();
   getshopCatid.getcatid();
-});
-onMounted(() => {
-  
-  
+  products.value = sellerProducts.sellerProductsList;
+  catId.value = getshopCatid.catidList;
+  loading.value = false
 });
 //监听数据变化同步数据变化 立即执行一次
-watchEffect(() => {
-    if (sellerProducts.sellerProductsList.length > 0) {
-        console.log('sellerProductsList 发生变化:', sellerProducts.sellerProductsList);
-        products.value = sellerProducts.sellerProductsList;
-        loading.value = false;//不要忘记加载
-    }
-    if(getshopCatid.catidList.length > 0){
-      console.log('catidList 发生变化:', getshopCatid.catidList);
-      catId.value = getshopCatid.catidList;
-    }
-});
+watch(() => sellerProducts.sellerProductsList, (val) => {
+  products.value = val
+  loading.value = false
+}, { immediate: true })
+
+watch(() => getshopCatid.catidList, (val) => {
+  catId.value = val
+}, { immediate: true })
 
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

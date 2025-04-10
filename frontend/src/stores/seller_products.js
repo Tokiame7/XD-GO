@@ -1,7 +1,6 @@
 // 导入一个defineStore 方法
 import { defineStore } from 'pinia'
 import { ref } from 'vue'//ref 让数据变为响应式数据 ref()\ref([]) 可以是单个数据、数组、对象
-import { Axios } from 'axios'
 //pinia 就是打包数据和方法让这些数据在几个组件间被统一管理
 import { getShopProducts, getOrderList, getShopCategories } from '@/api/seller'
 import { getProductDetail, deleteProduct, createProduct, updateProduct } from '@/api/product'
