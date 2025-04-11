@@ -3,9 +3,6 @@
   <div class="section my-products">
     <div class="section-header">
       <h2>MyProducts</h2>
-      <!-- <el-button text @click="handleViewMore()">
-          查看更多<el-icon><arrow-right /></el-icon>
-        </el-button> -->
     </div>
     <div class="product-list">
       <!-- v-for 渲染每一个 myProducts数组中元素，id 每一个的id便于维护dom ， class = 样式 ，点击事件传入方法product为当前商品-->
@@ -23,15 +20,27 @@
         </div>
       </div>
     </div>
-     <!-- 可以在这里添加展示商品详情的部分 -->
-     <div v-if="getsellerproductDetail.sellerProductDetail">
+  </div>
+  <el-dialog
+    v-model="centerDialogVisible"
+    width="500"
+    align-center
+  >
+    <!-- 可以在这里添加展示商品详情的部分 -->
+    <div v-if="getsellerproductDetail.sellerProductDetail">
       <h2>ProductsDetail</h2>
-      <p>Products'name: {{ getsellerproductDetail.sellerProductDetail.detail.goods_name }}</p>
+      <p>{{ getsellerproductDetail.sellerProductDetail.detail.goods_name }}</p>
       <p>Price: ¥{{ getsellerproductDetail.sellerProductDetail.detail.price }}</p>
       <!-- 其他详情信息 -->
-    </div>
-  </div>
-
+      </div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" @click="centerDialogVisible = false">
+          OK
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -42,7 +51,7 @@ import { useSellerProucts ,useGetproductDetail} from '@/stores/seller_products'
 //pinia打包 创建实例方法
 const sellerProducts = useSellerProucts()
 const getsellerproductDetail = useGetproductDetail();//数据体（detail）返回的是getsellerproductDetail.detail
-
+const centerDialogVisible = ref(false)
 //onM...组件挂载后紧跟的操作
 onMounted(()=>{
   sellerProducts.getSellerProductsList()
@@ -56,8 +65,9 @@ watch(sellerProducts.sellerProductsList,()=>{
 )
 
 //点击图片获得卖家商品详细数据 传入当前商品id
-const handleProductClick= (id) =>{
+const handleProductClick = (id) =>{
   getsellerproductDetail.getSellerProductDetail(id);
+  centerDialogVisible.value = true;
 }
 
 </script>
