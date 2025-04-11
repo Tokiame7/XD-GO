@@ -20,12 +20,8 @@
           Deliver
         </el-button>
       </template>
-
-
-
       </el-table-column>
     </el-table>
-
   </template>
   </div>
 </template>
@@ -42,7 +38,6 @@ const Shiporder = useShiporder()
 //整个组件挂载后的行为
 onMounted(() => {
   GetOrder.getorders();
-  OrderList.value = GetOrder.orderList;
 });
 
 const Editorder = (id,status)=>{
@@ -55,6 +50,7 @@ watchEffect(() => {
     console.log('orderlist 发生变化:', GetOrder.orderList);
     if (GetOrder.orderList.length > 0) {
         loading.value = false;//不要忘记加载
+        OrderList.value = GetOrder.orderList;
     }
 });
   </script>
