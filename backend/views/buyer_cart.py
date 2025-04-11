@@ -139,3 +139,156 @@ def get_cart_list(current_user):
             "code": 0,
             "message": f"Error: {str(e)}"
         }), 500  # Internal Server Error
+# 买家删除购物车商品API[DELETE]   /api/cart/remove_product
+@main.route('/remove_product', methods=['DELETE'])
+@token_required
+def remove_product_from_cart(current_user):
+    try:
+        if current_user.role != 'buyer':
+            return jsonify({
+                "code": 403,
+                "message": "只有买家可以从购物车移除商品"
+            }), 403
+
+        data = request.get_json()
+        if not data or 'proid' not in data:
+            return jsonify({
+                "code": 400,
+                "message": "缺少必要参数: proid"
+            }), 400
+
+        cart = Cart.query.filter_by(userid=current_user.userid).first()
+        if not cart:
+            return jsonify({
+                "code": 404,
+                "message": "购物车不存在"
+            }), 404
+
+        cart_item = CartItem.query.filter_by(carid=cart.carid, proid=data['proid']).first()
+        if not cart_item:
+            return jsonify({
+                "code": 404,
+                "message": "商品不在购物车中"
+            }), 404
+
+        db.session.delete(cart_item)
+        db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": "商品已从购物车移除",
+            "data": {
+                "proid": data['proid']
+            }
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 500,
+            "message": f"服务器错误: {str(e)}"
+        }), 500
+
+# 买家修改购物车商品数量API[POST]   /api/cart/update_quantity
+@main.route('/update_quantity', methods=['POST'])
+@token_required
+def update_cart_item_quantity(current_user):
+    try:
+        if current_user.role != 'buyer':
+            return jsonify({
+                "code": 403,
+                "message": "只有买家可以修改购物车商品数量"
+            }), 403
+
+        data = request.get_json()
+        if not data or 'proid' not in data or 'quantity' not in data:
+            return jsonify({
+                "code": 400,
+                "message": "缺少必要参数: proid 或 quantity"
+            }), 400
+
+        product = Product.query.filter_by(proid=data['proid']).first()
+        if not product:
+            return jsonify({
+                "code": 404,
+                "message": f"未找到商品: {data['proid']}"
+            }), 404
+
+        if data['quantity'] <= 0:
+            return jsonify({
+                "code": 400,
+                "message": "数量必须大于0"
+            }), 400
+
+        if product.stock < data['quantity']:
+            return jsonify({
+                "code": 400,
+                "message": "库存不足",
+                "available_stock": product.stock
+            }), 400
+
+        cart = Cart.query.filter_by(userid=current_user.userid).first()
+        if not cart:
+            return jsonify({
+                "code": 404,
+                "message": "购物车不存在"
+            }), 404
+
+        cart_item = CartItem.query.filter_by(carid=cart.carid, proid=data['proid']).first()
+        if not cart_item:
+            return jsonify({
+                "code": 404,
+                "message": "商品不在购物车中"
+            }), 404
+
+        cart_item.quantity = data['quantity']
+        db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": "购物车商品数量已更新",
+            "data": {
+                "proid": data['proid'],
+                "quantity": data['quantity']
+            }
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 500,
+            "message": f"服务器错误: {str(e)}"
+        }), 500
+
+# 买家清空购物车API[DELETE]   /api/cart/clear
+@main.route('/clear', methods=['DELETE'])
+@token_required
+def clear_cart(current_user):
+    try:
+        if current_user.role != 'buyer':
+            return jsonify({
+                "code": 403,
+                "message": "只有买家可以清空购物车"
+            }), 403
+
+        cart = Cart.query.filter_by(userid=current_user.userid).first()
+        if not cart:
+            return jsonify({
+                "code": 404,
+                "message": "购物车不存在"
+            }), 404
+
+        CartItem.query.filter_by(carid=cart.carid).delete()
+        db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": "购物车已清空"
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 500,
+            "message": f"服务器错误: {str(e)}"
+        }), 500
