@@ -1,4 +1,5 @@
 <template>
+  <div>
   <!-- 我的商品 -->
   <div class="section my-products">
     <div class="section-header">
@@ -41,6 +42,7 @@
       </div>
     </template>
   </el-dialog>
+</div>
 </template>
 
 <script setup>

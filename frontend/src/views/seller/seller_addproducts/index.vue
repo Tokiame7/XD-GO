@@ -138,8 +138,6 @@
 <script setup>
 import { ref, reactive, onMounted , watchEffect } from 'vue';
 import { useSellerProucts,useDeleteProduct,useAddProduct,useGetshopCatid, useUpdateProduct } from '@/stores/seller_products';
-import { get } from 'lodash-es';
-
 
 // 先创建实例
 const sellerProducts = useSellerProucts(); 
