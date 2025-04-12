@@ -121,8 +121,8 @@ export function addToCart(data) {
 // 更新购物车商品数量
 export function updateCartQuantity(id, quantity) {
   return request({
-    url: `/shop/cart/${id}`,
-    method: 'put',
+    url: `/api/cart/update_quantity`,
+    method: 'post',
     data: { quantity },
   })
 }
@@ -130,9 +130,17 @@ export function updateCartQuantity(id, quantity) {
 // 删除购物车商品
 export function removeFromCart(ids) {
   return request({
-    url: '/shop/cart/remove',
-    method: 'post',
+    url: '/api/cart/remove_product',
+    method: 'delete',
     data: { ids },
+  })
+}
+
+// 清空购物车
+export function clearCart() {
+  return request({
+    url: '/api/cart/clear',
+    method: 'delete',
   })
 }
 
@@ -156,7 +164,7 @@ export function getOrderPreview(data) {
 // 提交订单
 export function submitOrder(data) {
   return request({
-    url: '/shop/order/submit',
+    url: '/api/buy_order/submit',
     method: 'post',
     data,
   })
@@ -198,7 +206,7 @@ export function queryPaymentStatus(paymentId) {
 // 获取订单列表
 export function getOrderList(params) {
   return request({
-    url: '/shop/orders',
+    url: '/api/buy_order/list',
     method: 'get',
     params,
   })
