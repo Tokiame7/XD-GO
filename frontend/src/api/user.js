@@ -78,7 +78,7 @@ export function getAddressDetail(id) {
 // 新增个人信息修改接口
 export function updateUserInfo(data) {
     return request({
-        url: '/api/users/info_edit',
+        url: '/api/users/profile_edit',
         method: 'put',
         data
     })
@@ -245,3 +245,4 @@ export function clearHistory(type) {
     data: { type },
   })
 }
+

@@ -75,7 +75,7 @@ const submit = async () => {
 
         if (res.code === 200) {
             // 更新本地存储
-            userStore.updateUserInfo(payload)
+            updateUserInfo(payload)
             ElMessage.success('修改成功')
             router.push('/user')
         }
