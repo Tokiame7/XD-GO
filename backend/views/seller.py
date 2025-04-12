@@ -430,6 +430,8 @@ def update_order_status(current_user):
                 "code": 400,
                 "message": f"Invalid status: {data['status']}"
             }), 400
+
+        # Update the order status
         if data['status'] == 'pending' and order.status not in ['shipped', 'delivered']:
             data['status'] = 'shipped'
             # Update the order status
@@ -444,13 +446,28 @@ def update_order_status(current_user):
                     "status": data['status']
                 }
             }), 200  # OK
+        else:
+            order.status = data['status']
+            db.session.commit()
+
+            return jsonify({
+                "code": 200,
+                "message": "Order status updated successfully",
+                "data": {
+                    "orderid": data['orderid'],
+                    "status": data['status']
+                }
+            }), 200  # OK
 
     except Exception as e:
         db.session.rollback()
+        print(e)
         return jsonify({
             "code": 500,
             "message": f"Error: {str(e)}"
         }), 500  # Internal Server Error
+
+
 # 卖家获取热销商品列表（简单实现：按库存量降序）[GET]   /hotProducts
 @main.route('/hotProducts', methods=['GET'])
 @token_required
@@ -461,7 +478,7 @@ def get_hot_products(current_user):
             return jsonify({"code": 403, "message": "无权访问"}), 403
 
         # 查询当前卖家的商品，按库存降序排列
-        products = Product.query.filter_by(userid=current_user.userid)\
+        products = Product.query.filter_by(userid=current_user.userid) \
             .order_by(Product.stock.desc()).all()
 
         # 构建响应数据

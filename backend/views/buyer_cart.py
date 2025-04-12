@@ -139,6 +139,8 @@ def get_cart_list(current_user):
             "code": 0,
             "message": f"Error: {str(e)}"
         }), 500  # Internal Server Error
+
+
 # 买家删除购物车商品API[DELETE]   /api/cart/remove_product
 @main.route('/remove_product', methods=['DELETE'])
 @token_required
@@ -151,10 +153,13 @@ def remove_product_from_cart(current_user):
             }), 403
 
         data = request.get_json()
-        if not data or 'proid' not in data:
+        proid = data.get('ids')
+        print(proid, "is being removed from cart")
+        if not proid:
+            print(data)
             return jsonify({
                 "code": 400,
-                "message": "缺少必要参数: proid"
+                "message": "缺少必要参数: proid或ids"
             }), 400
 
         cart = Cart.query.filter_by(userid=current_user.userid).first()
@@ -164,7 +169,8 @@ def remove_product_from_cart(current_user):
                 "message": "购物车不存在"
             }), 404
 
-        cart_item = CartItem.query.filter_by(carid=cart.carid, proid=data['proid']).first()
+        cart_item = CartItem.query.filter_by(carid=cart.carid, proid=str(proid)).first()
+        print(cart_item, "is being removed from cart")
         if not cart_item:
             return jsonify({
                 "code": 404,
@@ -178,16 +184,17 @@ def remove_product_from_cart(current_user):
             "code": 200,
             "message": "商品已从购物车移除",
             "data": {
-                "proid": data['proid']
+                "proid": proid
             }
         }), 200
 
     except Exception as e:
-        db.session.rollback()
+        print(e)
         return jsonify({
             "code": 500,
             "message": f"服务器错误: {str(e)}"
         }), 500
+
 
 # 买家修改购物车商品数量API[POST]   /api/cart/update_quantity
 @main.route('/update_quantity', methods=['POST'])
@@ -195,6 +202,7 @@ def remove_product_from_cart(current_user):
 def update_cart_item_quantity(current_user):
     try:
         if current_user.role != 'buyer':
+            print("Only buyers can update cart item quantity")
             return jsonify({
                 "code": 403,
                 "message": "只有买家可以修改购物车商品数量"
@@ -202,6 +210,7 @@ def update_cart_item_quantity(current_user):
 
         data = request.get_json()
         if not data or 'proid' not in data or 'quantity' not in data:
+            print("缺少必要参数", data)
             return jsonify({
                 "code": 400,
                 "message": "缺少必要参数: proid 或 quantity"
@@ -234,7 +243,7 @@ def update_cart_item_quantity(current_user):
                 "message": "购物车不存在"
             }), 404
 
-        cart_item = CartItem.query.filter_by(carid=cart.carid, proid=data['proid']).first()
+        cart_item = CartItem.query.filter_by(carid=cart.carid, proid=data['ids']).first()
         if not cart_item:
             return jsonify({
                 "code": 404,
@@ -255,10 +264,12 @@ def update_cart_item_quantity(current_user):
 
     except Exception as e:
         db.session.rollback()
+        print(e)
         return jsonify({
             "code": 500,
             "message": f"服务器错误: {str(e)}"
         }), 500
+
 
 # 买家清空购物车API[DELETE]   /api/cart/clear
 @main.route('/clear', methods=['DELETE'])

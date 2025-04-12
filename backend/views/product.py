@@ -98,58 +98,6 @@ def get_product_detail():
         }), 500  # 500 Internal Server Error
 
 
-# 卖家修改商品API[PUT]   /seller_modify_product
-@main.route('/seller_modify_product', methods=['PUT'])
-@token_required
-def modify_product(current_user):
-    try:
-        # Ensure the user is a seller
-        if current_user.role != 'seller':
-            return jsonify({
-                "code": 0,
-                "message": "Access denied: Only sellers can modify products"
-            }), 403
-
-        # Get the product ID and data from the request
-        data = request.get_json()
-        if not data or 'proid' not in data:  # or any other required fields
-            return jsonify({
-                "code": 0,
-                "message": "Invalid input: Missing required field 'proid'"
-            }), 400
-
-        # Check if the product exists
-        product = Product.query.filter_by(proid=data['proid']).first()
-        if not product:
-            return jsonify({
-                "code": 0,
-                "message": f"Product not found with proid: {data['proid']}"
-            }), 404
-
-        # Update the product data
-        product.name = data.get('name', product.name)
-        product.price = data.get('price', product.price)
-        product.description = data.get('description', product.description)
-        product.image = data.get('image', product.image)
-        product.stock = data.get('stock', product.stock)
-        db.session.commit()
-
-        return jsonify({
-            "code": 200,
-            "message": "Product modified successfully",
-            "data": {
-                "proid": data['proid']
-            }
-        }), 200  # OK
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({
-            "code": 0,
-            "message": f"Error: {str(e)}"
-        }), 500  # Internal Server Error
-
-
 # 获取所有商品类别API[GET]   /category
 @main.route('/category', methods=['GET'])
 def get_all_categories():

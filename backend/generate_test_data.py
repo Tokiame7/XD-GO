@@ -128,27 +128,6 @@ def generate_sample_data():
         db.session.add(buyer_cart)
         db.session.commit()  # 提交购物车数据
 
-        # 添加商品到购物车
-        cart_items = [
-            CartItem(
-                carid=buyer_cart.carid,
-                proid=products[0].proid,
-                quantity=5
-            ),
-            CartItem(
-                carid=buyer_cart.carid,
-                proid=products[1].proid,
-                quantity=5
-            ),
-            CartItem(
-                carid=buyer_cart.carid,
-                proid=products[5].proid,
-                quantity=5
-            )
-        ]
-        db.session.add_all(cart_items)
-        db.session.commit()  # 提交购物车商品数据
-
         # 创建订单
         orders = [
             Order(
