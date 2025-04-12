@@ -2,4 +2,5 @@
 .idea/
 
 backend/__pycache__/
-/backend/migrations/versions/
+backend/migrations/__pycache__/
+backend/views/__pychache__/
