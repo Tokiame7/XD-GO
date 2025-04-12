@@ -108,8 +108,8 @@ def seller_product_detail():
     return jsonify({"status": 0, "message": "成功", "data": {"detail": data}})
 
 
-# 卖家更新自己的商品列表API[POST]   /updateProduct
-@main.route('/updateProduct', methods=['POST'])
+# 修改为PUT请求的卖家更新商品列表API
+@main.route('/seller_modify_product', methods=['PUT'])
 @token_required
 def update_products(current_user):
     try:
@@ -119,7 +119,7 @@ def update_products(current_user):
         # 验证必要字段
         if not data or 'products' not in data:
             return jsonify({
-                "code": 400,
+                "code": 0,
                 "message": "Invalid input: Missing required fields"
             }), 400
 
@@ -129,14 +129,14 @@ def update_products(current_user):
         for product_data in products:
             if not all(k in product_data for k in ['proid', 'price', 'stock']):
                 return jsonify({
-                    "code": 400,
+                    "code": 0,
                     "message": "Invalid product data: Missing required fields (proid, price or stock)"
                 }), 400
 
             # 检查价格和库存是否为有效值
             if product_data['price'] <= 0 or product_data['stock'] < 0:
                 return jsonify({
-                    "code": 400,
+                    "code": 0,
                     "message": f"Invalid product data: Price must be positive "
                                f"and stock must be non-negative (proid: {product_data['proid']}) "
                 }), 400
@@ -150,9 +150,25 @@ def update_products(current_user):
 
             if not product:
                 return jsonify({
-                    "code": 404,
+                    "code": 0,
                     "message": f"Product not found or not owned by you (proid: {product_data['proid']})"
                 }), 404
+
+            # 检查商品是否存在于未完成的订单中
+            pending_order_items = OrderItem.query.join(Order).filter(
+                OrderItem.proid == product_data['proid'],
+                Order.status != 'delivered'  # 检查非已完成订单
+            ).first()
+
+            if pending_order_items:
+                return jsonify({
+                    "code": 0,
+                    "message": f"Cannot update product: {product.name} (proid: {product_data['proid']}) "
+                              f"because it exists in pending orders"
+                }), 400
+
+            # 记录旧价格用于更新购物车
+            old_price = product.price
 
             # 更新商品信息
             if 'name' in product_data:
@@ -168,10 +184,19 @@ def update_products(current_user):
                 category = Category.query.get(product_data['catid'])
                 if not category:
                     return jsonify({
-                        "code": 404,
+                        "code": 0,
                         "message": f"Category not found (catid: {product_data['catid']})"
                     }), 404
                 product.catid = product_data['catid']
+
+            # 如果价格有变化，更新购物车中的价格信息
+            if 'price' in product_data and old_price != product_data['price']:
+                # 更新所有包含该商品的购物车项的价格
+                cart_items = CartItem.query.filter_by(proid=product_data['proid']).all()
+                for item in cart_items:
+                    # 这里可以根据业务需求决定是否更新购物车中的价格
+                    # 或者只是记录价格变化，让用户确认
+                    item.price = product_data['price']  # 假设直接更新价格
 
         # 提交数据库更改
         db.session.commit()
@@ -190,6 +215,7 @@ def update_products(current_user):
             "code": 0,
             "message": str(e)
         }), 400
+
 
 
 # 卖家增加自己的商品API[POST]   /addProduct
