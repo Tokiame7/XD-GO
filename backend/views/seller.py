@@ -109,7 +109,7 @@ def seller_product_detail():
 
 
 # 修改为PUT请求的卖家更新商品列表API
-@main.route('/api/product/seller_modify_product', methods=['PUT'])
+@main.route('/seller_modify_product', methods=['PUT'])
 @token_required
 def update_products(current_user):
     try:
