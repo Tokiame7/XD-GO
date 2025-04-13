@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend.models import db, Product, Category, Order, OrderItem, User
+from backend.models import db, Product, Category, Order, OrderItem, User, CartItem
 from backend.views.auth import token_required
 import datetime
 import uuid
@@ -109,7 +109,7 @@ def seller_product_detail():
     return jsonify({"status": 0, "message": "成功", "data": {"detail": data}})
 
 
-#卖家修改自己的商品api
+# 卖家修改自己的商品api
 @main.route('/seller_modify_product', methods=['PUT'])
 @token_required
 def seller_modify_product(current_user):
@@ -376,25 +376,34 @@ def delete_product(current_user):
 @token_required
 def get_sell_order_list(current_user):
     try:
-        # Ensure the user is a seller
+        # 确保用户是卖家
         if current_user.role != 'seller':
             return jsonify({
                 "code": 403,
                 "message": "Access denied: Only sellers can view their orders"
             }), 403
 
-        # Get the seller's orders
+        # 获取卖家的订单
         orders = Order.query.filter_by(sellerid=current_user.userid).all()
-        print(orders)
+        # print(orders)
         if not orders:
             return jsonify({
                 "code": 404,
                 "message": "No orders found"
             }), 404
 
-        # Get the order details for each order
+        # 处理每个订单详情
         order_list = []
         for order in orders:
+            # 获取买家信息
+            buyer = User.query.filter_by(userid=order.buyerid).first()
+            if not buyer:
+                return jsonify({
+                    "code": 404,
+                    "message": f"Buyer not found: {order.buyerid}"
+                }), 404
+
+            # 获取订单详情
             order_items = OrderItem.query.filter_by(orderid=order.orderid).all()
             order_items_data = []
             for item in order_items:
@@ -413,15 +422,21 @@ def get_sell_order_list(current_user):
                     "image": product.image
                 })
 
+            # 构建订单数据
             order_list.append({
                 "orderid": order.orderid,
                 "totalprice": str(order.totalprice),
                 "status": order.status,
                 "createtime": order.createtime.strftime("%Y-%m-%d %H:%M:%S"),
-                "order_items": order_items_data
+                "order_items": order_items_data,
+                "buyer_info": {
+                    "name": buyer.username,
+                    "phone": buyer.phone,
+                    "address": buyer.address
+                }
             })
 
-        # Return the order list
+        # 返回订单列表
         return jsonify({
             "code": 200,
             "message": "Order list retrieved successfully",
