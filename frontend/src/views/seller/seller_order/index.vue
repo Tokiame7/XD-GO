@@ -6,6 +6,7 @@
   <template v-else>
     <el-table :data="OrderList" stripe style="width: 100%">
       <el-table-column prop="orderid" label="OrderId" width="180" />
+      <!-- <el-table-column prop="buyer_info.name" label="BuyerName" width="180" /> -->
       <el-table-column prop="totalprice" label="TotalPrice" width="180" />
       <el-table-column prop="status" label="status" width ='180' />
       <el-table-column prop="createtime" label="CreateTime" />
