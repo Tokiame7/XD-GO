@@ -372,7 +372,7 @@ def delete_product(current_user):
 
 
 # 卖家获取所有订单列表API[GET]   /getList
-@main.route('/list', methods=['GET'])
+@main.route('/getList', methods=['GET'])
 @token_required
 def get_sell_order_list(current_user):
     try:
@@ -396,11 +396,11 @@ def get_sell_order_list(current_user):
         order_list = []
         for order in orders:
             # 获取买家信息
-            buyer = User.query.filter_by(userid=order.buyerid).first()
+            buyer = User.query.filter_by(userid=order.userid).first()
             if not buyer:
                 return jsonify({
                     "code": 404,
-                    "message": f"Buyer not found: {order.buyerid}"
+                    "message": f"Buyer not found: {order.userid}"
                 }), 404
 
             # 获取订单详情
@@ -432,7 +432,7 @@ def get_sell_order_list(current_user):
                 "buyer_info": {
                     "name": buyer.username,
                     "phone": buyer.phone,
-                    "address": buyer.address
+                    "address": buyer.shipping_address
                 }
             })
 
