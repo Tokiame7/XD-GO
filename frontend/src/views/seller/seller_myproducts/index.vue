@@ -1,62 +1,87 @@
 <template>
   <div>
-  <!-- 我的商品 -->
-  <div class="section my-products">
-    <div class="section-header">
-      <h2>MyProducts</h2>
-    </div>
-    <div class="product-list">
-      <!-- v-for 渲染每一个 myProducts数组中元素，id 每一个的id便于维护dom ， class = 样式 ，点击事件传入方法product为当前商品-->
-      <div v-for="product in sellerProducts.sellerProductsList" :key="product.productId" class="product-card"
-        @click="handleProductClick(product.productId)">
-        <div class="product-image">
-          <img :src="product.imageUrl" :alt="product.productName">
-          <div class="product-tag hot">HOT</div><!-- 热销位置样式 -->
-        </div>
-        <div class="product-info">
-          <h3>{{ product.productName }}</h3>
-          <p class="desc">{{ product.description }}</p>
-          <div class="price">¥{{ product.price.toFixed(2) }}</div>
-          <div class="sales">MonthStock {{ product.stock }}+</div>
+    <!-- 热销商品 -->
+    <div class="section hot-products">
+      <div class="section-header">
+        <h2>热销商品</h2>
+      </div>
+      <div class="product-list">
+        <div v-for="product in hotProducts.hotProductsList" :key="product.productId" class="product-card"
+          @click="handleProductClick(product.productId)">
+          <div class="product-image">
+            <img :src="product.imageUrl" :alt="product.productName">
+            <div class="product-tag hot">热销</div>
+          </div>
+          <div class="product-info">
+            <h3>{{ product.productName }}</h3>
+            <p class="desc">{{ product.description }}</p>
+            <div class="price">¥{{ product.price.toFixed(2) }}</div>
+            <div class="sales">库存 {{ product.stock }}+</div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- 我的商品 -->
+    <div class="section my-products">
+      <div class="section-header">
+        <h2>MyProducts</h2>
+      </div>
+      <div class="product-list">
+        <!-- v-for 渲染每一个 myProducts数组中元素，id 每一个的id便于维护dom ， class = 样式 ，点击事件传入方法product为当前商品-->
+        <div v-for="product in sellerProducts.sellerProductsList" :key="product.productId" class="product-card"
+          @click="handleProductClick(product.productId)">
+          <div class="product-image">
+            <img :src="product.imageUrl" :alt="product.productName">
+            <div class="product-tag hot">HOT</div><!-- 热销位置样式 -->
+          </div>
+          <div class="product-info">
+            <h3>{{ product.productName }}</h3>
+            <p class="desc">{{ product.description }}</p>
+            <div class="price">¥{{ product.price.toFixed(2) }}</div>
+            <div class="sales">MonthStock {{ product.stock }}+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <el-dialog
+      v-model="centerDialogVisible"
+      width="500"
+      align-center
+    >
+      <!-- 可以在这里添加展示商品详情的部分 -->
+      <div v-if="getsellerproductDetail.sellerProductDetail">
+        <h2>ProductsDetail</h2>
+        <p>{{ getsellerproductDetail.sellerProductDetail.detail.goods_name }}</p>
+        <p>Price: ¥{{ getsellerproductDetail.sellerProductDetail.detail.price }}</p>
+        <!-- 其他详情信息 -->
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="centerDialogVisible = false">
+            OK
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
-  <el-dialog
-    v-model="centerDialogVisible"
-    width="500"
-    align-center
-  >
-    <!-- 可以在这里添加展示商品详情的部分 -->
-    <div v-if="getsellerproductDetail.sellerProductDetail">
-      <h2>ProductsDetail</h2>
-      <p>{{ getsellerproductDetail.sellerProductDetail.detail.goods_name }}</p>
-      <p>Price: ¥{{ getsellerproductDetail.sellerProductDetail.detail.price }}</p>
-      <!-- 其他详情信息 -->
-      </div>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button type="primary" @click="centerDialogVisible = false">
-          OK
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
-</div>
 </template>
 
 <script setup>
 import { ref, onMounted,watch } from 'vue'
-import { useSellerProucts ,useGetproductDetail} from '@/stores/seller_products'
+import { useSellerProucts ,useGetproductDetail, useHotProducts} from '@/stores/seller_products'
 
 
 //pinia打包 创建实例方法
 const sellerProducts = useSellerProucts()
 const getsellerproductDetail = useGetproductDetail();//数据体（detail）返回的是getsellerproductDetail.detail
 const centerDialogVisible = ref(false)
+const hotProducts = useHotProducts()
+
 //onM...组件挂载后紧跟的操作
 onMounted(()=>{
   sellerProducts.getSellerProductsList()
+  hotProducts.getHotProductsList()
 })
 
 //当商品变化时立即执行一次获取商品
@@ -196,6 +221,28 @@ const handleProductClick = (id) =>{
           color: #999;
         }
       }
+    }
+  }
+}
+
+.hot-products {
+  margin-bottom: 40px;
+  
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
     }
   }
 }

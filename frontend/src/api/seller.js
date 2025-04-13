@@ -156,8 +156,6 @@ export function updateProduct(id, data) {
   })
 }
 
-
-
 // 商品上下架
 export function updateProductStatus(id, status) {
   return request({
@@ -264,6 +262,7 @@ export function getOrderStats() {
     method: 'get',
   })
 }
+
 //获取订单列表
 export function getOrderList(params) {
   return request({
@@ -373,5 +372,13 @@ export function confirmRefund(id) {
   return request({
     url: `/seller/refund/${id}/confirm`,
     method: 'post',
+  })
+}
+
+// 获取热销商品
+export function getHotProducts() {
+  return request({
+    url: '/api/sell_order/hotProducts',
+    method: 'get',
   })
 }
