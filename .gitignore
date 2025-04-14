@@ -4,3 +4,7 @@
 backend/__pycache__/
 backend/migrations/__pycache__/
 backend/views/__pychache__/
+
+backend/views/__pycache__/
+
+backend/migrations/versions/__pycache__/

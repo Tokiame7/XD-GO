@@ -372,7 +372,7 @@ def delete_product(current_user):
 
 
 # 卖家获取所有订单列表API[GET]   /getList
-@main.route('/getList', methods=['GET'])
+@main.route('/list', methods=['GET'])
 @token_required
 def get_sell_order_list(current_user):
     try:
