@@ -68,20 +68,33 @@
 </template>
 
 <script setup>
-import { ref, onMounted,watch } from 'vue'
+import { ref, onMounted,watch, watchEffect } from 'vue'
 import { useSellerProucts ,useGetproductDetail, useHotProducts} from '@/stores/seller_products'
-
+import { useUserStore } from '@/stores/user'
 
 //pinia打包 创建实例方法
 const sellerProducts = useSellerProucts()
 const getsellerproductDetail = useGetproductDetail();//数据体（detail）返回的是getsellerproductDetail.detail
 const centerDialogVisible = ref(false)
 const hotProducts = useHotProducts()
+const userStore = useUserStore()
 
 //onM...组件挂载后紧跟的操作
-onMounted(()=>{
+onMounted(() => {
   sellerProducts.getSellerProductsList()
-  hotProducts.getHotProductsList()
+
+  if (userStore.token) {
+    hotProducts.getHotProductsList()
+  } else {
+    console.warn('token 未准备好，热销商品请求已跳过')
+  }
+})
+
+// 当 token 准备好，就获取热销商品
+watchEffect(() => {
+  if (userStore.token) {
+    hotProducts.getHotProductsList()
+  }
 })
 
 //当商品变化时立即执行一次获取商品
