@@ -119,11 +119,11 @@ export function addToCart(data) {
 }
 
 // 更新购物车商品数量
-export function updateCartQuantity(id, quantity) {
+export function updateCartQuantity(data) {
   return request({
     url: `/api/cart/update_quantity`,
     method: 'post',
-    data: { quantity },
+    data, // 确保这里传递的是对象
   })
 }
 
@@ -215,7 +215,7 @@ export function getOrderList(params) {
 // 获取订单详情
 export function getOrderDetail(orderId) {
   return request({
-    url: `/shop/orders/${orderId}`,
+    url: `/api/buy_order/detail/${orderId}`,
     method: 'get',
   })
 }
