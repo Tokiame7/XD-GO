@@ -215,7 +215,7 @@ export function getOrderList(params) {
 // 获取订单详情
 export function getOrderDetail(orderId) {
   return request({
-    url: `/shop/orders/${orderId}`,
+    url: `/api/buy_order/detail/${orderId}`,
     method: 'get',
   })
 }

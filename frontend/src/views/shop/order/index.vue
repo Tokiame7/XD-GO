@@ -1,4 +1,3 @@
-
 <template>
     <div class="order-list">
         <div class="order-header">
@@ -131,7 +130,7 @@ const fetchOrders = async () => {
             page: currentPage.value,
             limit: pageSize.value
         })
-        orderList.value = res.data.items
+        orderList.value = res.data.orders // 确保后端返回的数据结构正确
         total.value = res.data.total
     } catch (error) {
         console.error('获取订单列表失败:', error)
@@ -189,7 +188,7 @@ const canApplyRefund = (order) => {
 const handlePay = (order) => {
     router.push({
         path: '/payment',
-        query: { orderId: order.id }
+        query: { orderId: order.orderid } // 确保字段名与后端一致
     })
 }
 
@@ -199,7 +198,7 @@ const handleCancel = async (order) => {
         await ElMessageBox.confirm('确定要取消该订单吗？', '提示', {
             type: 'warning'
         })
-        await cancelOrder(order.id)
+        await cancelOrder(order.orderid)
         ElMessage.success('订单已取消')
         fetchOrders()
     } catch (error) {
@@ -216,7 +215,7 @@ const handleConfirm = async (order) => {
         await ElMessageBox.confirm('确认已收到商品吗？', '提示', {
             type: 'warning'
         })
-        await confirmReceived(order.id)
+        await confirmReceived(order.orderid)
         ElMessage.success('已确认收货')
         fetchOrders()
     } catch (error) {
@@ -233,7 +232,7 @@ const handleDelete = async (order) => {
         await ElMessageBox.confirm('确定要删除该订单吗？', '提示', {
             type: 'warning'
         })
-        await deleteOrder(order.id)
+        await deleteOrder(order.orderid)
         ElMessage.success('订单已删除')
         fetchOrders()
     } catch (error) {
@@ -249,7 +248,7 @@ const showLogistics = ref(false)
 const logistics = ref({})
 const handleViewLogistics = async (order) => {
     try {
-        const res = await getOrderLogistics(order.id)
+        const res = await getOrderLogistics(order.orderid)
         logistics.value = res.data
         showLogistics.value = true
     } catch (error) {
@@ -262,7 +261,7 @@ const handleViewLogistics = async (order) => {
 const handleViewDetail = (order) => {
     router.push({
         path: '/order/detail',
-        query: { orderId: order.id }
+        query: { orderId: order.orderid }
     })
 }
 
