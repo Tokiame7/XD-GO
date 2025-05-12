@@ -153,6 +153,7 @@ import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { ElMessage } from 'element-plus'
+import { submitOrder } from '@/api/shop'
 
 const router = useRouter()
 const cartStore = useCartStore()
@@ -235,13 +236,22 @@ const handleSubmitOrder = async () => {
 
     try {
         loading.value = true
-        // 模拟下单成功
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        // 调用后端提交订单接口
+        const res = await submitOrder({
+            addressId: selectedAddressId.value,
+            paymentMethod: paymentMethod.value,
+            remark: remark.value,
+            items: cartStore.items.filter(item => item.selected).map(item => ({
+                productId: item.id,
+                quantity: item.quantity
+            }))
+        })
 
         ElMessage.success('下单成功')
         cartStore.clearCart()
         router.push('/order/success')
     } catch (error) {
+        console.error('下单失败:', error)
         ElMessage.error('下单失败，请重试')
     } finally {
         loading.value = false

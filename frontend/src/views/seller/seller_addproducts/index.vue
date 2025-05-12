@@ -126,11 +126,16 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 console.log('nihao');
 
 import { ref, reactive, onMounted, watch } from 'vue';
 import { useSellerProucts, useDeleteProduct, useAddProduct, useGetshopCatid, useUpdateProduct } from '@/stores/seller_products';
 
+=======
+import { ref, reactive, onMounted , watchEffect } from 'vue';
+import { useSellerProucts,useDeleteProduct,useAddProduct,useGetshopCatid, useUpdateProduct } from '@/stores/seller_products';
+>>>>>>> ee05095d67472dd70aacbb705bd9fe5c4d334ee9
 
 // 先创建实例
 const sellerProducts = useSellerProucts();

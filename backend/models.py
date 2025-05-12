@@ -66,6 +66,7 @@ class Order(db.Model):
     sellerid = db.Column(db.String(64), db.ForeignKey('user.userid'))
     status = db.Column(db.Enum('unpaid', 'pending', 'shipped', 'delivered'), default='pending')
     totalprice = db.Column(db.Numeric(10, 2), nullable=False, default=0.00)
+
     createtime = db.Column(db.DateTime, default=datetime.utcnow)
     updatetime = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

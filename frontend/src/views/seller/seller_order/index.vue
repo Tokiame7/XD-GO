@@ -1,5 +1,6 @@
 <template>
   <div>
+<<<<<<< HEAD
     <template v-if="loading">
       <p>Pageloading,waiting...</p>
     </template>
@@ -18,6 +19,34 @@
         </el-table-column>
       </el-table>
     </template>
+=======
+  <template v-if="loading">
+    <p>Pageloading,waiting...</p>
+  </template>
+  <template v-else>
+    <el-table :data="OrderList" stripe style="width: 100%">
+      <el-table-column prop="orderid" label="OrderId" width="180" />
+      <el-table-column prop="buyer_info.name" label="BuyerName" width="180" />
+      <el-table-column prop="buyer_info.phone" label="BuyerPhone" width="180" />
+      <el-table-column prop="buyer_info.address" label="BuyerAdress" width="200" />
+      <el-table-column prop="totalprice" label="TotalPrice" width="180" />
+      <el-table-column prop="status" label="status" width ='180' />
+      <el-table-column prop="createtime" label="CreateTime" />
+      <el-table-column fixed="right" label="Options" min-width="120">
+        <template #default="scope">
+        <el-button
+          link
+          type="primary"
+          size="small"
+          @click.prevent="Editorder(scope.row.orderid,scope.row.status)"
+        >
+          Deliver
+        </el-button>
+      </template>
+      </el-table-column>
+    </el-table>
+  </template>
+>>>>>>> ee05095d67472dd70aacbb705bd9fe5c4d334ee9
   </div>
 </template>
 <script setup>
@@ -33,7 +62,6 @@ const Shiporder = useShiporder()
 //整个组件挂载后的行为
 onMounted(() => {
   GetOrder.getorders();
-  OrderList.value = GetOrder.orderList;
 });
 
 const Editorder = (id, status) => {
@@ -43,10 +71,18 @@ const Editorder = (id, status) => {
 
 //监听数据变化同步数据变化
 watchEffect(() => {
+<<<<<<< HEAD
   console.log('orderlist 发生变化:', GetOrder.orderList);
   OrderList.value = GetOrder.orderList;
   if (GetOrder.orderList.length > 0) {
     loading.value = false;//不要忘记加载
   }
+=======
+    console.log('orderlist 发生变化:', GetOrder.orderList);
+    if (GetOrder.orderList.length > 0) {
+        loading.value = false;//不要忘记加载
+        OrderList.value = GetOrder.orderList;
+    }
+>>>>>>> ee05095d67472dd70aacbb705bd9fe5c4d334ee9
 });
 </script>

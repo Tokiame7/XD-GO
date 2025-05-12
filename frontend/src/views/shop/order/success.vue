@@ -11,7 +11,7 @@
             </div>
 
             <!-- 订单信息 -->
-            <div class="order-info">
+            <div class="order-info" v-if="orderInfo">
                 <div class="info-item">
                     <span class="label">订单编号：</span>
                     <span class="value">{{ orderInfo.orderNo }}</span>
@@ -28,7 +28,7 @@
             </div>
 
             <!-- 收货信息 -->
-            <div class="delivery-info">
+            <div class="delivery-info" v-if="orderInfo">
                 <h3>收货信息</h3>
                 <div class="info-content">
                     <div class="info-row">
@@ -48,7 +48,7 @@
 
             <!-- 操作按钮 -->
             <div class="action-buttons">
-                <el-button @click="router.push('/order/list')">查看订单</el-button>
+                <el-button @click="router.push('/order/index')">查看订单</el-button>
                 <el-button type="primary" @click="router.push('/')">继续购物</el-button>
             </div>
         </div>
@@ -56,23 +56,33 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { CircleCheckFilled } from '@element-plus/icons-vue'
+import { getOrderDetail } from '@/api/shop'
 
 const router = useRouter()
+const route = useRoute()
 
-// 模拟订单数据
-const orderInfo = ref({
-    orderNo: 'XD' + Date.now(),
-    paymentMethod: 'wechat',
-    totalAmount: 7999,
-    address: {
-        name: '张三',
-        phone: '13800138000',
-        fullAddress: '广东省深圳市南山区xx街道xx号'
+// 订单信息
+const orderInfo = ref(null)
+
+// 获取订单详情
+const fetchOrderDetail = async () => {
+    try {
+        const orderId = route.query.orderId
+        const response = await getOrderDetail(orderId)
+        orderInfo.value = response.data
+    } catch (error) {
+        console.error('获取订单详情失败:', error)
+        ElMessage.error('获取订单详情失败')
     }
+}
+
+// 页面加载时获取订单详情
+onMounted(() => {
+    fetchOrderDetail()
 })
 
 // 复制订单号

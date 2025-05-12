@@ -56,7 +56,7 @@
             <el-table-column label="数量" width="150">
               <template #default="{ row }">
                 <el-input-number v-model="row.quantity" :min="1" :max="99"
-                  @change="cartStore.updateQuantity(row.id, $event)" />
+                  @change="handleQuantityChange(row, $event)" />
               </template>
             </el-table-column>
 
@@ -107,6 +107,7 @@
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { removeFromCart, clearCart, updateCartQuantity } from '@/api/shop' // 引入 API 方法
 
 const router = useRouter()
 const cartStore = useCartStore()
@@ -117,43 +118,61 @@ const handleViewProduct = (product) => {
 }
 
 // 删除商品
-const handleRemove = (item) => {
-  ElMessageBox.confirm(
-    '确定要从购物车中删除该商品吗？',
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
-    .then(() => {
-      cartStore.removeFromCart(item.id)
-      ElMessage.success('删除成功')
-    })
-    .catch(() => { })
+const handleRemove = async (item) => {
+  try {
+    await ElMessageBox.confirm(
+      '确定要从购物车中删除该商品吗？',
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+    await removeFromCart(item.id) // 修改为直接传递商品ID
+    cartStore.removeFromCart(item.id) // 更新本地状态
+    ElMessage.success('删除成功')
+  } catch (error) {
+    console.error(error) // 打印错误信息
+    ElMessage.error('删除失败，请稍后重试')
+  }
 }
 
 // 清空购物车
-const handleClearCart = () => {
+const handleClearCart = async () => {
   if (!cartStore.items.length) {
     return
   }
 
-  ElMessageBox.confirm(
-    '确定要清空购物车吗？',
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
-    .then(() => {
-      cartStore.clearCart()
-      ElMessage.success('购物车已清空')
-    })
-    .catch(() => { })
+  try {
+    await ElMessageBox.confirm(
+      '确定要清空购物车吗？',
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+    await clearCart() // 调用后端 API 清空购物车
+    cartStore.clearCart() // 更新本地状态
+    ElMessage.success('购物车已清空')
+  } catch (error) {
+    console.error(error) // 打印错误信息
+    ElMessage.error('清空购物车失败，请稍后重试')
+  }
+}
+
+// 修改商品数量
+const handleQuantityChange = async (item, quantity) => {
+  try {
+    await updateCartQuantity({ proid: item.id, quantity }) // 修改为传递对象
+    cartStore.updateQuantity(item.id, quantity) // 更新本地状态
+    ElMessage.success('数量更新成功')
+  } catch (error) {
+    console.error(error) // 打印错误信息
+    ElMessage.error('更新数量失败，请稍后重试')
+  }
 }
 
 // 去结算

@@ -1,40 +1,49 @@
 <template>
-  <div class="user-form">
-    <el-form
-      :model="form"
-      class="form"
-      label-width="auto"
-      style="max-width: 600px"
-      label-position="top"
-    >
-      <el-form-item label="用户名">
-        <el-input v-model="form.name" />
-      </el-form-item>
-      <el-form-item label="用户电话">
-        <el-input v-model="form.phone" />
-      </el-form-item>
-      <el-form-item label="用户邮箱">
-        <el-input v-model="form.email" />
-      </el-form-item>
-      <el-form-item label="用户地址" v-if="userStore.userInfo.role === 'buyer'">
-        <el-input v-model="form.shipping_address" />
-      </el-form-item>
+    <div class="user-form">
+        <el-form :model="form" class="form" label-width="auto" style="max-width: 600px" label-position="top">
+            <!-- 用户名 -->
+            <el-form-item label="用户名">
+                <el-input v-model="form.name" />
+            </el-form-item>
 
-      <el-form-item>
-        <!--<el-button type="primary" @click="onSubmit">修改</el-button>-->
-        <el-button @click="cancel">返回主页</el-button>
+            <!-- 用户电话 -->
+            <el-form-item label="用户电话">
+                <el-input v-model="form.phone" />
+            </el-form-item>
 
-        <el-button
-          type="success"
-          @click="goToAddressManage"
-          v-if="userStore.userInfo.role === 'buyer'"
-        >
-          管理收货地址
-        </el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+            <!-- 用户邮箱 -->
+            <el-form-item label="用户邮箱">
+                <el-input v-model="form.email" />
+            </el-form-item>
+
+            <!-- 用户地址：仅 buyer 显示 -->
+            <el-form-item label="用户地址" v-if="userStore.userInfo.role === 'buyer'">
+                <el-input v-model="form.shipping_address" />
+            </el-form-item>
+
+            <!-- 按钮区域优化：统一放入 el-form-item，使用 el-row 实现横向布局 -->
+            <el-form-item>
+                <el-row :gutter="20" style="flex-wrap: wrap">
+                    <!-- 修改个人信息按钮 -->
+                    <el-col :span="12" :xs="24">
+                        <el-button type="primary" @click="goToEdit" style="width: 100%">修改个人信息</el-button>
+                    </el-col>
+
+                    <!-- 管理收货地址按钮：仅 buyer 显示 -->
+                    <el-col :span="12" :xs="24" v-if="userStore.userInfo.role === 'buyer'">
+                        <el-button type="success" @click="goToAddressManage" style="width: 100%">管理收货地址</el-button>
+                    </el-col>
+
+                    <!-- 返回主页按钮：单独一行 -->
+                    <el-col :span="24" style="margin-top: 10px">
+                        <el-button @click="cancel" style="width: 100%">返回主页</el-button>
+                    </el-col>
+                </el-row>
+            </el-form-item>
+        </el-form>
+    </div>
 </template>
+
 
 <script setup>
 import { reactive, onMounted } from 'vue'
@@ -88,6 +97,14 @@ const cancel = () => {
 const goToAddressManage = () => {
   router.push('/address')
 }
+
+// 新增跳转方法
+const goToEdit = () => {
+    router.push('/user/edit')
+}
+
+
+
 </script>
 
 <style scoped lang="scss">

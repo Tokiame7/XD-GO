@@ -20,7 +20,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getAddressDetail, addAddress, updateAddress } from '@/api/user'
+import { getAddressDetail, updateAddress } from '@/api/user'
 
 const route = useRoute()
 const router = useRouter()
@@ -32,22 +32,15 @@ const form = ref({
     detail: ''
 })
 
-// 提交处理
+// 修改submit方法
 const submit = async () => {
-    if (isEdit.value) {
-        await updateAddress(route.params.id, form.value)
-    } else {
-        await addAddress(form.value)
-    }
+    await updateAddress(form.value)
     router.push('/address')
 }
 
-// 初始化数据
+// 修改初始化逻辑
 onMounted(async () => {
-    if (route.params.id) {
-        const res = await getAddressDetail(route.params.id)
-        form.value = res.data
-        isEdit.value = true
-    }
+    const res = await getAddressList()
+    form.value.detail = res.data.shipping_address || '' // 映射地址字段
 })
 </script>
